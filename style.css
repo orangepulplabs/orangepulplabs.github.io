@@ -104,6 +104,10 @@ section{padding:clamp(56px,9vw,112px) 0}
 .arrow{font-weight:600}
 
 /* document (privacy) */
+.act{display:inline-block;margin-top:8px;font-weight:600;color:var(--orange-text);border-bottom:2px solid var(--orange);padding-bottom:2px;text-decoration:none}
+.steps{padding-left:1.2em}.steps li{margin-bottom:10px}
+.contact dt{font-family:var(--mono);font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);margin-top:28px}
+.contact dd{margin:6px 0 0;font-size:20px}
 .doc{max-width:720px;margin:0 auto;padding:clamp(48px,8vw,96px) var(--gutter) 96px}
 .doc h1{font-size:clamp(44px,7vw,76px)}
 .doc .meta{font:500 14px var(--mono);color:var(--ink3);margin:20px 0 32px}
@@ -124,3 +128,8 @@ footer.site-foot a{color:var(--ink);margin-right:24px}
   .plans{grid-template-columns:1fr}.plans>div+div{padding-left:0;border-left:0;border-top:1px solid var(--line)}
   .site-head nav{gap:18px}.shots{gap:32px}
 }
+@media (max-width:560px){
+  .site-head .wrap{flex-wrap:wrap;height:auto;padding-top:14px;padding-bottom:10px;row-gap:6px}
+  .brand{white-space:nowrap}.site-head nav{width:100%;gap:22px}.site-head nav a{font-size:15px;padding:6px 0}
+}
+.doc h1+p{margin-top:20px}
