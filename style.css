@@ -90,6 +90,7 @@ section{padding:clamp(44px,7vw,88px) 0}
 .gicon{position:absolute;bottom:12px;width:36px;height:36px;display:grid;place-items:center;background:var(--surface);color:var(--ink);border:0;border-radius:11px;cursor:pointer;padding:0;box-shadow:0 0 0 1px var(--line)}
 .gicon:hover{box-shadow:0 0 0 1.5px var(--ink)}
 .gsnd{right:12px}
+.ztitle{position:absolute;top:5.4%;left:0;right:0;text-align:center;margin:0;font:800 clamp(18px,3.2vh,28px)/1.1 var(--font);letter-spacing:-.03em;color:var(--ink);pointer-events:none;text-wrap:nowrap}
 .herophones{text-decoration:none}
 
 /* the game page: the whole screen is the game */
@@ -104,11 +105,17 @@ body.zest{background:var(--ph);min-height:100vh;min-height:100dvh;display:flex;f
 /* page transitions (the browser animates the whole page, and the Play button grows into the game) */
 @view-transition{navigation:auto}
 #play{view-transition-name:zest}
+.site-head .brand{view-transition-name:brand}
+.hero h1{view-transition-name:headline}
+body.zest .zbar .btn{view-transition-name:brand}
+.ztitle{view-transition-name:headline}
 body.zest .gstage{view-transition-name:zest}
 ::view-transition-group(zest){animation-duration:.6s;animation-timing-function:cubic-bezier(.2,.8,.2,1);overflow:clip}
 ::view-transition-old(zest),::view-transition-new(zest){height:100%;width:100%;object-fit:cover}
 ::view-transition-old(zest){animation-duration:.2s}
 ::view-transition-new(zest){animation-duration:.45s}
+::view-transition-group(brand),::view-transition-group(headline){animation-duration:.6s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}
+::view-transition-old(brand),::view-transition-new(brand),::view-transition-old(headline),::view-transition-new(headline){height:100%;width:100%;object-fit:contain;object-position:left center}
 ::view-transition-old(root){animation:vtout .35s ease both}
 ::view-transition-new(root){animation:vtin .5s .05s ease both}
 @keyframes vtout{to{opacity:0;transform:scale(.985)}}
