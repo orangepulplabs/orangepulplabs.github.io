@@ -104,6 +104,14 @@ body.zest{background:var(--ph);min-height:100vh;min-height:100dvh;display:flex;f
 
 /* page transitions (the browser animates the whole page, and the Play button grows into the game) */
 @view-transition{navigation:auto}
+.fl{position:fixed;margin:0;padding:0;white-space:pre;pointer-events:none;z-index:120;will-change:transform,opacity;text-align:center}
+html.flying *,html.arriving *{view-transition-name:none!important}
+html.flying body{background:var(--ph);transition:background .5s}
+html.flying body>*:not(.fl){opacity:0;transition:opacity .4s}
+html.arriving body{background:var(--ph)}
+html.arriving body>*:not(.fl){opacity:0!important}
+html.arriving.shown body{background:var(--bg);transition:background .5s}
+html.arriving.shown body>*:not(.fl){opacity:1!important;transition:opacity .45s}
 #play{view-transition-name:zest}
 .site-head .brand{view-transition-name:brand}
 .hero h1{view-transition-name:headline}
