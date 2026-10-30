@@ -83,7 +83,9 @@ section{padding:clamp(44px,7vw,88px) 0}
 .band p{margin:8px 0 0;color:var(--muted);max-width:32em}
 
 /* game */
-.game{max-width:420px;justify-self:center;width:100%}
+.game{display:none;max-width:420px;width:100%}
+.game.big{display:block}
+.herophones{text-decoration:none}
 .gstage{position:relative}
 .game canvas{display:block;width:100%;height:auto;aspect-ratio:400/520;border-radius:22px;background:var(--ph);box-shadow:0 0 0 1px var(--line);touch-action:manipulation;-webkit-user-select:none;user-select:none;cursor:pointer}
 .game canvas:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
@@ -94,21 +96,22 @@ section{padding:clamp(44px,7vw,88px) 0}
 @media (hover:none){.gx{opacity:1}}
 .skip-game{display:inline-block;margin-top:12px;font-size:14px;color:var(--muted)}
 .gback{display:none}
-.game.big .gback{display:block;position:fixed;inset:0;background:rgba(10,8,6,.66);z-index:90}
+.game.big .gback{display:block;position:fixed;inset:0;background:color-mix(in srgb,var(--bg) 94%,transparent);z-index:90}
 .game.big .gpanel{position:fixed;z-index:100;left:50%;top:50%;transform:translate(-50%,-50%);width:min(94vw,calc((100vh - 56px)*.7692));background:var(--bg);padding:8px;border-radius:30px;box-shadow:0 0 0 1px var(--line)}
 @supports (height:100dvh){.game.big .gpanel{width:min(94vw,calc((100dvh - 56px)*.7692))}}
 .game.big .skip-game{display:none}
-.fl{position:fixed;margin:0;padding:0;white-space:pre;pointer-events:none;z-index:120;will-change:transform,opacity}
 .gclose{display:none}
 .game.big .gclose{display:inline-flex;position:fixed;top:16px;left:16px;z-index:110;min-height:44px;padding:0 16px;font-size:15px}
-.game.big.tk .gback{background:var(--bg);animation:gfade .4s both}
-.game.big.tk .gpanel{animation:gpin .4s .3s both}
-.game.big.tk-out .gback{animation:gfade .25s .45s reverse both}
-.game.big.tk-out .gpanel{animation:gpin .2s reverse both}
-.game.big.tk-out .gclose{opacity:0;transition:opacity .2s}
+.game.big.fb .gback{animation:gfade .3s both}
+.game.big.fb .gpanel{animation:gpin .35s both}
+::view-transition-group(zest){animation-duration:.55s;animation-timing-function:cubic-bezier(.2,.8,.2,1);border-radius:28px;overflow:clip}
+::view-transition-old(zest),::view-transition-new(zest){height:100%;width:100%;object-fit:cover}
+::view-transition-old(zest){animation-duration:.18s}
+::view-transition-new(zest){animation-duration:.4s}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.35s}
 @keyframes gfade{from{opacity:0}to{opacity:1}}
 @keyframes gpin{from{opacity:0;transform:translate(-50%,-50%) scale(.985)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-@media (prefers-reduced-motion:reduce){.game.big.tk .gback,.game.big.tk .gpanel{animation:none}}
+@media (prefers-reduced-motion:reduce){.game.big.fb .gback,.game.big.fb .gpanel{animation:none}}
 html.lock{overflow:hidden}
 
 /* tidyup page */
