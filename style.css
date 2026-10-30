@@ -98,6 +98,17 @@ section{padding:clamp(44px,7vw,88px) 0}
 .game.big .gpanel{position:fixed;z-index:100;left:50%;top:50%;transform:translate(-50%,-50%);width:min(94vw,calc((100vh - 56px)*.7692));background:var(--bg);padding:8px;border-radius:30px;box-shadow:0 0 0 1px var(--line)}
 @supports (height:100dvh){.game.big .gpanel{width:min(94vw,calc((100dvh - 56px)*.7692))}}
 .game.big .skip-game{display:none}
+.fl{position:fixed;margin:0;padding:0;white-space:pre;pointer-events:none;z-index:120;will-change:transform,opacity}
+.gclose{display:none}
+.game.big .gclose{display:inline-flex;position:fixed;top:16px;left:16px;z-index:110;min-height:44px;padding:0 16px;font-size:15px}
+.game.big.tk .gback{background:var(--bg);animation:gfade .5s both}
+.game.big.tk .gpanel{animation:gpin .5s .55s both}
+.game.big.tk-out .gback{animation:gfade .3s .85s reverse both}
+.game.big.tk-out .gpanel{animation:gpin .3s reverse both}
+.game.big.tk-out .gclose{opacity:0;transition:opacity .2s}
+@keyframes gfade{from{opacity:0}to{opacity:1}}
+@keyframes gpin{from{opacity:0;transform:translate(-50%,-50%) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion:reduce){.game.big.tk .gback,.game.big.tk .gpanel{animation:none}}
 html.lock{overflow:hidden}
 
 /* tidyup page */
