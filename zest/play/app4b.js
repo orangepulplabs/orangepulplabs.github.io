@@ -690,8 +690,8 @@ function seedDemo(o){o=o||{};
   if(o.real)delete d.st.demo;else d.st.demo=1;sv(d)}
 
 /* ---------- boot ---------- */
-scr=$('screen');phone=document.querySelector('.phone');hand=$('hand');wireDockLock();reelInstall();
-['today','lib','play','fam','set'].forEach(function(k,i){$('tt'+(i+1)).onclick=function(){({today:home,lib:library,play:function(){reelOpen('tab')},fam:families,set:settings})[k]()}});
+scr=$('screen');phone=document.querySelector('.phone');hand=$('hand');wireDockLock();if(window.reelInstall)reelInstall();
+['today','lib','play','fam','set'].forEach(function(k,i){var tb=$('tt'+(i+1));if(tb)tb.onclick=function(){({today:home,lib:library,play:function(){reelOpen('tab')},fam:families,set:settings})[k]()}});
 if(isLocal()&&/[?&]reset/.test(location.search)){lsDel('zv4');lsDel('zv4.bak')}
 if(isLocal()&&/[?&]demo/.test(location.search)){seedDemo()}
 (function(){var d0=db();if(!d0.st.musicInit){if(!d0.p)d0.st.music=0;d0.st.musicInit=1;sv(d0)}})();   // a new install starts quiet: music is the player's choice
