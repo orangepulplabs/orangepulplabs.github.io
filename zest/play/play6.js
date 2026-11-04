@@ -35,6 +35,24 @@ var TERMS='<p class="zgt">By playing you agree to the <a href="https://orangepul
 friendBroken=function(){var g=guestOn(),fr=pzFresh(),p=PUZZLES[fr.id],back=g?guestHome:home;
   show('<div class="core"><h1 class="s">That puzzle has moved on.</h1><p class="tag">Here is one of the puzzles in Zest today.</p>'+(g?TERMS:'')+'</div><div class="dock stk"><button class="zbtn pri wide" id="fb">Play '+esc(p.name)+'</button></div>',true,{back:back});
   $('fb').onclick=function(){playPuzzle(fr.id,fr.level,{tag:fr.tag,friend:{t:null},exit:back,from:back,guest:g})}};
+/* the bare page (no ?c= link): app4b boots into home(), which needs reel.js (not loaded here), so it stopped on "Loading your puzzle...".
+   Now a new visitor is a guest here too (same in-memory storage as challenge.js gives a link), the app home has no reel teaser,
+   and the page opens the guest home with one of today's visible puzzles. */
+var BARE=!/[?&]c=/.test(location.search||'');
+if(typeof reelTeaser==='undefined'){window.reelTeaser=function(){return ''};window.reelTeaserWire=function(){}}
+if(BARE&&!ZC.guest)(function(){try{var d=null;try{d=JSON.parse(localStorage.getItem('zv4')||'null')}catch(e){}if(d&&d.p&&d.p.done)return;
+  var P=Storage.prototype,s1=P.setItem,r1=P.removeItem,g1=P.getItem,c1=P.clear,me=function(t){return ZC.guest&&t===localStorage};ZC.guest=true;ZC.mem={};
+  P.setItem=function(k,v){if(me(this)){ZC.mem[k]=String(v);return}return s1.apply(this,arguments)};
+  P.removeItem=function(k){if(me(this)){delete ZC.mem[k];return}return r1.apply(this,arguments)};
+  P.getItem=function(k){if(me(this))return Object.prototype.hasOwnProperty.call(ZC.mem,k)?ZC.mem[k]:null;return g1.apply(this,arguments)};
+  P.clear=function(){if(me(this)){ZC.mem={};return}return c1.apply(this,arguments)};
+  ZC.endGuest=function(){ZC.guest=false;ZC.mem={};try{if(typeof STORE!=='undefined')STORE.cache=null}catch(e){}if(document.body)document.body.classList.remove('zg')}}catch(e){}})();
+var gh0=guestHome;
+guestHome=function(){if(!BARE||(FRIEND&&!FRIEND.broken))return gh0.apply(this,arguments);var g=guestOn(),fr=pzFresh(),p=PUZZLES[fr.id];newRun();
+  show('<div class="core"><h1 class="s">Zest</h1><p class="tag">Here is one of the puzzles in Zest today.</p>'+(g?TERMS:'')+'</div><div class="dock stk"><button class="zbtn pri wide" id="gp">Play '+esc(p.name)+'</button><div class="dock2"><button class="zbtn ghost" id="go">Open Zest here</button></div></div>',false,{back:guestHome});
+  $('gp').onclick=function(){playPuzzle(fr.id,fr.level,{tag:fr.tag,friend:{t:null},exit:guestHome,from:guestHome,guest:g})};
+  $('go').onclick=function(){ZC.endGuest();CTX=null;home()}};
+var fb0=friendBoot;friendBoot=function(){var r=fb0.apply(this,arguments);if(!r&&BARE)guestHome();return r};
 /* the puzzle screen, like the app: the board explains the rule, so the caption keeps only the friend's line, and the toolbar uses icons */
 var ICO6={pzu:['Undo','<path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'],
   pzr:['Restart','<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'],
