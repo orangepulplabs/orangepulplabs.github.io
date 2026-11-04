@@ -35,6 +35,19 @@ var TERMS='<p class="zgt">By playing you agree to the <a href="https://orangepul
 friendBroken=function(){var g=guestOn(),fr=pzFresh(),p=PUZZLES[fr.id],back=g?guestHome:home;
   show('<div class="core"><h1 class="s">That puzzle has moved on.</h1><p class="tag">Here is one of the puzzles in Zest today.</p>'+(g?TERMS:'')+'</div><div class="dock stk"><button class="zbtn pri wide" id="fb">Play '+esc(p.name)+'</button></div>',true,{back:back});
   $('fb').onclick=function(){playPuzzle(fr.id,fr.level,{tag:fr.tag,friend:{t:null},exit:back,from:back,guest:g})}};
+/* the puzzle screen, like the app: the board explains the rule, so the caption keeps only the friend's line, and the toolbar uses icons */
+var ICO6={pzu:['Undo','<path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'],
+  pzr:['Restart','<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'],
+  pzhb:['Hint','<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>']};
+var pp0=playPuzzle;
+playPuzzle=function(id,level,o){var out=pp0.apply(this,arguments);try{
+  var p=PUZZLES[id],cap=$('pzcap');
+  if(cap&&p&&p.v6){var t=cap.textContent,how=p.how||'';if(how&&t.indexOf(how)>=0)t=t.replace(how,'').trim();cap.textContent=t;cap.hidden=!t}
+  if(p&&p.v6)Object.keys(ICO6).forEach(function(k){var b=$(k);if(!b)return;b.setAttribute('aria-label',ICO6[k][0]);b.title=ICO6[k][0];b.classList.add('ic6');
+    b.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICO6[k][1]+'</svg>'});
+}catch(e){}return out};
+(function(){var s=document.createElement('style');s.textContent='.pzbar .zbtn.ic6{flex:0 0 56px!important;min-width:56px!important;width:56px!important;height:56px!important;border-radius:28px!important;padding:0!important;display:inline-flex!important;align-items:center;justify-content:center}.pzbar:has(.ic6){display:flex;justify-content:center!important;gap:16px!important}';document.head.appendChild(s)})();
+
 /* the ending: the win on the board first, then Keep going */
 var res0=pzResult;
 pzResult=function(id,level,o,seed,inst,r,q){if(!(guestOn()||o.friend))return res0.apply(this,arguments);
