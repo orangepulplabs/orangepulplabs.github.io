@@ -1,11 +1,11 @@
-/* Zest 1.2.0 friend page layer (orangepulplabs.com/zest/play/). Built by site-gen.py: ["switch-off", "jump-away", "tube-sort", "tilt-run", "slide-tiles", "make-target", "balance-weights", "zero-one", "dodecahedron-tour", "river-ferry", "seven-pieces", "code-cracker", "word-steps", "tiger-and-herd", "blockade", "seed-pits"] and "https://orangepulplabs.com/beta/" are filled in at build time.
+/* Zest 1.2.0 friend page layer (orangepulplabs.com/zest/play/). Built by site-gen.py: ["switch-off", "jump-away", "tube-sort", "tilt-run", "slide-tiles", "make-target", "balance-weights", "zero-one", "four-by-four", "dodecahedron-tour", "river-ferry", "seven-pieces", "code-cracker", "dot-loop", "bridge-walk", "four-shades", "word-steps", "word-square", "scramble", "tiger-and-herd", "blockade", "seed-pits", "who-owns-the-zebra", "living-stones", "link-across"] and "https://orangepulplabs.com/beta/" are filled in at build time.
    Loaded after app4d, challenge, delight, the v6 kit, the one v6 puzzle override (plus trim6.js), and before app4b boots.
-   - Only the 16 puzzles of Zest 1.2.0 can be played. A link to any other puzzle shows "That puzzle has moved on" with one of the 16.
+   - Only the puzzles of the current Zest release (25 in 1.2.1) can be played. A link to any other puzzle shows "That puzzle has moved on" with one of them.
    - The board is the v6 redesign (ZK.override has replaced the original entry), with the same seed as the sender: pzSeed(id, level, tag).
    - The win plays on the board (ZK.win), then the "Keep going" ending: your result against theirs, one line, the Google Play button.
    Nothing here writes cookies or storage. */
 (function(){
-var VIS=["switch-off", "jump-away", "tube-sort", "tilt-run", "slide-tiles", "make-target", "balance-weights", "zero-one", "dodecahedron-tour", "river-ferry", "seven-pieces", "code-cracker", "word-steps", "tiger-and-herd", "blockade", "seed-pits"],STORE="https://orangepulplabs.com/beta/",TEASER='A new true story every day.';
+var VIS=["switch-off", "jump-away", "tube-sort", "tilt-run", "slide-tiles", "make-target", "balance-weights", "zero-one", "four-by-four", "dodecahedron-tour", "river-ferry", "seven-pieces", "code-cracker", "dot-loop", "bridge-walk", "four-shades", "word-steps", "word-square", "scramble", "tiger-and-herd", "blockade", "seed-pits", "who-owns-the-zebra", "living-stones", "link-across"],STORE="https://orangepulplabs.com/beta/",TEASER='A new true story every day.';
 function vis(id){return VIS.indexOf(id)>=0}
 /* the curation: hidden puzzles are not playable (their file may be loaded because it also holds a visible one) */
 var get0=pzGet;pzGet=function(id){return vis(id)?get0(id):null};
@@ -14,7 +14,7 @@ var keep=PUZZLE_ORDER.filter(vis);PUZZLE_ORDER.length=0;Array.prototype.push.app
 var zctx0=zctx;zctx=function(){var c=zctx0();c.dailyOk=function(day,id){return vis(id)};return c};
 /* the fresh puzzle offered after a broken or moved-on link: one of the loaded visible puzzles, early level, today's seed */
 pzFresh=function(){var day=todayStr(),id=PUZZLE_ORDER[0],p=PUZZLES[id];return {id:id,level:1+Math.floor(seeded('pzlv|'+day)()*Math.min(5,p.levels)),tag:day}};
-/* another of the 16 opens as its own link, so the page loads only that puzzle's files (and the guest stays a guest) */
+/* another visible puzzle opens as its own link, so the page loads only that puzzle's files (and the guest stays a guest) */
 function anotherHref(not){var pool=VIS.filter(function(x){return x!==not}),id=pool[Math.floor(Math.random()*pool.length)],t=null;
   try{t=ZC.encodeChallenge({id:id,level:1+Math.floor(Math.random()*3),seed:ZC.newSeed()})}catch(e){}return t?'./?c='+t:'./'}
 var CSS='.k6{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding:28px 20px 8px}'+

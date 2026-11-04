@@ -166,7 +166,8 @@ ZK.win=function(host,o){o=o||{};var rm=ZK.rm(),stars=Math.max(1,Math.min(3,o.sta
       var pos=cells.map(function(c){var r=c.getBoundingClientRect();return{c:c,d:Math.hypot(r.left-hb.left+r.width/2-ox,r.top-hb.top+r.height/2-oy)}}),mx=1;
       pos.forEach(function(p){if(p.d>mx)mx=p.d});
       /* SVG cells scale around the SVG origin, not their own centre (pieces flew off the board in Seven Pieces), so they only lift */
-      pos.forEach(function(p){var sv=typeof SVGElement!=='undefined'&&p.c instanceof SVGElement;ZK.anim(p.c,sv?[{translate:'0 0'},{translate:'0 -4px'},{translate:'0 0'}]:[{scale:'1',translate:'0 0'},{scale:'1.1',translate:'0 -4px'},{scale:'1',translate:'0 0'}],380,SPRING,p.d/mx*360)});
+      pos.forEach(function(p){var sv=typeof SVGElement!=='undefined'&&p.c instanceof SVGElement,lu=4;if(sv)try{var m=(p.c.ownerSVGElement||p.c).getScreenCTM();if(m&&m.a>0)lu=+(4/m.a).toFixed(4)}catch(e){}   /* 1.2.1: SVG user units can be tiny (Link Across: ~40 px per unit), so lift 4 SCREEN px */
+        ZK.anim(p.c,sv?[{translate:'0 0'},{translate:'0 -'+lu+'px'},{translate:'0 0'}]:[{scale:'1',translate:'0 0'},{scale:'1.1',translate:'0 -4px'},{scale:'1',translate:'0 0'}],380,SPRING,p.d/mx*360)});
       ZK.burst(host,ox,oy,{n:stars===3?16:11,r:stars===3?80:56,colors:o.colors,ms:640});
       if(stars===3)setTimeout(function(){if(!dead)ZK.burst(host,ox,oy,{n:10,r:120,colors:o.colors,ms:700,size:.6})},140)}},rm?0:300);
   /* 3. the card with stars (lands 520 to 820 ms), Next tappable from 600 ms */
