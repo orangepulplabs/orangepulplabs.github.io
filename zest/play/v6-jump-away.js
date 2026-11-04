@@ -60,14 +60,14 @@ var CSS=''
 +'.ja{position:relative;width:100%;max-width:372px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;font-family:var(--font);--ja-wood:#E9D6B5;--ja-wood2:#D9BF94;--ja-hole:#B79A6E;--ja-peg1:#FF9A4D;--ja-peg2:#D9480F;--ja-peg3:#7A2500}'
 +':root[data-theme="dark"] .ja{--ja-wood:#3A3127;--ja-wood2:#2C251D;--ja-hole:#1A1612;--ja-peg1:#FFB27A;--ja-peg2:#F06A1F;--ja-peg3:#8A3000}'
 +'.ja-board{position:relative;display:grid;gap:4px;padding:12px;box-sizing:border-box;border-radius:26px;background:radial-gradient(120% 90% at 30% 20%,var(--ja-wood),var(--ja-wood2));box-shadow:inset 0 2px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.12),0 6px 18px rgba(60,30,0,.14);touch-action:none;user-select:none;-webkit-user-select:none}'
-+'.ja-h{all:unset;position:relative;aspect-ratio:1;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}'
-+'.ja-h::before{content:"";position:absolute;inset:22%;border-radius:50%;background:var(--ja-hole);box-shadow:inset 0 3px 4px rgba(0,0,0,.35),0 1px 0 rgba(255,255,255,.35)}'
++'.ja-h{all:unset;position:relative;aspect-ratio:1;width:calc(var(--jc) + 2*var(--jo));height:calc(var(--jc) + 2*var(--jo));margin:calc(-1*var(--jo));cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}'
++'.ja-h::before{content:"";position:absolute;inset:calc(var(--jo) + var(--jc)*.22);border-radius:50%;background:var(--ja-hole);box-shadow:inset 0 3px 4px rgba(0,0,0,.35),0 1px 0 rgba(255,255,255,.35)}'
 +'.ja-h:focus-visible{outline:3px solid var(--ink);outline-offset:-2px}'
-+'.ja-h.tg::after{content:"";position:absolute;inset:12%;border-radius:50%;box-shadow:0 0 0 3px var(--ja-peg2),0 0 14px 2px var(--ja-peg1);animation:jaglow 1s ease-in-out infinite}'
++'.ja-h.tg::after{content:"";position:absolute;inset:calc(var(--jo) + var(--jc)*.12);border-radius:50%;box-shadow:0 0 0 3px var(--ja-peg2),0 0 14px 2px var(--ja-peg1);animation:jaglow 1s ease-in-out infinite}'
 +'@keyframes jaglow{0%,100%{opacity:.55;scale:.92}50%{opacity:1;scale:1.04}}'
 +'.ja-h.near::after{box-shadow:0 0 0 4px var(--ink),0 0 18px 4px var(--ja-peg1);animation:none;opacity:1}'
 +'.ja-g{display:block}'
-+'.ja-p{position:relative;width:74%;height:74%;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff 0,var(--ja-peg1) 18%,var(--ja-peg2) 62%,var(--ja-peg3) 100%);box-shadow:0 3px 0 rgba(90,30,0,.45),0 5px 8px rgba(0,0,0,.25);transition:transform .2s '+ZK.SPRING+',box-shadow .2s;pointer-events:none;will-change:transform}'
++'.ja-p{position:relative;width:calc(var(--jc)*.74);height:calc(var(--jc)*.74);border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff 0,var(--ja-peg1) 18%,var(--ja-peg2) 62%,var(--ja-peg3) 100%);box-shadow:0 3px 0 rgba(90,30,0,.45),0 5px 8px rgba(0,0,0,.25);transition:transform .2s '+ZK.SPRING+',box-shadow .2s;pointer-events:none;will-change:transform}'
 +'.ja-p.up{transform:translateY(-6px) scale(1.12);box-shadow:0 3px 0 rgba(90,30,0,.35),0 14px 16px rgba(0,0,0,.28)}'
 +'.ja-p.dim{opacity:.5}'
 +'.ja-p.drag{transition:none;z-index:5}'
@@ -82,6 +82,9 @@ function mount(root,inst,api){ZK.css(CSS,'ja-css');root.textContent='';
   var ctr=ZK.counter({icon:PEG,label:function(k){return k+' peg'+(k===1?'':'s')+' left'},zero:false});
   var board=document.createElement('div');board.className='ja-board zk-board';board.setAttribute('role','group');board.setAttribute('aria-label','The board');
   var D=Math.max(g.C,g.R),gp=D>=7?2:4,pad=D>=7?8:12,cs=getComputedStyle(root),avail=Math.min(372,(root.clientWidth-parseFloat(cs.paddingLeft||0)-parseFloat(cs.paddingRight||0))||350),cell=Math.min(64,Math.floor((avail-2*pad-(D-1)*gp)/D));
+  /* tap targets: at least 44 px even when the drawn cell is smaller (7-wide boards at 320 px: 37 px). The hole and peg stay drawn at the
+     cell size; the button reaches past it by --jo on every side (neighbours' edges overlap by a few px; a tap there is between two holes anyway) */
+  var hit=Math.max(cell,44);board.style.setProperty('--jc',cell+'px');board.style.setProperty('--jo',((hit-cell)/2)+'px');
   board.style.gap=gp+'px';board.style.padding=pad+'px';board.style.gridTemplateColumns='repeat('+g.C+','+cell+'px)';board.style.gridAutoRows=cell+'px';board.style.width=(g.C*cell+(g.C-1)*gp+2*pad)+'px';board.style.maxWidth='100%';
   for(var r=0;r<g.R;r++)for(var c=0;c<g.C;c++){var h=g.at(r,c);if(h<0){var sp=document.createElement('span');sp.className='ja-g';sp.setAttribute('aria-hidden','true');board.appendChild(sp);continue}
     (function(h){var b=document.createElement('button');b.type='button';b.className='ja-h zk-p';b.setAttribute('data-zkc','');var p=document.createElement('span');p.className='ja-p';b.appendChild(p);
