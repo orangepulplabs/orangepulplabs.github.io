@@ -198,7 +198,7 @@ footer.site-foot{border-top:1px solid var(--line);padding:clamp(40px,6vw,72px) 0
 .zphones{position:relative;height:min(80svh,800px);min-height:420px;display:flex;justify-content:center;align-items:center;isolation:isolate}
 .zsun{position:absolute;z-index:-1;width:min(100%,760px);aspect-ratio:1;border-radius:50%;background:var(--tint)}
 .zsun::after{content:"";position:absolute;inset:-5%;border-radius:50%;border:1.5px solid var(--chip);transform:translate(3%,2%)}
-.zphone{display:block;height:100%;width:auto;aspect-ratio:600/1342;border-radius:8%/3.6%;background:var(--paper);box-shadow:0 0 0 1px var(--line),0 40px 70px -30px rgba(27,25,22,.45)}
+.zphone{display:block;height:100%;width:auto;aspect-ratio:600/1337;border-radius:8%/3.6%;background:var(--paper);box-shadow:0 0 0 1px var(--line),0 40px 70px -30px rgba(27,25,22,.45)}
 .zphones .front{position:relative;height:92%;transform:translateX(-16%) rotate(-3deg)}
 .zphones .back{position:absolute;height:80%;transform:translateX(38%) rotate(6deg)}
 .zsec{padding:clamp(72px,10vw,150px) 0;position:relative}
