@@ -63,7 +63,18 @@ playPuzzle=function(id,level,o){var out=pp0.apply(this,arguments);try{
   if(cap&&p&&p.v6){var t=cap.textContent,how=p.how||'';if(how&&t.indexOf(how)>=0)t=t.replace(how,'').trim();cap.textContent=t;cap.hidden=!t}
   if(p&&p.v6)Object.keys(ICO6).forEach(function(k){var b=$(k);if(!b)return;b.setAttribute('aria-label',ICO6[k][0]);b.title=ICO6[k][0];b.classList.add('ic6');
     b.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICO6[k][1]+'</svg>'});
+  if(p&&p.v6)teach6(id,level,o||{},p);
 }catch(e){}return out};
+/* 1.2.2 teaching (v6/teach.js, the same table as the app): the goal line above the board, a Rules pill beside Undo / Restart / Hint,
+   the nudge after 4 s with no input before the first move, and the goal picture for Tube Sort and Slide Tiles. Nothing is stored. */
+function teach6(id,level,o,p){if(!window.ZT)return;var root=$('pzroot');if(!root||document.getElementById('pzgoal'))return;
+  var tag=o.tag||(o.seed?String(o.seed).split('|').slice(2).join('|'):''),seed=o.seed||pzSeed(id,level,tag),inst=null;try{inst=p.make(level,pzRng(seed))}catch(e){}
+  var g=document.createElement('div');g.id='pzgoal';g.className='zt-goal';g.setAttribute('data-goal','');var th=ZT.thumb(id,inst);
+  g.innerHTML=th?'<span class="zt-goalrow"><span></span>'+th+'</span>':'';(th?g.querySelector('.zt-goalrow span'):g).textContent=ZT.goal(id);root.parentNode.insertBefore(g,root);
+  var bar=document.querySelector('.pzbar');if(bar){var b=document.createElement('button');b.type='button';b.className='zt-rules';b.id='pzrules';b.setAttribute('data-rules','');b.textContent='Rules';
+    b.onclick=function(){ZT.sheet(p.name+' rules',ZT.stepsHtml(id,p.how),'Back to the puzzle')};bar.appendChild(b)}
+  var moved=false,rid=run.id;root.addEventListener('pointerdown',function(){moved=true},true);
+  ZT.nudge({id:id,p:p,root:root,make:function(){return p.make(level,pzRng(seed))},moved:function(){return moved||rid!==run.id},blocked:function(){return !!(root.querySelector('.zk-hand')||document.querySelector('.zt-sheet'))}})}
 (function(){var s=document.createElement('style');s.textContent='.pzbar .zbtn.ic6{flex:0 0 56px!important;min-width:56px!important;width:56px!important;height:56px!important;border-radius:28px!important;padding:0!important;display:inline-flex!important;align-items:center;justify-content:center}.pzbar:has(.ic6){display:flex;justify-content:center!important;gap:16px!important}';document.head.appendChild(s)})();
 
 /* the ending: the win on the board first, then Keep going */
