@@ -44,7 +44,7 @@ function mount(root,inst,api){ZK.css(CSS,'dt-css');root.textContent='';var D=PZC
   function xy(e){var r=board.getBoundingClientRect();return[(e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*H]}
   function nearest(P,maxPx){var r=board.getBoundingClientRect(),best=-1,bd=1e9;for(var v=0;v<n;v++){var d=Math.hypot(P[0]-pos[v][0],P[1]-pos[v][1])*r.width/100;if(d<bd){bd=d;best=v}}return bd<=maxPx?best:-1}
   function check(){clearTimeout(lostT);ZK.stuck(stage,false);if(fin||path.length<2)return;
-    lostT=setTimeout(function(){if(fin)return;if(!D.complete(adj,n,path)){ZK.stuck(stage,true,{text:'This loop can’t finish',onUndo:undo});api.say('This route cannot be finished. Undo a few steps.')}},rm?0:200)}
+    lostT=setTimeout(function(){if(fin)return;if(!D.complete(adj,n,path)){ZK.stuck(stage,true,{kind:'dead',text:'This loop can’t finish',onUndo:undo})}},rm?0:200)}
   function hop(from,to,closing){var a=pos[from],b=pos[to];ZK.unmark(stage);
     if(!rm){bead.setAttribute('opacity',1);var an=bead.animate([{transform:'translate('+a[0]+'px,'+a[1]+'px) scale(1.4)'},{transform:'translate('+b[0]+'px,'+b[1]+'px) scale(1)'}],{duration:240,easing:'cubic-bezier(.3,.7,.4,1)',fill:'forwards'});an.onfinish=function(){bead.setAttribute('opacity',0)};
       var g=vs[to].g;try{g.animate([{transform:'scale(1)'},{transform:'scale(1.35)'},{transform:'scale(1)'}],{duration:320,delay:200,easing:ZK.SPRING})}catch(e){}}}
@@ -90,6 +90,7 @@ function mount(root,inst,api){ZK.css(CSS,'dt-css');root.textContent='';var D=PZC
       if(lv===2){hl=nx;paint();return 'Go to the marked corner.'}
       tap(nx);return 'Moved for you.'},
     destroy:function(){clearTimeout(lostT);if(ghost)ghost.stop();if(idle)idle.stop();offs.forEach(function(f){f()});root.textContent=''},
+    moves:function(){return steps},   /* 1.2.4: the count the header, the Reel chip and the win card all show */
     lastEl:function(){return last},
     state:function(){return{path:path.slice(),fin:fin}}}}
 ZK.override({id:ID,name:'Dodecahedron Tour',family:'move',theme:'F7',calm:true,

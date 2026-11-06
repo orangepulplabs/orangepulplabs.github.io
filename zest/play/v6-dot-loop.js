@@ -36,7 +36,10 @@ function mount(root,inst,api){ZK.css(CSS,'dl-css');root.textContent='';
   function cc(c){return[c%C+1,Math.floor(c/C)+1]}
   function segs(){return closed?path.length:Math.max(0,path.length-1)}
   /* clue state for the (implied) loop */
-  function clue(c,hollow){if(path.length<3)return 0;var p=cc(c),ins=inPoly(path,p[0],p[1]);return hollow?(ins?-1:0):(ins?1:0)}
+  /* 1.2.4 (dot-loop-01): an OPEN wire says nothing wrong. The implied chord used to put rings 'inside' while the player was drawing the correct
+     shortest loop, so correct play lit up amber. A ring can only be broken for good once the loop is closed, and a failed close already shows amber
+     (bad). Filled dots still get the green 'inside so far' ring: that is a positive cue, never a 'wrong'. */
+  function clue(c,hollow){if(path.length<3)return 0;var p=cc(c),ins=inPoly(path,p[0],p[1]);if(hollow)return closed&&ins?-1:0;return ins?1:0}
   function paint(){svg.textContent='';
     for(var v=0;v<Rv*Cv;v++){var q=px(v);svg.appendChild(sv('circle',{cx:q[0],cy:q[1],r:'.05',fill:'var(--dl-peg)'}))}
     var pts=path.map(function(v){var q=px(v);return q[0]+','+q[1]}).join(' ');
@@ -114,7 +117,7 @@ function mount(root,inst,api){ZK.css(CSS,'dl-css');root.textContent='';
     state:function(){return{len:segs(),fin:fin,path:path.slice()}}}}
 ZK.override({id:ID,name:'Dot Loop',family:'grid',theme:'F7',calm:true,
   blurb:'Draw one wire around the dots and keep the rings outside.',
-  how:'Pull one closed wire. Filled dots inside, rings outside.',
+  how:'Pull one closed wire, as short as you can. Filled dots inside, rings outside.',
   areas:['space','flex'],levels:38,secs:90,make:make,mount:mount,
   stars:function(res,inst){var p=(inst&&inst.par)||res.moves,m=res.moves,h=res.hints||0;return{stars:pzStarsByPar(m,p,h),line:'Wire length '+m+(m<=p?', the shortest.':'. The shortest is '+p+'.')}}});
 })();

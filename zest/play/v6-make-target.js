@@ -77,8 +77,8 @@ function mount(root,inst,api){ZK.css(CSS,'mk-css');root.textContent='';
       setTimeout(function(){api.done({solved:true,moves:hist.length,hints:hints,undos:undos,extra:{par:inst.par}})},rm?0:280);return}
     stuckCheck()}
   function stuckCheck(){clearTimeout(lostTm);ZK.stuck(stage,false);if(fin)return;
-    if(cur.length<2){ZK.stuck(stage,true,{text:'Out of numbers',onUndo:undo});api.say('Out of numbers. Undo to step back.');return}
-    if(cur.length<=4)lostTm=setTimeout(function(){if(fin)return;var r=A.targetSolve(cur,target,200000);if(!r){ZK.stuck(stage,true,{text:'The target is out of reach',onUndo:undo});api.say('The target is out of reach. Undo to step back.')}},600)}
+    if(cur.length<2){ZK.stuck(stage,true,{kind:'over',text:'Out of numbers',onUndo:undo});api.say('Out of numbers. Undo to step back.');return}
+    if(cur.length<=4)lostTm=setTimeout(function(){if(fin)return;var r=A.targetSolve(cur,target,200000);if(!r){ZK.stuck(stage,true,{kind:'dead',text:'The target is out of reach',onUndo:undo})}},600)}
   function undo(){if(fin||!hist.length)return false;cur=hist.pop();picks=[];undos++;pips.set(hist.length);render();ZK.unmark(stage);ZK.stuck(stage,false);clearTimeout(lostTm);ZK.sfx('undo');ZK.buzz('tap');stuckCheck();return true}
   function L(t,ty,fn){t.addEventListener(ty,fn);offs.push(function(){t.removeEventListener(ty,fn)})}
   L(stage,'pointerdown',function(e){var c=e.target.closest&&e.target.closest('button.mk-n,button.mk-o');if(c&&!fin){c.classList.add('pv');ZK.sfx('press')}});

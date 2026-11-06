@@ -37,8 +37,9 @@ var CSS='.rf{position:relative;width:100%;max-width:372px;margin:0 auto;display:
 +'.rf-chip span{display:flex;align-items:center;gap:3px}.rf-chip svg{display:block}.rf-it svg{display:block;pointer-events:none}'
 +'.rf-board{position:relative;width:100%;border-radius:26px;overflow:hidden;background:linear-gradient(90deg,var(--rf-g) 0,var(--rf-g) 19%,var(--rf-w1) 19%,var(--rf-w2) 81%,var(--rf-g) 81%);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 6px 18px rgba(20,60,90,.18);touch-action:manipulation;user-select:none;-webkit-user-select:none}'
 +'.rf-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}'
++'.rf-svg.rf-top{z-index:4;overflow:visible}'
 +'.rf-it{all:unset;position:absolute;left:0;top:0;width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2rem;line-height:1;cursor:pointer;background:rgba(255,255,255,.55);box-shadow:0 2px 0 rgba(0,0,0,.12);transition:transform .32s cubic-bezier(.3,1.12,.6,1);will-change:transform;-webkit-tap-highlight-color:transparent}'
-+':root[data-theme="dark"] .rf-it{background:rgba(255,255,255,.18)}.rf-it:focus-visible,.rf-boat:focus-visible{outline:3px solid var(--ink);outline-offset:2px}'
++':root[data-theme="dark"] .rf-it{background:rgba(237,230,216,.82)}:root[data-theme="dark"] .rf-chip{background:#EDE6D8;box-shadow:none}.rf-it:focus-visible,.rf-boat:focus-visible{outline:3px solid var(--ink);outline-offset:2px}'
 +'.rf-it.sail{transition:transform .48s cubic-bezier(.45,0,.3,1)}'
 +'.rf-boat{all:unset;position:absolute;left:0;top:0;width:100px;height:62px;cursor:pointer;transition:transform .48s cubic-bezier(.45,0,.3,1);will-change:transform;z-index:3;-webkit-tap-highlight-color:transparent}'
 +'.rf-boat svg{width:100%;height:100%;overflow:visible}.rf-go{position:absolute;right:-6px;top:-12px;width:28px;height:28px;border-radius:50%;background:var(--accent,#E8590C);line-height:0;box-shadow:0 2px 6px rgba(0,0,0,.25)}'
@@ -55,9 +56,10 @@ function mount(root,inst,api){ZK.css(CSS,'rf-css');root.textContent='';var R={pa
   var bt=document.createElement('button');bt.type='button';bt.className='rf-boat';bt.setAttribute('aria-label','Sail across');
   bt.innerHTML='<svg viewBox="0 0 100 62" aria-hidden="true"><path d="M4 30h92l-14 26H18z" fill="var(--rf-wood)" stroke="#5B3A15" stroke-width="3" stroke-linejoin="round"/><path d="M12 38h76" stroke="#5B3A15" stroke-width="2" opacity=".45"/></svg><span class="rf-farmer" aria-hidden="true">'+ico('farmer',44)+'</span><span class="rf-go" aria-hidden="true"><svg viewBox="0 0 28 28" width="28" height="28"><path d="M8 14h11M14 8.5l5.5 5.5-5.5 5.5" fill="none" stroke="#1B1916" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
   bt.onclick=function(){sail()};board.appendChild(bt);
+  var top=sv('svg',{'aria-hidden':'true','class':'rf-svg rf-top'});board.appendChild(top);
   var pips=ZK.pips(inst.par);stage.appendChild(rules);stage.appendChild(board);stage.appendChild(pips.el);root.appendChild(stage);
   var goEl=bt.querySelector('.rf-go');
-  function layout(){W=board.clientWidth||300;Hh=Math.max(250,n*58+24);board.style.height=Hh+'px';svg.setAttribute('viewBox','0 0 '+W+' '+Hh);place(true)}
+  function layout(){W=board.clientWidth||300;Hh=Math.max(250,n*58+24);board.style.height=Hh+'px';svg.setAttribute('viewBox','0 0 '+W+' '+Hh);top.setAttribute('viewBox','0 0 '+W+' '+Hh);place(true)}
   function rowY(i){return 12+i*58+(Hh-24-n*58)/2}
   function boatX(side){var l=Math.round(W*.19)+6,r=Math.round(W*.81)-6-100;return side?r:l}
   function itemPos(i){if(boat===i){var bx=boatX(f);return[bx+(f?4:44),Hh/2-34]}var s=(mask>>i)&1;return[s?W-8-52:8,rowY(i)]}
@@ -67,9 +69,16 @@ function mount(root,inst,api){ZK.css(CSS,'rf-css');root.textContent='';var R={pa
   function onBank(){var o=[];for(var i=0;i<n;i++)if(((mask>>i)&1)===f&&boat!==i)o.push(i);return o}
   function dangerPairs(){var o=onBank(),pr=[];bad.forEach(function(b){if(o.indexOf(b[0])>=0&&o.indexOf(b[1])>=0)pr.push(b)});return pr}
   var warn=false;
-  function links(){svg.textContent='';if(busy||fin||(boat<0&&!warn))return;dangerPairs().forEach(function(b){var p=itemPos(b[0]),q=itemPos(b[1]);
-    svg.appendChild(sv('line',{x1:p[0]+26,y1:p[1]+26,x2:q[0]+26,y2:q[1]+26,stroke:'#E9A23B','stroke-width':4,'stroke-dasharray':'2 7','stroke-linecap':'round'}));
-    var m=[(p[0]+q[0])/2+26,(p[1]+q[1])/2+26],t=sv('path',{d:'M'+(m[0]+2)+' '+(m[1]-11)+'l-9 13h6l-2 9 10-14h-6z',fill:'#F6B73C',stroke:'#1B1916','stroke-width':1.8,'stroke-linejoin':'round'});svg.appendChild(t)})}
+  /* 1.2.4 (river-ferry-01): a bank is one column, so a straight link ran BEHIND the tiles in between and its zap landed next to the wrong animal.
+     Each biting pair now gets an arc that leaves both tiles on their river side and bows out into the water (wider for pairs further apart, so arcs nest),
+     drawn on a layer above the tiles, with an amber ring on both ends and the zap at the arc's peak. */
+  function links(){svg.textContent='';top.textContent='';if(busy||fin||(boat<0&&!warn))return;var side=f;dangerPairs().forEach(function(b){var p=itemPos(b[0]),q=itemPos(b[1]),dir=side?-1:1,
+      x0=side?p[0]:p[0]+52,x1=side?q[0]:q[0]+52,y0=p[1]+26,y1=q[1]+26,gap=Math.abs(b[1]-b[0]),bow=34+gap*16,cx=(x0+x1)/2+dir*bow*2,cy=(y0+y1)/2,px=(x0+x1)/4+cx/2,py=cy;
+    var g=sv('g',{'data-link':names[b[0]]+'-'+names[b[1]]});
+    g.appendChild(sv('path',{d:'M'+x0+' '+y0+'Q'+cx+' '+cy+' '+x1+' '+y1,fill:'none',stroke:'#1B1916','stroke-width':6.5,'stroke-linecap':'round',opacity:.28}));
+    g.appendChild(sv('path',{d:'M'+x0+' '+y0+'Q'+cx+' '+cy+' '+x1+' '+y1,fill:'none',stroke:'#E9A23B','stroke-width':4,'stroke-dasharray':'3 6','stroke-linecap':'round'}));
+    [p,q].forEach(function(r){g.appendChild(sv('rect',{x:r[0]-3,y:r[1]-3,width:58,height:58,rx:18,fill:'none',stroke:'#E9A23B','stroke-width':3.5}))});
+    g.appendChild(sv('path',{d:'M'+(px+2)+' '+(py-11)+'l-9 13h6l-2 9 10-14h-6z',fill:'#F6B73C',stroke:'#1B1916','stroke-width':1.8,'stroke-linejoin':'round'}));top.appendChild(g)})}
   function refresh(){place();links();pips.set(moves);bt.classList.toggle('zk-p',true)}
   function tapItem(i){if(fin||busy)return;warn=false;ZK.ghostDone(ID);if(ghost)ghost.stop();ZK.unmark(stage);
     if(boat===i){boat=-1;ZK.sfx('undo');ZK.buzz('tap');refresh();return}
@@ -79,12 +88,12 @@ function mount(root,inst,api){ZK.css(CSS,'rf-css');root.textContent='';var R={pa
   function sail(){if(fin||busy)return;ZK.ghostDone(ID);if(ghost)ghost.stop();ZK.unmark(stage);
     var m2=boat<0?mask:mask^(1<<boat);
     if(!R.safe(m2,bad,f)){var pr=dangerPairs();warn=true;links();ZK.wrong(bt);pr.forEach(function(b){ZK.anim(its[b[0]],[{rotate:'0deg'},{rotate:'-8deg'},{rotate:'8deg'},{rotate:'0deg'}],300);ZK.anim(its[b[1]],[{rotate:'0deg'},{rotate:'8deg'},{rotate:'-8deg'},{rotate:'0deg'}],300)});api.say('Not safe to leave those two alone.');return}
-    busy=true;hist.push({mask:mask,f:f,boat:boat});var carried=boat;svg.textContent='';
-    var willWin=(m2===(1<<n)-1&&f===0);if(willWin)setTimeout(function(){fin=true;api.done({solved:true,moves:moves+1,hints:hints,undos:undos,extra:{par:inst.par}})},rm?0:250);
+    busy=true;hist.push({mask:mask,f:f,boat:boat});var carried=boat;svg.textContent='';top.textContent='';
     its.forEach(function(b){b.classList.add('sail')});f=1-f;place();ZK.sfx('slide');ZK.buzz('move');
     setTimeout(function(){its.forEach(function(b){b.classList.remove('sail')});mask=m2;boat=-1;busy=false;moves++;api.moved();if(carried>=0)last=its[carried];
       place();links();pips.set(moves);ZK.sfx('clack');ZK.buzz('tap');if(carried>=0)ZK.anim(its[carried],[{scale:'1.2'},{scale:'1'}],260,ZK.SPRING);
-      if(mask===(1<<n)-1&&f===1){fin=true;place();return}
+      /* 1.2.4 (river-ferry-02): the win comes after the boat has landed and the crossing is counted (it used to fire mid-river, with the header one behind) */
+      if(mask===(1<<n)-1&&f===1){fin=true;place();api.say('Everyone is across.');setTimeout(function(){api.done({solved:true,moves:moves,hints:hints,undos:undos,extra:{par:inst.par}})},rm?0:220);return}
       api.say('Crossing '+moves+' done.');stuckCheck()},rm?20:500)}
   function undo(){if(fin||busy)return false;if(boat>=0){boat=-1;refresh();return true}if(!hist.length)return false;var h=hist.pop();mask=h.mask;f=h.f;boat=-1;moves=Math.max(0,moves-1);undos++;ZK.stuck(stage,false);ZK.sfx('undo');ZK.buzz('tap');refresh();return true}
   if(window.ResizeObserver){var ro=new ResizeObserver(function(){layout()});ro.observe(board);offs.push(function(){ro.disconnect()})}

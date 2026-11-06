@@ -101,6 +101,7 @@ function mount(root,inst,api){ZK.css(CSS,'bw-css');root.textContent='';
       if(lv===2){ZK.mark(chips[t.k]);return t.v===0?'Take the '+wt+' off.':'Put the '+wt+' on the '+(t.v>0?'right':'left')+' pan.'}
       place(t.k,t.v);return 'Placed one for you.'},
     destroy:function(){if(ghost)ghost.stop();if(idle)idle.stop();offs.forEach(function(f){f()});root.textContent=''},
+    moves:function(){return sums().u},   /* 1.2.4: weights in use, the same count as the result (it was every drop and return) */
     lastEl:function(){return last},
     state:function(){return{pl:pl.slice(),sums:sums(),fin:fin,sel:sel}}}}
 

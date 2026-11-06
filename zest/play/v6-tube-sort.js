@@ -108,8 +108,8 @@ function mount(root,inst,api){ZK.css(CSS,'ts-css');root.textContent='';
     if(TS.solved(T)){fin=true;api.say('Every tube is one colour.');setTimeout(function(){api.done({solved:true,moves:hist.length,hints:hints,undos:undos,extra:{par:inst.par}})},rm?0:520);return}
     stuckCheck()}
   function stuckCheck(){clearTimeout(lostTm);ZK.stuck(stage,false);if(fin)return;
-    if(!TS.moves(T).length){ZK.stuck(stage,true,{text:'No pours left',onUndo:undo});api.say('No pours left. Undo to step back.');return}
-    lostTm=setTimeout(function(){if(fin)return;var r=TS.solve(T,30000,1);if(!r.path&&!r.capped){ZK.stuck(stage,true,{text:'This one can’t be finished now',onUndo:undo});api.say('From here the tubes cannot be sorted. Undo to step back.')}},700)}
+    if(!TS.moves(T).length){ZK.stuck(stage,true,{kind:'over',text:'No pours left',onUndo:undo});api.say('No pours left. Undo to step back.');return}
+    lostTm=setTimeout(function(){if(fin)return;var r=TS.solve(T,30000,1);if(!r.path&&!r.capped){ZK.stuck(stage,true,{kind:'dead',text:'This one can’t be finished now',onUndo:undo})}},700)}
   function undo(){if(fin||!hist.length)return false;settle();T=hist.pop();sel=-1;undos++;draw();ZK.unmark(stage);ZK.stuck(stage,false);ZK.sfx('undo');ZK.buzz('tap');stuckCheck();return true}
   draw();
   if(inst.level===1){var p0=TS.solve(T,5000,1).path;if(p0&&p0.length){var a0=p0[0][0],b0=p0[0][1];

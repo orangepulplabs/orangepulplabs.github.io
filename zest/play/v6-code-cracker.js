@@ -28,7 +28,7 @@ function mount(root,inst,api){ZK.css(CSS,'cc-css');root.textContent='';var C=CCX
   for(i=0;i<len;i++)guess.push(-1);
   var stage=document.createElement('div');stage.className='cc zk-stage zk-host'+(rm?' zk-rm':'');
   var hbox=document.createElement('div');hbox.className='cc-hist';hbox.setAttribute('role','list');hbox.setAttribute('aria-label','Your guesses and clues');
-  var cap=document.createElement('div');cap.className='cc-cap';cap.textContent='● right peg, right slot   ○ right peg, wrong slot';cap.style.display='none';
+  var cap=document.createElement('div');cap.className='cc-cap';cap.textContent='● right peg, right slot · ○ right peg, wrong slot';cap.style.display='none';
   var board=document.createElement('div');board.className='cc-pegs zk-board';board.setAttribute('role','group');board.setAttribute('aria-label','Your guess');var slots=[];
   for(i=0;i<len;i++)(function(i){var b=document.createElement('button');b.type='button';b.className='cc-p cc-slot';b.setAttribute('data-zkc','');b.onclick=function(){if(fin)return;ZK.ghostDone(ID);if(ghost)ghost.stop();if(guess[i]>=0){guess[i]=-1;ZK.sfx('undo')}sel=i;paint()};slots.push(b);board.appendChild(b)})(i);
   var pal=document.createElement('div');pal.className='cc-pal';pal.style.gridTemplateColumns='repeat('+Math.min(5,inst.size)+',56px)';var keys=[];
@@ -40,8 +40,9 @@ function mount(root,inst,api){ZK.css(CSS,'cc-css');root.textContent='';var C=CCX
   function paint(){for(var i=0;i<len;i++){var s=slots[i],v=guess[i];s.className='cc-p cc-slot'+(v>=0?' full':'')+(sel===i?' sel':'')+(hp===i?' mk':'');s.style.background=v>=0?PAL[v%10]:'';s.style.color=v>=0?INK[v%10]:'';s.textContent=v>=0?v:'';
       s.setAttribute('aria-label','Slot '+(i+1)+' of '+len+', '+(v<0?'empty':'peg '+v)+(hp===i?', hint':''))}
     chk.setAttribute('aria-disabled',full()?'false':'true');chk.style.display='';
-    var brk=full()&&hist.some(function(h){var f=C.fb(guess,h[0]);return f[0]!==h[1][0]||f[1]!==h[1][1]});
-    chk.classList.toggle('warn',!!brk);chk.textContent=brk?'! Check':'Check';chk.setAttribute('aria-label',brk?'Check. This guess breaks an earlier clue.':'Check')}
+    /* 1.2.4 (code-cracker-02): no '! Check' before Check. It flagged a guess that breaks an earlier clue, unexplained, which handed the player a free
+       consistency checker and spoiled the deduction. Checking such a guess is allowed; its pips show the player what they missed. */
+    chk.classList.remove('warn');chk.textContent='Check';chk.setAttribute('aria-label','Check')}
   function nextEmpty(from){for(var k=0;k<len;k++){var j=(from+k)%len;if(guess[j]<0)return j}return from}
   function put(d){if(fin)return;ZK.ghostDone(ID);if(ghost)ghost.stop();ZK.unmark(stage);hp=-1;var j=guess[sel]<0?sel:nextEmpty(0);if(guess[j]>=0&&full()){ZK.wrong(slots[sel]);return}
     guess[j]=d;sel=nextEmpty(j);ZK.sfx('click',{p:d});ZK.buzz('tap');paint();ZK.anim(slots[j],[{scale:'.6'},{scale:'1.15'},{scale:'1'}],240,ZK.SPRING);last=slots[j];

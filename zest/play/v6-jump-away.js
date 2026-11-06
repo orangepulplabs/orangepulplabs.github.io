@@ -98,8 +98,8 @@ function mount(root,inst,api){ZK.css(CSS,'ja-css');root.textContent='';
     ctr.set(n())}
   function select(a){sel=a;paint();if(a>=0){ZK.sfx('lift');ZK.buzz('tap')}}
   function stuckCheck(){clearTimeout(lostTimer);ZK.stuck(stage,false);if(fin)return;
-    if(!legal(g,st).length){ZK.stuck(stage,true,{text:n()===2?'So close: no jumps left':'No jumps left',onUndo:undo});api.say('No jumps left.');return}
-    lostTimer=setTimeout(function(){if(fin)return;var w=winnable(g,st,150000);if(w===false){ZK.stuck(stage,true,{text:'One peg is out of reach now',onUndo:undo});api.say('From here one peg is out of reach. Undo to step back.')}},250)}
+    if(!legal(g,st).length){ZK.stuck(stage,true,{kind:'over',text:n()===2?'So close: no jumps left':'No jumps left',onUndo:undo});api.say('No jumps left.');return}
+    lostTimer=setTimeout(function(){if(fin)return;var w=winnable(g,st,150000);if(w===false){ZK.stuck(stage,true,{kind:'dead',text:'One peg is out of reach now',onUndo:undo})}},250)}
   function jump(t,fromXY){ZK.ghostDone(ID);if(ghost)ghost.stop();ZK.unmark(stage);
     var a=ZK.at(board,holes[t[0]]),b=ZK.at(board,holes[t[2]]),m=ZK.at(board,holes[t[1]]);if(fromXY){a.x=fromXY.x;a.y=fromXY.y}
     hist.push(t);st[t[0]]=0;st[t[1]]=0;st[t[2]]=1;sel=-1;last=holes[t[2]];paint();api.moved();

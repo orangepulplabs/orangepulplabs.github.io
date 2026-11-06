@@ -50,7 +50,7 @@ function mount(root,inst,api){CC.css();ZK.css(CSS,'sc-css');
   function label(){for(var k=0;k<len;k++){var si=inSlot.indexOf(k);tiles[k].setAttribute('aria-label','Letter '+inst.words[wi].s.charAt(k)+(si>=0?', placed in slot '+(si+1)+', tap to take back':', tap to place'))}}
   var ANA={};function anas(){var cur=inst.words[wi];if(ANA[wi])return ANA[wi];var k=srt(cur.w);return ANA[wi]=CC.words(len).filter(function(w){return srt(w)===k}).concat([cur.w])}
   function dead(){var g=guess();return g.length>0&&g.length<len&&!anas().some(function(a){return a.slice(0,g.length)===g})}
-  function stuckChk(){if(dead()){ZK.stuck(stage,true,{text:'No word starts like this',onUndo:function(){ctl.undo()}});ZK.sfx('soft')}else ZK.stuck(stage,false)}   /* 1.2.1: known lost, said at once */
+  function stuckChk(){if(dead())ZK.stuck(stage,true,{kind:'dead',text:'No word starts like this',onUndo:function(){ctl.undo()}});else ZK.stuck(stage,false)}   /* 1.2.4: legal but lost: the kit says it on a hint, 3 tiles later or after 10 s idle */
   function guess(){return inSlot.map(function(k){return inst.words[wi].s.charAt(k)}).join('')}
   function tapTile(k){if(fin||locked)return;ZK.ghostDone(ID);if(ghost)ghost.stop();ZK.unmark(stage);var si=inSlot.indexOf(k);
     tiles.forEach(function(t){t.classList.remove('wrong')});
@@ -93,6 +93,7 @@ function mount(root,inst,api){CC.css();ZK.css(CSS,'sc-css');
       while(inSlot.length<len&&!fin&&!locked){var n2=nextNeeded(),c2=n2.ans.charAt(n2.ok),t2=null;for(var q=0;q<len;q++)if(inSlot.indexOf(q)<0&&inst.words[wi].s.charAt(q)===c2){t2=q;break}if(t2===null)break;tapTile(t2)}
       return 'Spelled it for you.'},
     destroy:function(){if(ghost)ghost.stop();if(idle)idle.stop();stage.removeEventListener('keydown',key);root.textContent=''},
+    moves:function(){return placed},   /* 1.2.4: the count the header, the Reel chip and the win card all show */
     lastEl:function(){return last},
     state:function(){return{word:wi,placed:inSlot.length,fin:fin}}};return ctl}
 

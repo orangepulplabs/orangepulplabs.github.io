@@ -42,6 +42,8 @@ function mount(root,inst,api){ZK.css(DK.BASECSS+CSS,'ls-css');root.textContent='
   for(i=0;i<GS;i++){DK.sv('line',{x1:30,y1:P(i),x2:270,y2:P(i),stroke:'var(--dk-line)','stroke-width':2.2,'stroke-linecap':'round'},gG);DK.sv('line',{x1:P(i),y1:30,x2:P(i),y2:270,stroke:'var(--dk-line)','stroke-width':2.2,'stroke-linecap':'round'},gG)}
   for(p=0;p<25;p++)(function(p){var bt=DK.btn('Point','dk-pt');bt.style.left=((P(p%5)+12)/3.24)+'%';bt.style.top=((P(Math.floor(p/5))+12)/3.24)+'%';bt.style.width='18.5%';bt.style.height='18.5%';bt.style.margin='0';bt.style.transform='translate(-50%,-50%)';bt.style.borderRadius='14px';bt.onclick=function(){tap(p)};btn.push(bt);board.appendChild(bt)})(p);
   stage.appendChild(pips.el);root.appendChild(stage);
+  /* 1.2.4: the stone budget in words (the pips alone did not say it): "1 stone left" */
+  var bud=DK.h('div','ls-bud',null,{'aria-live':'off'},stage);bud.style.cssText='font:700 .875rem/1.3 var(--font);color:var(--muted,#5f5a52);text-align:center;margin-top:2px';
   function targetVal(){return type==='cap'?2:1}
   function tGroup(){return b[t]===targetVal()?G.groupOf(b,t):null}
   function xy(q){return[P(q%5),P(Math.floor(q/5))]}
@@ -52,7 +54,7 @@ function mount(root,inst,api){ZK.css(DK.BASECSS+CSS,'ls-css');root.textContent='
   function NBR(q){var r=Math.floor(q/5),c=q%5,l=[];if(r>0)l.push(q-5);if(r<4)l.push(q+5);if(c>0)l.push(q-1);if(c<4)l.push(q+1);return l}
   var sEl={};
   function sync(pop){gS.textContent='';sEl={};for(p=0;p<25;p++)if(b[p]){var g=stoneG(b[p],p===t&&b[p]===targetVal()),c=xy(p);g.style.transform='translate('+c[0]+'px,'+c[1]+'px)';gS.appendChild(g);sEl[p]=g}
-    marks();var gr=tGroup();ctr.set(gr?gr.libs:0,true);pips.set(bm);
+    marks();var gr=tGroup();ctr.set(gr?gr.libs:0,true);pips.set(bm);var lft=Math.max(0,k-bm);bud.textContent=type==='cap'?lft+' stone'+(lft===1?'':'s')+' left':'Hold for '+lft+' more stone'+(lft===1?'':'s');
     for(p=0;p<25;p++)btn[p].setAttribute('aria-label','Row '+(Math.floor(p/5)+1)+', column '+(p%5+1)+', '+(b[p]===1?'dark stone':b[p]===2?'white stone':'empty'));
     if(pop)for(var q in pop)if(sEl[q])ZK.anim(sEl[q].firstChild,[{transform:'translate(0,-16px) scale(.5)',opacity:0},{transform:'scale(1.14)',opacity:1,offset:.6},{transform:'scale(1)',opacity:1}],260,ZK.SPRING)}
   function D(ms){return rm?0:ms}
@@ -64,15 +66,15 @@ function mount(root,inst,api){ZK.css(DK.BASECSS+CSS,'ls-css');root.textContent='
     sync({q:1});var removed=0;for(var z=0;z<25;z++)if(before[z]&&!b[z])removed++;if(removed){popOut(before,b,q);L.later(function(){ZK.sfx('pop');ZK.buzz('pop')},D(80))}
     if(type==='cap'&&b[t]!==2){return win()}
     var left=k-bm;
-    if(type==='cap'&&left<1){return lose('Out of stones')}
+    if(type==='cap'&&left<1){return lose('Out of stones: you had '+k+' stone'+(k===1?'':'s'),'over')}
     busy=true;var wr=G.whiteReply(type,b,before,type==='cap'?left:k-bm+1,t);
     L.later(function(){var b1=b;if(wr&&wr.i>=0){prev=b;b=wr.b;lastPt=-2;sync({});var wi=wr.i;
         if(sEl[wi])ZK.anim(sEl[wi].firstChild,[{transform:'translate(0,-16px) scale(.5)',opacity:0},{transform:'scale(1.14)',opacity:1,offset:.6},{transform:'scale(1)',opacity:1}],D(260),ZK.SPRING);
         ZK.sfx('clack');popOut(b1,b,wi)}else{prev=b}
       busy=false;
-      if(type==='save'){if(b[t]!==1)return lose('Group lost');if(bm>=k)return win();return sync()}
-      sync();if(!G.capAny(b,prev,k-bm,t))lose('The group holds')},D(wr&&wr.i>=0?420:200))}
-  function lose(txt){busy=false;ZK.stuck(stage,true,{text:txt,onUndo:function(){ctl.undo()}})}
+      if(type==='save'){if(b[t]!==1)return lose('Your group was captured','over');if(bm>=k)return win();return sync()}
+      sync();if(!G.capAny(b,prev,k-bm,t))lose('The group can’t be captured now','dead')},D(wr&&wr.i>=0?420:200))}
+  function lose(txt,kind){busy=false;ZK.stuck(stage,true,{kind:kind,text:txt,onUndo:function(){ctl.undo()}})}
   function win(){fin=true;busy=false;ZK.stuck(stage,false);sync();ZK.sfx('cap');api.say('Solved.');L.later(function(){api.done({solved:true,moves:bm,hints:hints,undos:undos,extra:{par:inst.par,type:type,k:k}})},D(380))}
   var ctl={
     undo:function(){if(fin||!hist.length)return false;L.clear();DK.stopAnims(stage);busy=false;gF.textContent='';var h=hist.pop();b=h.b;prev=h.prev;bm=h.bm;lastPt=h.last;undos++;ZK.stuck(stage,false);ZK.sfx('undo');ZK.buzz('tap');ZK.unmark(stage);sync();return true},

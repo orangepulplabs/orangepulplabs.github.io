@@ -113,10 +113,15 @@ function mount(root,inst,api){ZK.css(CSS,'fb-css');root.textContent='';
   function cheer(q){var got=0;regionsOf(q).forEach(function(reg,k){var key=(k*100)+(k===0?d.rc[q]:k===1?d.cc[q]:d.bc[q]);if(regDone(reg)){if(!doneReg[key]){doneReg[key]=1;got++;
         if(!rm)reg.forEach(function(j,w){ZK.anim(cells[j],[{translate:'0 0'},{translate:'0 -4px'},{translate:'0 0'}],300,ZK.SPRING,w*40)})}}else doneReg[key]=0});
     if(got)setTimeout(function(){ZK.sfx('cap',{n:Math.min(4,hist.length%5)})},100)}
+  /* 1.2.4 stuck policy: a repeat is marked on the board at once (the cells turn 'bad' and it says "That number repeats"); a legal grid
+     that can no longer be finished says nothing at once (kind 'dead', shown by the kit on a hint, 3 moves later or after 10 s idle).
+     The text is true: "A cell has no number left" only when an empty cell really has none (that cell is outlined), otherwise the kit's
+     "This can't be finished from here". */
   function stuckCheck(){clearTimeout(lostTm);ZK.stuck(stage,false);if(fin)return;
-    lostTm=setTimeout(function(){if(fin)return;var q,bad=false,lost=false;for(q=0;q<N;q++)if(conflict(q))bad=true;
-      if(!bad){for(q=0;q<N&&!lost;q++)if(!cur[q]&&!cands(d,cur,q).length)lost=true;if(!lost&&F.solve(d,cur,1).count===0)lost=true}
-      if(lost){ZK.stuck(stage,true,{text:'A cell has no number left',onUndo:undo});api.say('A cell has no number left. Undo to step back.')}},550)}
+    lostTm=setTimeout(function(){if(fin)return;var q,bad=false,empty=-1;for(q=0;q<N;q++)if(conflict(q))bad=true;if(bad)return;
+      for(q=0;q<N&&empty<0;q++)if(!cur[q]&&!cands(d,cur,q).length)empty=q;
+      if(empty>=0){ZK.stuck(stage,true,{kind:'dead',text:'A cell has no number left',cells:[cells[empty]]});return}
+      if(F.solve(d,cur,1).count===0)ZK.stuck(stage,true,{kind:'dead'})},550)}
   function place(q,v,silent){if(fin||inst.given[q])return;var was=cur[q];if(was===v){v=0}
     hist.push([q,was]);if(v&&v!==inst.sol[q])wrong++;cur[q]=v;last=cells[q];api.moved();ctr.set(empties());pips.set(hist.length);paint();
     if(!silent){ZK.sfx(v?'click':'undo',{p:v});ZK.buzz('move')}

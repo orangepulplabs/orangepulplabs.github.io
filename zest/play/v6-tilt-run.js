@@ -85,7 +85,7 @@ function mount(root,inst,api){ZK.css(CSS,'tr-css');root.textContent='';
       if(st)ZK.anim(st,[{transform:'none'},{transform:'translate('+DX[d]*3+'px,'+DY[d]*3+'px)'},{transform:'none'}],180,'ease-out');
       else ZK.anim(board,[{transform:'none'},{transform:'translate('+DX[d]*2+'px,'+DY[d]*2+'px)'},{transform:'none'}],160,'ease-out');
       if(Math.abs(pos.x-inst.gx)+Math.abs(pos.y-inst.gy)===1){goalEl.classList.remove('close');void goalEl.offsetWidth;goalEl.classList.add('close');ZK.sfx('star',{i:0})}
-      if(!reachable(pos.x,pos.y)){ZK.stuck(stage,true,{text:'The hole is out of reach now',onUndo:undo});api.say('From here the ball cannot reach the hole. Undo to step back.')}},ms);
+      if(!reachable(pos.x,pos.y)){ZK.stuck(stage,true,{kind:'dead',text:'The hole is out of reach now',onUndo:undo})}},ms);
     if(win){fin=true}}
   /* swipe anywhere on the board, or tap a spot in line with the ball */
   var sw=null;function L(t,ty,fn,o){t.addEventListener(ty,fn,o);offs.push(function(){t.removeEventListener(ty,fn,o)})}

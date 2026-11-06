@@ -40,17 +40,30 @@ var CSS=''
 +'.zk-win .zk-next:focus-visible,.zk-win .zk-more:focus-visible{outline:3px solid var(--ink,#000);outline-offset:2px}'
 +'.zk-win .zk-more{all:unset;cursor:pointer;min-height:32px;padding:0 10px;font:700 .8125rem/32px var(--font,system-ui);color:var(--link,#B23A07)}'
 +'.zk-won .zk-board{pointer-events:none}'
-+'.zk-stuckchip{position:absolute;left:50%;top:calc(100% - 22px);z-index:7;display:flex;align-items:center;gap:10px;padding:6px 6px 6px 14px;border-radius:26px;background:var(--surface,#fff);box-shadow:0 6px 22px rgba(0,0,0,.18),0 0 0 1px var(--line,#ddd);transform:translateX(-50%);font:700 .9375rem var(--font,system-ui);color:var(--ink,#111);white-space:nowrap}'
-+'.zk-stuckchip button{all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;height:44px;min-width:44px;padding:0 14px;border-radius:22px;background:var(--accent,#E8590C);color:var(--on-accent,#111);font:800 .9375rem var(--font,system-ui)}'
++'.zk-stuckchip{position:relative;z-index:7;display:flex;align-items:center;gap:8px;max-width:100%;box-sizing:border-box;padding:4px 4px 4px 14px;border-radius:26px;background:var(--surface,#fff);box-shadow:0 6px 22px rgba(0,0,0,.18),0 0 0 1px var(--line,#ddd);font:700 .8125rem/1.25 var(--font,system-ui);color:var(--ink,#111);text-align:left}'
++'.zk-stuckchip>span{flex:1 1 auto;min-width:0}'
++'.zk-stuckchip button{all:unset;flex:none;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;height:44px;min-width:44px;padding:0 12px;border-radius:22px;background:var(--accent,#E8590C);color:var(--on-accent,#111);font:800 .9375rem var(--font,system-ui)}'
++'.zk-stuckchip button.zk-rs{padding:0;width:44px;background:var(--surface-2,rgba(0,0,0,.06));color:var(--ink,#111);box-shadow:inset 0 0 0 1.5px var(--line,#ddd)}'
++'.zk-stuckchip button:focus-visible{outline:3px solid var(--ink,#000);outline-offset:2px}'
+/* the reserved row under the board (puzzle page: .zk-status around the hint line; elsewhere a slot after the board) */
++'.zk-status{position:relative;min-height:52px;display:flex;flex-direction:column;justify-content:center}'
++'.zk-status>.pzh,.zk-status>.pzh:empty{min-height:0;margin-top:0;margin-bottom:0}'
++'.zk-status.zk-haschip>.pzh{display:none}'
++'.zk-slot{display:flex;justify-content:center;padding:0 8px}.zk-slot:empty{display:none}'
++'.zk-slot.zk-flow{min-height:52px}.zk-slot.zk-flow:empty{display:flex}'
+/* a rule-breaking move: the cells or pieces in the clash */
++'.zk-hoff{opacity:.42}'
++'.zk-clash{outline:3px solid #E9A23B!important;outline-offset:1px!important}'
 +'.zk-stuck .zk-board{opacity:.62;transition:opacity .3s}'
 +'.zk-ctr{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px 0 10px;border-radius:17px;background:var(--surface,#fff);box-shadow:0 0 0 1.5px var(--line,#ddd);font:800 1.0625rem/1 var(--font,system-ui);color:var(--ink,#111);font-variant-numeric:tabular-nums}'
 +'.zk-ctr svg{width:18px;height:18px;flex:none}.zk-ctr .zk-num{display:inline-block;min-width:1.2ch;text-align:center}.zk-ctr.zk-zero{background:var(--ok-bg,#ddefe2);color:var(--ok-ink,#14532d);box-shadow:none}'
 +'.zk-pips{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;min-height:10px;max-width:100%}.zk-pips i{width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--edge,#888)}.zk-pips i.on{background:var(--accent,#E8590C);box-shadow:none}.zk-pips i.over{width:7px;height:7px;margin-top:1px;background:var(--edge,#888);box-shadow:none;opacity:.7}'
 +'.zk-sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}'
 +'.zk-hintglow{animation:zkglow 1.6s ease-in-out 3}@keyframes zkglow{0%,100%{box-shadow:var(--sh1,0 1px 3px rgba(0,0,0,.2))}50%{box-shadow:0 0 0 4px var(--accent,#E8590C),0 0 18px var(--accent,#E8590C)}}'
-+'.zk-mark{animation:zkmark 1s ease-in-out infinite}@keyframes zkmark{0%,100%{outline:3px dashed transparent;outline-offset:2px}50%{outline:3px dashed var(--ink,#111);outline-offset:4px}}'
-+'@media (prefers-reduced-motion:reduce){.zk-p,.zk-p:active{transition:none;scale:none}.zk-hintglow,.zk-mark{animation:none}.zk-mark{outline:3px dashed var(--ink,#111);outline-offset:3px}}'
-+'.zk-rm .zk-p,.zk-rm .zk-p:active{transition:none;scale:none}.zk-rm .zk-mark{animation:none;outline:3px dashed var(--ink,#111);outline-offset:3px}';
+/* the hint mark wins over a puzzle's own 'all:unset' (an !important animation beats normal declarations; its keyframes are always visible) */
++'.zk-mark{animation:zkmark 1s ease-in-out infinite!important;outline:3px dashed var(--ink,#111);outline-offset:3px}@keyframes zkmark{0%,100%{outline:3px dashed var(--ink,#111);outline-offset:2px}50%{outline:3px dashed var(--accent,#E8590C);outline-offset:5px}}'
++'@media (prefers-reduced-motion:reduce){.zk-p,.zk-p:active{transition:none;scale:none}.zk-hintglow{animation:none}.zk-mark{animation:none!important;outline:3px dashed var(--ink,#111)!important;outline-offset:3px!important}}'
++'.zk-rm .zk-p,.zk-rm .zk-p:active{transition:none;scale:none}.zk-rm .zk-mark,.zk-rm.zk-mark{animation:none!important;outline:3px dashed var(--ink,#111)!important;outline-offset:3px!important}';
 ZK.css=function(extra,id){try{if(!document.getElementById('zk-css')){var s=document.createElement('style');s.id='zk-css';s.textContent=CSS;document.head.appendChild(s)}
   if(extra&&id&&!document.getElementById(id)){var t=document.createElement('style');t.id=id;t.textContent=extra;document.head.appendChild(t)}}catch(e){}};
 
@@ -187,14 +200,94 @@ ZK.win=function(host,o){o=o||{};var rm=ZK.rm(),stars=Math.max(1,Math.min(3,o.sta
   setTimeout(function(){if(!dead&&btn&&ZK.kbd)try{btn.focus({preventScroll:true})}catch(e){}},rm?60:400);
   return{el:box,next:btn,close:function(){dead=true;if(box.parentNode)box.remove();host.classList.remove('zk-won')}}};
 
-/* ---------- stuck ---------- */
+/* ---------- stuck: one policy for every puzzle (1.2.4) ----------
+   ZK.stuck(host, on, {kind, text, cells, onUndo})
+   kind 'rule'  a move that visibly breaks a stated rule: shown at once, the clashing cells or pieces (o.cells) are outlined, and the text
+                names the rule (puzzles only use it when that is true).
+   kind 'over'  the game is over by its own rules (no legal move left, out of stones): shown at once with Undo and Restart.
+   kind 'dead'  (the default) a legal move into a position that can no longer be finished. Nothing shows at once. The kit remembers the move
+                where it happened and shows "This can't be finished from here" (or the puzzle's own truthful text) with Undo (back to the
+                last good position) and Restart only when (a) the player asks for a hint (the runner calls ZK.sess(..).reveal('hint')),
+                (b) the player has made 3 or more moves past that point, or (c) 10 s pass without a touch while the position is lost.
+   on=false says "not known lost now"; a 'dead' record clears when an Undo goes back past the losing move, on Restart, or when the
+   puzzle has not said "lost" again within 1.5 s (the position changed and is fine).
+   The chip never sits on the board or its controls: it goes in the reserved row under the board (.zk-slot: the puzzle page's status row,
+   the Reel card's caption) or, without one, in a slot of its own after the board. Its Undo and Restart go through the runner (sess.ui),
+   so the move counter, the Reel chip and the win card stay in step.
+   The session (ZK.sess(el)): one per mounted board, made by ZK.override's mount wrapper. It counts the moves (api.moved, minus each Undo
+   that undid something, 0 on Restart; or the puzzle's own ctrl.moves()), and holds the stuck state. The runner and the Reel set
+   sess.ui = {count(n), undo(), restart(), hints()} to keep their own controls in step. */
 var UNDO='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 7L4 12l5 5M4 12h10a6 6 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 -4)"/></svg>';
-ZK.stuck=function(host,on,o){o=o||{};var c=host.querySelector(':scope > .zk-stuckchip');
-  if(!on){host.classList.remove('zk-stuck');if(c)c.remove();return}
-  if(c)return;host.classList.add('zk-host','zk-stuck');c=document.createElement('div');c.className='zk-stuckchip';c.setAttribute('role','status');
-  var t=document.createElement('span');t.textContent=o.text||'No moves left';c.appendChild(t);
-  if(o.onUndo){var b=document.createElement('button');b.type='button';b.className='zk-p';b.innerHTML=UNDO+'<span>Undo</span>';b.setAttribute('aria-label','Undo');b.onclick=function(){o.onUndo()};c.appendChild(b)}
-  host.appendChild(c);ZK.anim(c,[{opacity:0,transform:'translateX(-50%) translateY(10px)'},{opacity:1,transform:'translateX(-50%)'}],260,SPRING);ZK.sfx('soft');ZK.buzz('soft')};
+var RESTART='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+ZK.DEAD_TEXT='This can’t be finished from here';
+ZK.DEAD_MOVES=3;ZK.DEAD_IDLE=10000;ZK.DEAD_STALE=1500;
+/* the kind for chips raised by puzzle files that pass none (kept here so those files need no change) */
+ZK.KIND={'They linked across':'over','No seeds left':'over','Dead end':'over','Wrong start island':'rule'};   /* Bridge Walk: starting on an even island breaks the stated rule */
+/* the move count for puzzles whose own count is in state() under another name */
+ZK.MOVES={'dot-loop':function(s){return s.len},'code-cracker':function(s){return s.guesses}};
+function sessOf(el){for(var e=el;e&&e!==document;e=e.parentNode)if(e.__zks)return e.__zks;return null}
+ZK.sess=sessOf;
+function mkSess(id,root){
+  var s={id:id,root:root,n:0,ctrl:null,ui:null,dead:null,revealed:false,deadNow:false,staleT:0,idleT:0,chip:null,host:null,why:''};
+  if(root)root.__zks=s;
+  s.count=function(){var c=s.ctrl;try{if(c&&typeof c.moves==='function'){var m=c.moves();if(typeof m==='number'&&m>=0)return m}
+      if(c&&c.state&&ZK.MOVES[id]){var m2=ZK.MOVES[id](c.state()||{});if(typeof m2==='number'&&m2>=0)return m2}}catch(e){}return s.n};
+  s.sync=function(){if(s.ui&&s.ui.count)try{s.ui.count(s.count())}catch(e){}};
+  s.lost=function(){return !!s.dead};
+  s.clearDead=function(){clearTimeout(s.staleT);clearTimeout(s.idleT);var had=!!s.dead;s.dead=null;s.revealed=false;s.deadNow=false;if(s.chip&&s.chip.kind==='dead')hide(s)};
+  s.armIdle=function(){clearTimeout(s.idleT);if(!s.dead||s.revealed)return;s.idleT=setTimeout(function(){if(s.dead&&!s.revealed&&(!s.root||s.root.isConnected))s.reveal('idle')},ZK.DEAD_IDLE)};
+  s.reveal=function(why){if(!s.dead)return false;s.revealed=true;s.why=why||'';clearTimeout(s.idleT);show(s,'dead',s.dead.o,why);return true};
+  /* the canonical Undo and Restart (the runner wraps them to count undos and reset hints) */
+  s.undo=function(){var c=s.ctrl;if(!c||!c.undo)return false;var n0=s.n,d0=s.dead,r;s.n=Math.max(0,s.n-1);if(s.dead&&s.n<s.dead.n0)s.clearDead();
+    try{r=c.undo()}catch(e){r=false}
+    if(r===false){s.n=n0;if(d0&&!s.dead){s.dead=d0;s.deadNow=true}return false}
+    if(s.chip&&s.chip.kind!=='dead')hide(s);setTimeout(s.sync,0);s.sync();return true};
+  s.restart=function(){var c=s.ctrl;try{c&&c.restart&&c.restart()}catch(e){}s.n=0;s.clearDead();hide(s);setTimeout(s.sync,0);s.sync()};
+  s.doUndo=function(){return s.ui&&s.ui.undo?s.ui.undo():s.undo()};
+  s.doRestart=function(){if(s.ui&&s.ui.restart)s.ui.restart();else s.restart()};
+  s.moved=function(){s.n++;try{if(s.ui&&s.ui.moved)s.ui.moved()}catch(e){}s.sync();setTimeout(s.sync,0);setTimeout(s.sync,500);if(s.dead)s.armIdle()};
+  if(root)root.addEventListener('pointerdown',function(){if(s.dead)s.armIdle()},true);
+  if(root)root.addEventListener('pointerup',function(){setTimeout(s.sync,0)},true);   /* changes a puzzle makes on its own (a tap back along the wire) */
+  return s}
+ZK.mkSess=mkSess;
+/* where the chip goes: the page's reserved row, the Reel card's caption slot, or a slot of its own right after the board */
+function slotFor(host){var sec=host.closest&&host.closest('.pz5'),z;
+  if(sec&&(z=sec.querySelector('.zk-status .zk-slot')))return z;
+  var card=host.closest&&host.closest('.rl6c');if(card&&(z=card.querySelector('.rchipslot')))return z;
+  var nx=host.nextElementSibling;if(nx&&nx.classList&&nx.classList.contains('zk-slot'))return nx;
+  z=document.createElement('div');z.className='zk-slot zk-flow';if(host.parentNode)host.parentNode.insertBefore(z,host.nextSibling);return z}
+function hide(s){var c=s.chip;s.chip=null;if(!c)return;if(c.el.parentNode)c.el.remove();
+  if(c.cells)c.cells.forEach(function(e){if(e&&e.classList)e.classList.remove('zk-clash')});
+  if(c.host)c.host.classList.remove('zk-stuck');var st=c.slot&&c.slot.closest&&c.slot.closest('.zk-status');if(st)st.classList.remove('zk-haschip');
+  var card=c.slot&&c.slot.closest&&c.slot.closest('.rl6c');if(card)card.classList.remove('zk-chip')}
+function show(s,kind,o,why){o=o||{};var host=s.host;if(!host)return;
+  var text=o.text||(kind==='dead'?ZK.DEAD_TEXT:'No moves left');
+  if(kind==='dead'&&why==='hint')text='A recent move went wrong. It can’t be finished.';
+  if(s.chip&&s.chip.kind===kind&&s.chip.text===text)return;
+  var fresh=!s.chip;hide(s);
+  var slot=slotFor(host),c=document.createElement('div');c.className='zk-stuckchip';c.setAttribute('role','status');c.setAttribute('data-kind',kind);
+  var t=document.createElement('span');t.textContent=text;c.appendChild(t);
+  var k=kind==='dead'&&s.dead?Math.max(1,s.n-s.dead.n0+1):1;
+  var b=document.createElement('button');b.type='button';b.className='zk-p zk-un';b.innerHTML=UNDO+'<span>Undo'+(k>1?' '+k:'')+'</span>';
+  b.setAttribute('aria-label',k>1?'Undo '+k+' moves, back to the last good position':'Undo');
+  b.onclick=function(){var n=k;if(kind==='dead'&&s.dead)n=Math.max(1,s.n-s.dead.n0+1);for(var i=0;i<n;i++)if(s.doUndo()===false)break;ZK.sfx('undo')};c.appendChild(b);
+  if(kind!=='rule'){var r=document.createElement('button');r.type='button';r.className='zk-p zk-rs';r.innerHTML=RESTART;r.setAttribute('aria-label','Restart');r.onclick=function(){s.doRestart()};c.appendChild(r)}
+  slot.appendChild(c);var cells=[].concat(o.cells||[]).filter(Boolean);cells.forEach(function(e){if(e.classList)e.classList.add('zk-clash')});
+  s.chip={el:c,kind:kind,text:text,host:host,slot:slot,cells:cells};
+  if(kind!=='rule')host.classList.add('zk-host','zk-stuck');
+  var st=slot.closest&&slot.closest('.zk-status');if(st)st.classList.add('zk-haschip');var card=slot.closest&&slot.closest('.rl6c');if(card)card.classList.add('zk-chip');
+  if(fresh){ZK.anim(c,[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],260,SPRING);ZK.sfx('soft');ZK.buzz('soft')}
+  try{if(s.ui&&s.ui.say)s.ui.say(text)}catch(e){}}
+ZK.stuck=function(host,on,o){o=o||{};if(!host)return;var s=sessOf(host);if(!s){s=host.__zks||(host.__zks=mkSess('',null))}s.host=host;
+  if(!on){s.deadNow=false;if(s.chip&&s.chip.kind!=='dead')hide(s);
+    if(s.dead){clearTimeout(s.staleT);s.staleT=setTimeout(function(){if(!s.deadNow)s.clearDead()},ZK.DEAD_STALE)}
+    return}
+  var kind=o.kind||ZK.KIND[o.text]||'dead';
+  if(kind!=='dead'){if(s.dead)s.clearDead();show(s,kind,o);return}
+  s.deadNow=true;clearTimeout(s.staleT);
+  if(!s.dead){s.dead={n0:s.n,o:o};s.armIdle()}else s.dead.o=o;
+  if(s.revealed)show(s,'dead',o,s.why);
+  else if(s.n-s.dead.n0>=ZK.DEAD_MOVES)s.reveal('moves')};
 
 /* ---------- idle: the soft stuck hook (glows the runner's Hint button by default) ---------- */
 ZK.idle=function(host,ms,fn){var t=null,dead=false;fn=fn||function(){var h=document.querySelector('.pz5 [data-hint],#hi');if(h){h.classList.remove('zk-hintglow');void h.offsetWidth;h.classList.add('zk-hintglow')}};
@@ -227,5 +320,13 @@ ZK.bar=function(host,c){var b=document.createElement('div');b.style.cssText='dis
 
 /* ---------- override registry: v6 puzzles replace the original registerPuzzle entries; the originals are kept for the gallery ---------- */
 ZK.orig={};ZK.list=[];
-ZK.override=function(def){if(typeof PUZZLES==='undefined')return;if(PUZZLES[def.id]&&!PUZZLES[def.id].v6)ZK.orig[def.id]=PUZZLES[def.id];def.v6=true;if(ZK.list.indexOf(def.id)<0)ZK.list.push(def.id);registerPuzzle(def);return def};
+/* the mount wrapper makes the session: it sees every counted move (api.moved) and the result (api.done: the hint count the runner kept,
+   so a Restart gives a clean replay its stars back), and keeps the stuck state of this board */
+function wrapMount(def){var m0=def.mount;if(!m0||m0.__zk)return;
+  var m1=function(root,inst,api){api=api||{};var s=mkSess(def.id,root),a={};for(var k in api)a[k]=api[k];
+    a.moved=function(){var r=api.moved?api.moved.apply(api,arguments):undefined;s.moved();return r};
+    a.done=function(res){res=res||{};try{if(s.ui&&s.ui.hints)res.hints=s.ui.hints()}catch(e){}s.clearDead();hide(s);return api.done?api.done.call(api,res):undefined};
+    var c=m0.call(this,root,inst,a);s.ctrl=c;return c};
+  m1.__zk=1;def.mount=m1}
+ZK.override=function(def){if(typeof PUZZLES==='undefined')return;wrapMount(def);if(PUZZLES[def.id]&&!PUZZLES[def.id].v6)ZK.orig[def.id]=PUZZLES[def.id];def.v6=true;if(ZK.list.indexOf(def.id)<0)ZK.list.push(def.id);registerPuzzle(def);return def};
 })();

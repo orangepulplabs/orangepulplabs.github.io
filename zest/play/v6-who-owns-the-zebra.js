@@ -125,7 +125,7 @@ function mount(root,inst,api){ZK.css(DK.BASECSS+CSS,'zb-css');root.textContent='
     chips.textContent='';chips.appendChild(mx);var ca=sel[0],hb=sel[1],cmk=crossedMask(ca,hb);
     for(var v2=0;v2<H;v2++)(function(v){var b=DK.h('button','zb-ch zk-p',tok(inst,ca,v,true),{type:'button'}),here=place[ca][hb]===v,mn=!!(man[ca][hb]>>v&1),au=!!(autoMask(ca,hb)>>v&1)&&!here;
       b.className='zb-ch zk-p'+(here?' here':'')+(mn?' x':'')+(au?' auto':'');b.setAttribute('aria-label',name(inst,ca,v)+(here?', placed here':mn?', crossed out':au?', ruled out':''));b.onclick=function(){chip(v)};chips.insertBefore(b,mx)})(v2);
-    ctr.set(remaining(),true);var cx=!fin&&remaining()>0&&clash();if(cx&&!wasClash&&placing){slips++;ZK.sfx('soft');ZK.buzz('wrong')}wasClash=cx;ZK.stuck(stage,cx,cx?{text:'A clue is broken',onUndo:function(){ctl.undo()}}:undefined)}
+    ctr.set(remaining(),true);var cx=!fin&&remaining()>0&&clash();if(cx&&!wasClash&&placing){slips++}wasClash=cx;ZK.stuck(stage,cx,cx?{kind:'dead',text:'The clues can’t all hold now',onUndo:function(){ctl.undo()}}:undefined)}   /* 1.2.4: a clash found by combining clues is not shown at once (the kit shows it on a hint, 3 moves later or after 10 s idle) */
   function select(ci2,h2){if(fin)return;sel=[ci2,h2];ZK.sfx('press');ZK.unmark(stage);render()}
   function act(fn,pl){hist.push(snap());fn();placing=!!pl;render();placing=false}
   function chip(v){if(fin)return;ZK.ghostDone(ID);if(ghost)ghost.stop();ZK.unmark(stage);var ca=sel[0],hb=sel[1],au=!!(autoMask(ca,hb)>>v&1)&&place[ca][hb]!==v;
@@ -151,7 +151,7 @@ function mount(root,inst,api){ZK.css(DK.BASECSS+CSS,'zb-css');root.textContent='
       L.later(function(){var w=document.querySelector('.pz5 .zk-win');if(w&&w.scrollIntoView)try{w.scrollIntoView({block:'nearest',behavior:rm?'auto':'smooth'})}catch(e){}},rm?200:700);
       L.later(function(){api.done({solved:true,moves:checks+slips,hints:hints,undos:undos,extra:{par:1,owner:own}})},rm?0:420);return}
     w.forEach(function(x){ZK.wrong(cell[x[0]][x[1]],{silent:true});cell[x[0]][x[1]].classList.add('bad')});ZK.sfx('soft');ZK.buzz('wrong');
-    ZK.stuck(stage,true,{text:w.length+' cell'+(w.length===1?'':'s')+' off',onUndo:function(){ctl.undo()}})}
+    ZK.stuck(stage,true,{kind:'rule',text:w.length+' cell'+(w.length===1?' does':'s do')+'n’t fit the clues',cells:w.map(function(x){return cell[x[0]][x[1]]}),onUndo:function(){ctl.undo()}})}
   var ctl={
     undo:function(){if(fin||!hist.length)return false;load(hist.pop());undos++;ZK.sfx('undo');ZK.buzz('tap');ZK.unmark(stage);render();return true},
     restart:function(){if(fin)return;hist=[];wasClash=false;for(var a=0;a<nc;a++)for(var b=0;b<H;b++){place[a][b]=-1;man[a][b]=0}sel=[0,0];ZK.sfx('undo');ZK.unmark(stage);render()},

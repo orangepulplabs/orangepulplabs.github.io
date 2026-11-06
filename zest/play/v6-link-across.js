@@ -55,6 +55,7 @@ var CSS=''
 +'.la [data-zkc]{transform-box:fill-box;transform-origin:center}'
 +'.la .la-pt{border-radius:50%;margin:0;transform:translate(-50%,-50%)}'
 +'.la .la-pill{display:inline-flex;align-items:center;gap:6px}'
++'.la .zk-ctr.la-cut .zk-num{font-size:.875rem;letter-spacing:.01em}.la .zk-ctr.la-cut-me{background:#FBE3BF;color:#7A3B00;box-shadow:0 0 0 2px #E9A23B}'
 +'.la .zk-ctr>svg{width:26px;height:24px}.la .zk-ctr .la-to{font:700 .75rem/1 var(--font);color:var(--muted,#5f5a52);margin-left:2px}.la .dk-top{gap:10px}';
 /* 1.2.1: the race pills draw what they count: your two orange edges joined by a dotted run of discs (cells you still need), their navy edges joined by diamonds */
 var ICO1='<svg viewBox="0 0 26 24" aria-hidden="true"><path d="M4 2.5h18M4 21.5h18" stroke="#F28C28" stroke-width="3" stroke-linecap="round"/><circle cx="13" cy="8" r="3.2" fill="#F28C28" stroke="#6B3200" stroke-width="1.4"/><circle cx="13" cy="16" r="3.2" fill="none" stroke="#F28C28" stroke-width="1.6" stroke-dasharray="2 1.6"/></svg>';
@@ -80,7 +81,12 @@ function mount(root,inst,api){ZK.css(DK.BASECSS+CSS,'la-css');root.textContent='
     if(who===1){DK.sv('circle',{cx:X(k),cy:Y(k),r:.33,fill:'#F28C28',stroke:'#6B3200','stroke-width':.09},g);DK.sv('circle',{cx:X(k),cy:Y(k),r:.1,fill:'#FFE2B8'},g)}
     else{DK.sv('rect',{x:X(k)-.25,y:Y(k)-.25,width:.5,height:.5,rx:.12,transform:'rotate(45 '+X(k)+' '+Y(k)+')',fill:'#27324A',stroke:'#fff','stroke-width':.08},g)}return g}
   function sync(){gP.textContent='';pe={};for(var k=0;k<N*N;k++){if(b[k]){var g=piece(k,b[k]);gP.appendChild(g);pe[k]=g}btn[k].setAttribute('aria-label','Row '+(Math.floor(k/N)+1)+', column '+(k%N+1)+', '+(b[k]===1?'your disc':b[k]===2?'their diamond':'empty'))}
-    var me=need(N,b,1,nb),th=need(N,b,2,nb);cMe.set(me>=99?0:me,true);cThem.set(th>=99?0:th,true);pips.set(steps);ZK.stuck(stage,false);if(!fin&&!busy)chk()}
+    var me=need(N,b,1,nb),th=need(N,b,2,nb);pill(cMe,me,'You are cut off: no path is left',true);pill(cThem,th,'They are cut off: no path is left',false);pips.set(steps);ZK.stuck(stage,false);if(!fin&&!busy)chk()}
+  /* 1.2.4 (link-across-01): 'impossible' (99) used to show as 0, the 'linked' state (green on your pill). A side with no path left now reads 'Cut off':
+     a warning style on your pill (you can no longer link), a plain one on theirs (they can no longer link). */
+  function pill(c,k,cutLbl,mine){var cut=k>=99,sm=c.el.querySelector('.la-to'),nm=c.el.querySelector('.zk-num');c.set(cut?-1:k,true);
+    c.el.classList.toggle('la-cut',cut);c.el.classList.toggle('la-cut-me',cut&&mine);c.el.setAttribute('data-cut',cut?'1':'0');
+    if(cut){nm.textContent='Cut off';c.el.setAttribute('aria-label',cutLbl)}if(sm)sm.style.display=cut?'none':''}
   function winNow(){var e=empt(b);if(!e)return[];var k=distK(N,b,nb,Math.ceil(e/2));return k?winning(N,b,k,nb):[]}
   function chk(){if(over)return ZK.stuck(stage,true,{text:'They linked across',onUndo:function(){ctl.undo()}});if(!winNow().length)ZK.stuck(stage,true,{text:'No forced win left',onUndo:function(){ctl.undo()}})}
   function D(ms){return rm?0:ms}
@@ -95,7 +101,7 @@ function mount(root,inst,api){ZK.css(DK.BASECSS+CSS,'la-css');root.textContent='
     if(ch.length&&!rm){var pts=ch.map(function(k){return X(k).toFixed(3)+' '+Y(k).toFixed(3)}).join('L'),ln=DK.sv('path',{d:'M'+pts,fill:'none',stroke:'#FFE2B8','stroke-width':.16,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.95},gW);
       try{var len=ln.getTotalLength();ln.style.strokeDasharray=len;ln.animate([{strokeDashoffset:len},{strokeDashoffset:0}],{duration:420,easing:'ease-out',fill:'forwards'})}catch(e){}}
     else if(ch.length)DK.sv('path',{d:'M'+ch.map(function(k){return X(k).toFixed(3)+' '+Y(k).toFixed(3)}).join('L'),fill:'none',stroke:'#FFE2B8','stroke-width':.16,'stroke-linecap':'round'},gW);
-    cMe.set(0);L.later(function(){api.done({solved:true,moves:steps,hints:hints,undos:undos,extra:{par:inst.par,N:N}})},D(450))}
+    pill(cMe,0,'',true);L.later(function(){api.done({solved:true,moves:steps,hints:hints,undos:undos,extra:{par:inst.par,N:N}})},D(450))}
   var ctl={
     undo:function(){if(fin||!hist.length)return false;L.clear();busy=false;var h=hist.pop();b=h.b;steps=h.steps;lastPt=h.last;over=false;undos++;ZK.sfx('undo');ZK.buzz('tap');ZK.unmark(stage);sync();return true},
     restart:function(){if(fin)return;L.clear();busy=false;hist=[];b=inst.b.slice();steps=0;lastPt=-1;over=false;ZK.sfx('undo');ZK.unmark(stage);sync()},

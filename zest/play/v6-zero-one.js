@@ -86,11 +86,22 @@ function mount(root,inst,api){ZK.css(CSS,'zo-css');root.textContent='';
     return newly}
   function wave(list){if(rm)return;list.forEach(function(x,j){var idx=[];for(var q=0;q<n;q++)idx.push(x[0]?x[1]*n+q:q*n+x[1]);
       idx.forEach(function(q,w){ZK.anim(cells[q],[{translate:'0 0'},{translate:'0 -4px'},{translate:'0 0'}],300,ZK.SPRING,w*45+j*60)})});}
+  /* 1.2.4 stuck policy: a broken rule is already marked on the board as it happens (amber cells, amber pips); a full board that breaks one
+     says which rule and outlines the cells. A legal grid that can no longer be finished says nothing at once (kind 'dead': the kit shows
+     "This can't be finished from here" on a hint, 3 moves later, or after 10 s idle). */
+  function ruleText(){var q,r,c,h=n/2;function at(r,c){return cur[r*n+c]}
+    for(r=0;r<n;r++)for(c=0;c+2<n;c++){var a=at(r,c);if(a>=0&&a===at(r,c+1)&&a===at(r,c+2))return 'Three alike in a row'}
+    for(c=0;c<n;c++)for(r=0;r+2<n;r++){var b=at(r,c);if(b>=0&&b===at(r+1,c)&&b===at(r+2,c))return 'Three alike in a column'}
+    for(r=0;r<n;r++){var z=0,o=0;for(c=0;c<n;c++){if(at(r,c)===0)z++;else if(at(r,c)===1)o++}if(z>h||o>h)return 'A row has too many '+(z>h?'0s':'1s')}
+    for(c=0;c<n;c++){var z2=0,o2=0;for(r=0;r<n;r++){if(at(r,c)===0)z2++;else if(at(r,c)===1)o2++}if(z2>h||o2>h)return 'A column has too many '+(z2>h?'0s':'1s')}
+    return 'A rule is broken'}
   function stuckCheck(){clearTimeout(lostTm);ZK.stuck(stage,false);if(fin)return;
-    lostTm=setTimeout(function(){if(fin)return;var lost=false,q;
+    lostTm=setTimeout(function(){if(fin)return;var bm=badMap(),bad=Object.keys(bm),q,lost=false;
+      if(empties()===0&&bad.length){var t=ruleText();ZK.stuck(stage,true,{kind:'rule',text:t,cells:bad.map(function(k){return cells[+k]})});api.say(t+'. Undo to step back.');return}
+      if(bad.length)return;   /* the marked cells already show the broken rule */
       if(empties()===0)lost=true;else{for(q=0;q<N&&!lost;q++)if(cur[q]<0&&!okv(cur,n,q,0)&&!okv(cur,n,q,1))lost=true;
-        if(!lost&&Object.keys(badMap()).length===0&&Z.solve(cur,n,1).count===0)lost=true}
-      if(lost){ZK.stuck(stage,true,{text:'A rule is broken',onUndo:undo});api.say('A rule is broken. Undo to step back.')}},empties()===0?260:600)}
+        if(!lost&&Z.solve(cur,n,1).count===0)lost=true}
+      if(lost)ZK.stuck(stage,true,{kind:'dead'})},empties()===0?260:600)}
   function done(){var ok=true;for(var q=0;q<N;q++)if(cur[q]!==inst.sol[q]){ok=false;break}return ok}
   function set(q,v,silent){hist.push([q,cur[q]]);cur[q]=v;last=cells[q];api.moved();var bm=badMap(),was=!!bm[q],nw=paint();ctr.set(empties());pips.set(hist.length);
     if(!silent){ZK.sfx('click',{p:v===1?5:1});ZK.buzz('move')}

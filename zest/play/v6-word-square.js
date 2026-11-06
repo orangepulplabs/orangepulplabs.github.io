@@ -83,6 +83,7 @@ function mount(root,inst,api){CC.css();ZK.css(CSS,'sq-css');
       if(lv===2){ZK.mark(els[arr[i]]);return 'This row goes to slot '+(k+1)+'. Read it down column '+(k+1)+'.'}
       sel=-1;doMove(i,k,true);last=els[arr[k]];paint();ZK.sfx('slide');if(sym())solvedPart();return 'Moved for you.'},
     destroy:function(){if(ghost)ghost.stop();if(idle)idle.stop();stage.removeEventListener('keydown',key);root.textContent=''},
+    moves:function(){return locked?base:base+hist.length},   /* while a solved part waits for the next, its moves are already in base */   /* 1.2.4: the count the header, the Reel chip and the win card all show */
     lastEl:function(){return last},state:function(){return{moves:hist.length,fin:fin}}}}
 ZK.override({id:ID,name:'Word Square',family:'word',theme:'F3',blurb:'Move the rows until every row reads down as its column.',
   how:'Drag a row to its place (or tap it, then its slot). Green tiles match their mirror.',areas:['space','flex'],levels:30,secs:75,make:make,mount:mount,

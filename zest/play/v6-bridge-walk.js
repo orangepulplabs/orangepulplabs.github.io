@@ -91,9 +91,18 @@ function mount(root,inst,api){ZK.css(CSS,'bwk-css');root.textContent='';var B=PZ
       b.classList.toggle('zk-mark',hl.indexOf(v)>=0)}
     pips.set(hist.length);flag.classList.toggle('on',proof);
     if(cur>=0){walker.style.opacity=1}}
-  function deadCheck(){ZK.stuck(stage,false);if(fin||cur<0)return;var left=m-hist.length;if(!left)return;
-    if(!unusedAt(cur).length){ZK.stuck(stage,true,{text:'Dead end',onUndo:undo});say('No bridges left here. Undo.');return}
-    var p=B.find(n,E,used.slice(),cur);if(!p){ZK.stuck(stage,true,{text:'A bridge is cut off now',onUndo:undo});say('From here some bridge can no longer be reached. Undo a step.')}}
+  /* 1.2.4 (bridge-walk-01): the reason is the real one, and it clears once the position is fine again.
+     - With exactly two odd islands, a full walk must start on one of them; a walk that started on an even island can never finish, whatever comes next
+       ('Wrong start island'). It used to say 'A bridge is cut off now', which was false, and it stayed up after Undo with 0 bridges crossed.
+     - From a right start the only other way to fail is a bridge stranded out of reach ('A bridge is cut off now', now true), or no bridge left here.
+     - With 0 bridges crossed nothing is stuck: the player just picks another start (tap another island, or Undo). */
+  function wrongStart(){if(!hist.length)return false;var s0=hist[0].from,od=oddList();return od.length===2&&od.indexOf(s0)<0}
+  function why(){if(fin||cur<0||!hist.length)return null;if(m-hist.length===0)return null;
+    if(wrongStart())return 'start';if(!unusedAt(cur).length)return 'dead';if(!B.find(n,E,used.slice(),cur))return 'cut';return null}
+  function deadCheck(){ZK.stuck(stage,false);var w=why();if(!w)return;
+    if(w==='start'){ZK.stuck(stage,true,{text:'Wrong start island',onUndo:undo});say('A full walk must start on an island with an odd number of bridges. Undo back to the start.');return}
+    if(w==='dead'){ZK.stuck(stage,true,{text:'Dead end',onUndo:undo});say('No bridges left here. Undo.');return}
+    ZK.stuck(stage,true,{text:'A bridge is cut off now',onUndo:undo});say('From here some bridge can no longer be reached. Undo a step.')}
   function start(v){ZK.ghostDone(ID);if(ghost)ghost.stop();cur=v;last=isl[v];place(v);walker.style.opacity=1;ZK.anim(walker,[{scale:'0'},{scale:'1.25'},{scale:'1'}],300,ZK.SPRING);ZK.sfx('lift');ZK.buzz('tap');hl=[];paint();say('Start on island '+LET.charAt(v)+'.')}
   function cross(k){var v=other(k,cur),from=cur,fq=ZK.at(board,isl[from]),tq=ZK.at(board,isl[v]);ZK.ghostDone(ID);if(ghost)ghost.stop();ZK.unmark(stage);hl=[];
     used[k]=1;hist.push({e:k,from:from});cur=v;last=isl[v];api.moved();
@@ -110,13 +119,14 @@ function mount(root,inst,api){ZK.css(CSS,'bwk-css');root.textContent='';var B=PZ
     if(v===cur)return;
     var ks=unusedAt(cur).filter(function(k){return other(k,cur)===v});
     if(ks.length){cross(ks[0]);return}
+    if(!hist.length){start(v);return}   /* 1.2.4: no bridge crossed yet, so a tap on an island with no bridge from here just moves the start */
     ZK.wrong(isl[v]);if(unusedAt(cur).length)unusedAt(cur).forEach(function(k){ZK.anim(gE[k].plank.parentNode,[{opacity:1},{opacity:.4},{opacity:1}],360)})}
   function oddList(){var o=[];deg.forEach(function(x,v){if(x%2)o.push(v)});return o}
   function tapProof(v){if(deg[v]%2===0){ZK.wrong(isl[v]);setNote('Even: bridges pair up here',1600);return}
     marks[v]=!marks[v];ZK.sfx('lift');ZK.buzz('tap');ZK.anim(isl[v],[{scale:'1.15'},{scale:'1'}],220,ZK.SPRING);paint();checkProof()}
   function checkProof(){
     var od=oddList();if(od.every(function(x){return marks[x]})){fin=true;proof=false;paint();api.moved();setNote('',0);ZK.stuck(stage,false);say('Proved: no walk can cross every bridge once.');
-      setTimeout(function(){api.done({solved:true,moves:m+wrong,hints:hints,undos:undos,extra:{par:m,wrong:wrong,impossible:true,odd:inst.odd}})},rm?0:300)}}
+      setTimeout(function(){api.done({solved:true,moves:1,hints:hints,undos:undos,extra:{par:1,wrong:wrong,impossible:true,odd:inst.odd}})},rm?0:300)}}   /* 1.2.4 (bridge-walk-03): a proof is one move (the header counts 1), never 'm moves' */
   flag.onclick=function(){if(fin)return;ZK.ghostDone(ID);if(ghost)ghost.stop();
     if(inst.impossible){proof=!proof;marks={};paint();setNote(proof?'Mark every island with an odd number':'',0);if(proof){ZK.sfx('lift');ZK.buzz('tap')}return}
     wrong++;showDeg=true;proof=false;paint();ZK.wrong(flag);var o=oddList();setNote(o.length===0?'Every island is even: you can walk it':'Only two islands are odd: you can walk it',2600);say('A walk does exist on this map.')};
@@ -147,6 +157,7 @@ function mount(root,inst,api){ZK.css(CSS,'bwk-css');root.textContent='';var B=PZ
       if(cur<0){var r=B.solve(inst);if(lv<=1){showDeg=true;paint();return inst.odd?'Start on an island with an odd number of bridges.':'Every island is even: start anywhere.'}
         if(lv===2){hl=[r.start];paint();return 'Start on the marked island.'}start(r.start);return 'Started for you.'}
       var p=B.find(n,E,used.slice(),cur);
+      if(!p&&wrongStart()&&lv<3){showDeg=true;paint();return 'A full walk starts on an island with an odd number of bridges. Undo back to the start.'}
       if(!p){if(lv<3){return 'A bridge is cut off from here. Undo a step or two.'}var c=0;while(hist.length&&!B.find(n,E,used.slice(),cur)){undo();undos--;c++}if(!B.find(n,E,used.slice(),cur)){cur=-1;walker.style.opacity=0}paint();return 'Stepped back '+c+'.'}
       var to=other(p[0],cur);if(lv<=1){showDeg=true;paint();return 'Do not strand a bridge behind you: save some for later.'}
       if(lv===2){hl=[to];paint();return 'Cross toward the marked island.'}cross(p[0]);return 'Crossed for you.'},
@@ -159,5 +170,6 @@ ZK.override({id:ID,name:'Bridge Walk',family:'move',theme:'F7',calm:true,
   how:'Walk over every bridge exactly once. No way? Flag it and mark the odd islands.',
   areas:['space','flex'],levels:30,secs:75,make:make,mount:mount,
   stars:function(res,inst){var x=res.extra||{},par=(inst&&inst.par)||x.par||res.moves,m=res.moves,h=res.hints||0,wr=x.wrong||0,s=pzStarsByPar(m,par,h);if(wr&&s>1)s--;
-    return{stars:s,line:(inst&&inst.impossible)?'Proved: too many odd islands for any walk.':'All '+par+' bridges crossed once.'}}});
+    if(inst&&inst.impossible){var od=x.odd||inst.odd;s=h?2:3;return{stars:s,line:'Proved: '+(od?od+' odd islands, ':'')+'too many for any walk.',winLine:'Proved: '+(od?od+' odd islands, ':'too many odd islands, ')+'so no walk exists'}}   /* 1.2.4 (bridge-walk-03) */
+    return{stars:s,line:'All '+par+' bridges crossed once.'}}});
 })();

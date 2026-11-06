@@ -62,7 +62,7 @@ function mount(root,inst,api){ZK.css(CSS,'tg-css');root.textContent='';var rm=ZK
     gG.textContent='';if(hl){gG.appendChild(sv('polygon',{points:pts(polyOf(hl.i,hl)),fill:'none',stroke:'var(--ink)','stroke-width':.12,'stroke-dasharray':'.25 .18','stroke-linejoin':'round'}))}
     pips.set(moves)}
   function snapH(){hist.push(JSON.stringify({p:placed}))}
-  function doomed(){clearTimeout(lost);ZK.stuck(stage,false);if(fin)return;lost=setTimeout(function(){if(fin||count()===7)return;var r=T.solve(silArr,occ(),placed.map(Boolean),300000);if(!r)ZK.stuck(stage,true,{text:'These pieces can’t all fit',onUndo:undo})},rm?0:150)}
+  function doomed(){clearTimeout(lost);ZK.stuck(stage,false);if(fin)return;lost=setTimeout(function(){if(fin||count()===7)return;var r=T.solve(silArr,occ(),placed.map(Boolean),300000);if(!r)ZK.stuck(stage,true,{kind:'dead',text:'These pieces can’t all fit',onUndo:undo})},rm?0:150)}
   /* ---- drag and drop ---- */
   function L(t,ty,fn,o){t.addEventListener(ty,fn,o);offs.push(function(){t.removeEventListener(ty,fn,o)})}
   function startDrag(ix,e,fromBoard){var g=geo(),cands=placements(TP[ix].t,silArr.filter(function(k){return!occ(ix)[k]}),SIL,occ(ix));
@@ -116,6 +116,7 @@ function mount(root,inst,api){ZK.css(CSS,'tg-css');root.textContent='';var rm=ZK
       snapH();placed[p.i]={o:p.o,x:p.x,y:p.y};moves++;api.moved();last=null;paint();ZK.sfx('clack');
       if(count()===7){fin=true;setTimeout(function(){api.done({solved:true,moves:moves,hints:hints,undos:undos,extra:{par:inst.par}})},rm?0:260)}else doomed();return 'Placed it for you.'},
     destroy:function(){clearTimeout(lost);if(ghost)ghost.stop();if(idle)idle.stop();offs.forEach(function(f){f()});root.textContent=''},
+    moves:function(){return moves},   /* 1.2.4: the count the header, the Reel chip and the win card all show */
     lastEl:function(){return last||gP.firstChild},
     state:function(){return{placed:count(),fin:fin,moves:moves}}}}
 ZK.override({id:ID,name:'Seven Pieces',family:'grid',theme:'F8',calm:true,

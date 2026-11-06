@@ -116,7 +116,7 @@ setTimeout(function(){api.done({solved:true,moves:hist.length,hints:hints,undos:
 
 ZK.override({id:ID,name:'Switch Off',family:'grid',theme:'F10',calm:true,
   blurb:'Tap the lights until every one is off.',
-  how:'A tap switches a light and the lights beside it. Make the board dark.',
+  how:'A tap switches a light and the lights above, below and beside it. Make the board dark.',
   areas:['control','flex'],levels:30,secs:75,make:make,mount:mount,
   stars:function(res,inst){var p=(inst&&inst.par)||res.moves,m=res.moves,h=res.hints||0;
     return{stars:pzStarsByPar(m,p,h),line:'All dark in '+m+' tap'+(m===1?'':'s')+'. The fewest is '+p+'.'}}});

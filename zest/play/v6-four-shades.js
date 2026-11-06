@@ -73,7 +73,7 @@ function mount(root,inst,api){ZK.css(CSS,'fs-css');root.textContent='';var n=ins
       nodes[a].innerHTML=(lock[a]>=0?LOCK:'')+(col[a]>=0?'<span aria-hidden="true">'+LET[col[a]]+'</span>':'');nodes[a].style.background=hl===a?'rgba(255,255,255,.7)':'transparent';nodes[a].style.boxShadow=hl===a?'0 0 0 3px #E9A23B':'none';
       nodes[a].setAttribute('aria-label','Region '+(a+1)+', '+(col[a]>=0?'colour '+LET[col[a]]+' '+PN[col[a]]:'not coloured')+(lock[a]>=0?', fixed':'')+(bad[a]?', clashes with a neighbour':''))}
     sws.forEach(function(b,q){b.classList.toggle('on',(q===4?cur===-1:q===cur))});ctr.set(left,true);
-    ZK.stuck(stage,false);if(!cl.length&&left&&!fin&&!PZD7.fs.solve(adj,col,null))ZK.stuck(stage,true,{text:'These colours can’t all fit',onUndo:undo})}
+    ZK.stuck(stage,false);if(!cl.length&&left&&!fin&&!PZD7.fs.solve(adj,col,null))ZK.stuck(stage,true,{kind:'dead',text:'These colours can’t all fit',onUndo:undo})}
   function pick(c){cur=c;ZK.sfx('press');ZK.buzz('tap');paint()}
   function tapR(i){if(fin)return;ZK.ghostDone(ID);if(ghost)ghost.stop();ZK.unmark(stage);hl=-1;
     if(lock[i]>=0){ZK.wrong(nodes[i]);return}
@@ -93,7 +93,7 @@ function mount(root,inst,api){ZK.css(CSS,'fs-css');root.textContent='';var n=ins
   idle=ZK.idle(stage,25000);
   function undo(){if(fin||!hist.length)return false;var u=hist.pop();col[u[0]]=u[1];steps=Math.max(0,steps-1);undos++;hl=-1;paint();ZK.sfx('undo');ZK.buzz('tap');return true}
   return{undo:undo,
-    restart:function(){if(fin)return;col=lock.slice();hist=[];hl=-1;ZK.unmark(stage);paint();ZK.sfx('undo')},
+    restart:function(){if(fin)return;col=lock.slice();hist=[];steps=0;hl=-1;ZK.unmark(stage);paint();ZK.sfx('undo')},
     hint:function(lv){if(fin)return null;hints++;ZK.unmark(stage);var cl=clashes(),sol;
       if(cl.length){var p=cl[0],i=p[0];if(lock[i]>=0)i=p[1];hl=i;if(lv<3){paint();return lv<=1?'Two touching regions match.':'The marked region matches a neighbour.'}hist.push([i,col[i]]);col[i]=-1;steps++;hl=-1;paint();return 'Cleared the clash.'}
       sol=PZD7.fs.solve(adj,col,null);
@@ -103,6 +103,7 @@ function mount(root,inst,api){ZK.css(CSS,'fs-css');root.textContent='';var n=ins
       if(lv===2){hl=best;paint();return 'It can be '+dom(best).map(function(x){return LET[x]}).join(' or ')+'.'}
       cur=sol[best];paint();tapR(best);return 'Coloured it for you.'},
     destroy:function(){if(ghost)ghost.stop();if(idle)idle.stop();offs.forEach(function(f){f()});root.textContent=''},
+    moves:function(){return steps},   /* 1.2.4: the count the header, the Reel chip and the win card all show */
     lastEl:function(){return lastI>=0?nodes[lastI]:null},
     state:function(){return{col:col.slice(),fin:fin}}}}
 ZK.override({id:ID,name:'Four Shades',family:'grid',theme:'F8',calm:true,
