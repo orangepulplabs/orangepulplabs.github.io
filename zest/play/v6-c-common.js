@@ -20,7 +20,7 @@ CC.CSS=''
 +'.cc-row{display:flex;gap:7px;justify-content:center;align-items:center}'
 +'.cc-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}'
 +'.zk-rm .cc-t{transition:none!important}';
-CC.css=function(){ZK.css(CC.CSS,'cc-css')};
+CC.css=function(){ZK.css(CC.CSS,'cw-css')};
 /* a tile's text swap with a flip (no motion under reduced motion) */
 CC.flip=function(el,fn){if(ZK.rm()){fn();return}var a=ZK.anim(el,[{transform:'rotateX(0)'},{transform:'rotateX(90deg)'}],110,'ease-in');setTimeout(function(){fn();ZK.anim(el,[{transform:'rotateX(-90deg)'},{transform:'rotateX(0)'}],200,ZK.SPRING)},a?105:0)};
 /* run a list of tap steps in a real browser test: each step is a CSS selector (string) */

@@ -55,7 +55,7 @@ var CSS='.bw{position:relative;width:100%;max-width:372px;margin:0 auto;display:
 var WALKER='<svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="12" r="8.5" fill="#E8590C" stroke="#fff" stroke-width="2.4"/><circle cx="14.2" cy="10.2" r="2.4" fill="#fff" opacity=".75"/><path d="M17 20.5L11 31h12z" fill="#E8590C" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>';
 var FLAG='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 21V4m0 1h11l-2.5 4L17 13H6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-function mount(root,inst,api){ZK.css(CSS,'bw-css');root.textContent='';var B=PZC3.bw;
+function mount(root,inst,api){ZK.css(CSS,'bwk-css');root.textContent='';var B=PZC3.bw;
   var n=inst.n,E=inst.edges,pos=inst.pos,m=E.length,rm=ZK.rm(api),deg=B.deg(n,E),used=E.map(function(){return 0}),hist=[],cur=-1,fin=false,hints=0,undos=0,wrong=0,proof=false,marks={},showDeg=false,hl=[],ghost=null,idle=null,offs=[],drag=null,swallow=false,last=null,noteT=null;
   var stage=document.createElement('div');stage.className='bw zk-stage zk-host'+(rm?' zk-rm':'');
   var board=document.createElement('div');board.className='bw-board zk-board';board.setAttribute('role','group');board.setAttribute('aria-label','Map with '+n+' islands and '+m+' bridges');
