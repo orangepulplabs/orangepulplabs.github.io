@@ -97,8 +97,8 @@ function section(){var r=R();
     '<button class="sw" role="switch" data-rk="'+k+'" aria-checked="'+(!!r[k].on)+'" aria-labelledby="rem-'+k+'"></button></div>'}
   return h5('<div class="sect" data-rems><div class="sh"><h2>Reminders</h2></div><div class="card list" style="padding:4px 16px">'+
     row('daily','Daily puzzle','Not sent once today\u2019s is solved')+row('reel','Reel','Not sent once you have played the Reel')+
-    '<div class="remst" data-remst hidden><span class="rt"><b>Notifications are off</b><small>Turn them on for Zest in Android settings.</small></span><button class="btn sec" data-remopen>Open settings</button></div>'+
-    '<p class="sm" data-remweb style="padding:10px 0" hidden>Sent by the Android app.</p></div></div>')}
+    '<div class="remst" data-remst hidden><span class="rt"><b>Notifications are off</b><small>Turn them on in iPhone Settings, Notifications, Zest.</small></span><button class="btn sec" data-remopen>Open settings</button></div>'+
+    '<p class="sm" data-remweb style="padding:10px 0" hidden>Add it to your Home Screen to get reminders.</p></div></div>')}
 function mountSettings(sh){var root=sh&&sh.el;if(!root||qs(root,'[data-rems]'))return;
   if(!document.getElementById('rem6css')){var st=document.createElement('style');st.id='rem6css';st.textContent=CSS;document.head.appendChild(st)}
   var old=qs(root,'[data-remind]'),sect=old&&old.closest('.sect'),box=section();

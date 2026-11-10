@@ -22,6 +22,8 @@
   var SPOT=inApp?'':(browser==='chrome'||iPad)?'top':browser==='safari'?(iosV>=26?'br':'bottom'):'';
   var W=window.ZWEB={iOS:iOS,android:android,home:home,inApp:inApp,browser:browser,update:null,log:[]};
   document.documentElement.classList.add(home?'zw-home':'zw-browser');
+  var PUSHOK=home&&'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window||/[?&]as=pushtest\b/.test(q);
+  document.documentElement.classList.add(PUSHOK?'zw-push':'zw-nopush');
   function ev2(n){W.log.push(n);try{if(typeof ev==='function')ev(n)}catch(e){}}
   function K(){var t={};try{var st=JSON.parse(localStorage.getItem('zv5.web')||'{}');if(st&&typeof st==='object')t=st}catch(e){}return t}
   function setK(t){try{localStorage.setItem('zv5.web',JSON.stringify(t))}catch(e){}}
@@ -36,6 +38,36 @@
     }).catch(function(e){W.log.push('sw:'+e)})});
     var reloaded=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(W.applying&&!reloaded){reloaded=true;location.reload()}});
   }
+
+  /* ---------- reminders (Home Screen app, iOS 16.4+): plays the Android app's part for v6/remind6.js ----------
+     remind6 builds the 7-day plan and talks to "the app" through ZestNative. Here: the plan's words are kept for the service worker
+     (cache 'zpush'), and only its times go to our service (POST /v1/push/plan), which sends an empty push at each time (zest-api src/push.js).
+     Permission is asked only from remind6's own explainer (Allow) or a Settings switch, as on Android. */
+  var DEMO='https://zest-api-demo.orangepulplabs.workers.dev';
+  function api(){try{return (typeof API!=='undefined'&&API)||DEMO}catch(e){return DEMO}}
+  function u8(b){b=b.replace(/-/g,'+').replace(/_/g,'/');var r=atob(b+'==='.slice((b.length+3)%4)),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
+  function granted(){try{return Notification.permission==='granted'}catch(e){return false}}
+  function tell(){try{if(window.__zestNotif)window.__zestNotif({sdk:34,enabled:granted()})}catch(e){}}
+  function subscription(create){return navigator.serviceWorker.ready.then(function(reg){return reg.pushManager.getSubscription().then(function(s){if(s||!create)return s;
+      return fetch(api()+'/v1/push/key').then(function(r){return r.json()}).then(function(k){return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(k.key)})})})})}
+  var lastItems=null;
+  function postPlan(){if(!lastItems||!granted())return Promise.resolve(null);return subscription(false).then(function(s){if(!s)return null;
+      return fetch(api()+'/v1/push/plan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({endpoint:s.endpoint,at:lastItems.map(function(x){return x.at})})})
+        .then(function(r){W.log.push('push:plan '+r.status);return r.status})}).catch(function(e){W.log.push('push:err '+e)})}
+  function keepWords(items){try{caches.open('zpush').then(function(c){return c.put(new URL('../push-plan',location.href).href,new Response(JSON.stringify(items),{headers:{'content-type':'application/json'}}))})}catch(e){}}
+  if(PUSHOK){
+    window.ZestNative={postMessage:function(m){m=String(m||'');var i=m.indexOf(':'),k=m.slice(0,i),v=m.slice(i+1);W.log.push('native:'+k);
+      if(k==='remind'){try{var o=JSON.parse(v);lastItems=o.items||[];keepWords(lastItems);postPlan()}catch(e){}}
+      else if(k==='notif'&&v==='status')setTimeout(tell,0);
+      else if(k==='notif'&&v==='ask'){var p;try{p=Notification.requestPermission()}catch(e){p=null}   /* in the tap, before any await: iOS needs that */
+        Promise.resolve(p).then(function(){if(!granted()){tell();return}return subscription(true).then(function(){return postPlan()}).catch(function(e){W.log.push('push:sub '+e)}).then(tell)})}
+      else if(k==='notif'&&v==='settings')say('Turn them on in iPhone Settings, then Notifications, then Zest.')}};
+    W.push={post:postPlan,sub:subscription};
+  }
+  // a tapped reminder opens ./v6/?rem=daily|reel (or messages an open window): go where remind6 would on Android
+  function remOpen(r){if(r!=='daily'&&r!=='reel')return;var n=0;(function go(){if(window.__zestRemOpen){window.__zestRemOpen(r)}else if(n++<40)setTimeout(go,250)})()}
+  try{navigator.serviceWorker.addEventListener('message',function(e){if(e.data&&e.data.rem)remOpen(e.data.rem)})}catch(e){}
+  var remQ=/[?&]rem=(daily|reel)\b/.exec(q);if(remQ)window.addEventListener('load',function(){setTimeout(function(){remOpen(remQ[1])},300)});
 
   /* ---------- progress code: every localStorage key of the app (zv5*, the teaching state zt*), as one line of text ---------- */
   var KEEP=/^(zv5|zt)/;

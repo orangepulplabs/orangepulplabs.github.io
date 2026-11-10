@@ -223,6 +223,23 @@ footer.site-foot{border-top:1px solid var(--line);padding:clamp(40px,6vw,72px) 0
 .ifacts span.i{flex:none;width:40px;height:40px;border-radius:12px;background:var(--tint);color:var(--link);display:grid;place-items:center}
 .iurl{display:inline-block;margin-top:8px;padding:10px 14px;border-radius:12px;background:var(--ph);font:700 17px var(--font);letter-spacing:.01em}
 .zos-ios .ios-desk,.zos-android .ios-desk{display:none}.zos-desk .ios-phone{display:none}
+/* /install/: a wall of puzzle tiles, one card on top (layout idea from oboe.com; our own art and words) */
+body.inst{min-height:100vh;overflow-x:hidden}
+.ibg{position:fixed;inset:-30vh -30vw;z-index:0;display:grid;grid-template-columns:repeat(9,1fr);gap:28px;transform:rotateX(52deg) rotateZ(-38deg) scale(1.05);transform-origin:50% 50%;pointer-events:none}
+.ibg i{display:grid;place-items:center;aspect-ratio:1;border-radius:22px;background:var(--surface);box-shadow:0 0 0 1px var(--line),10px 14px 0 rgba(27,25,22,.08);color:var(--ink)}
+.ibg i:nth-child(3n){background:var(--tint)}.ibg i:nth-child(5n){background:var(--ph)}.ibg i:nth-child(7n){background:color-mix(in srgb,#7FA36B 16%,var(--surface))}.ibg i:nth-child(11n){background:color-mix(in srgb,#6B8FB0 16%,var(--surface))}
+.ibg svg{width:72%;height:auto;opacity:.92}
+.ishade{position:fixed;inset:0;z-index:1;background:radial-gradient(ellipse at center,transparent 30%,var(--bg) 92%);pointer-events:none}
+.iwrap{position:relative;z-index:2;min-height:100vh;display:grid;place-items:center;padding:72px 16px 64px}
+.icard{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;max-width:720px;width:100%;padding:30px 32px;border-radius:28px;background:color-mix(in srgb,var(--surface) 94%,transparent);border:1px solid var(--line);box-shadow:0 24px 70px rgba(27,25,22,.22);backdrop-filter:blur(6px)}
+.icard h1{font:700 clamp(40px,6vw,56px)/1 var(--display);margin:6px 0 10px;letter-spacing:-.01em;display:flex;align-items:center;gap:12px}
+.icard h1 svg{width:52px;height:auto}.icard .tag{font:600 21px/1.3 var(--display);margin:0 0 8px}.icard .sub{color:var(--muted);font-size:15px;margin:0}
+.icard .side{display:flex;flex-direction:column;gap:10px;padding-left:28px;border-left:1px solid var(--line)}
+.icard .side .badge,.icard .side .ibadge,.icard .side .gpfake{width:210px;justify-content:flex-start}.icard .side small.fine{color:var(--muted);font-size:12.5px;text-align:center}
+.zos-ios .icard .side .ibadge{order:-1}
+.ifoot{position:fixed;left:0;right:0;bottom:14px;z-index:2;display:flex;justify-content:center;gap:8px}
+.ifoot a{font:600 12.5px var(--font);color:var(--ink);text-decoration:none;background:var(--surface);border:1px solid var(--line);padding:5px 12px;border-radius:999px}
+@media (max-width:640px){.icard{grid-template-columns:1fr;padding:24px 20px}.icard .side{padding:18px 0 0;border-left:0;border-top:1px solid var(--line)}.icard .side .badge,.icard .side .ibadge{width:100%}.ibg{grid-template-columns:repeat(6,1fr);gap:16px}}
 .zphones{position:relative;height:min(80svh,800px);min-height:420px;display:flex;justify-content:center;align-items:center;isolation:isolate}
 .zsun{position:absolute;z-index:-1;width:min(100%,760px);aspect-ratio:1;border-radius:50%;background:var(--tint)}
 .zsun::after{content:"";position:absolute;inset:-5%;border-radius:50%;border:1.5px solid var(--chip);transform:translate(3%,2%)}
