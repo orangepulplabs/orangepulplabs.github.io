@@ -3,14 +3,15 @@
 /* Terms (10 Nov 2026, owner): every player accepts the Terms and Privacy policy with a tap before playing, on Android and the web app.
    New players: the welcome's "Agree and play". A friend's link: the same words on a small screen first. Players who joined before this:
    a one-time "We updated our Terms" screen. S().tos = the version accepted; raise TERMS_V when the Terms change in a way players must accept again.
-   Zest is for all ages (owner, 10 Nov 2026): "Under 13" is an age group like the others (no ads, no sign-in, no rankings; see ads.js, settings.js). */
-var TERMS_V='2026-11-10';
-var TERMS_LINE='By tapping, you accept the <a href="https://orangepulplabs.com/zest/terms/" target="_blank" rel="noopener">Terms</a> and <a href="https://orangepulplabs.com/zest/privacy/" target="_blank" rel="noopener">Privacy policy</a>.';
+   Zest is for ages 13 and up (owner, 11 Nov 2026, ads planned): the app never asks about under 13. The age question offers six bands from 13 to 17
+   up to 55 or over (AGE_BANDS), and "Agree and play" confirms the player is 13 or older (TERMS_LINE). No stop screen. */
+var TERMS_V='2026-11-11';   // 11 Nov 2026: back to 13+ (was all ages for a day)
+var TERMS_LINE='By tapping, you confirm you are 13 or older and accept the <a href="https://orangepulplabs.com/zest/terms/" target="_blank" rel="noopener">Terms</a> and <a href="https://orangepulplabs.com/zest/privacy/" target="_blank" rel="noopener">Privacy policy</a>.';
 function needTerms(){var v=S();return !v.tos||v.tos<TERMS_V}
 function agreeTerms(){var v=S();v.tos=TERMS_V;v.agreeAt=Date.now();save();ev('onb_agree')}
 function termsGate(updated,done){
   var n=h5('<div class="ob" role="dialog" aria-modal="true" aria-label="Terms" style="z-index:95"><div class="mark">'+MARK+'</div><h1>'+(updated?'We updated our Terms':'Before you play')+'</h1>'+
-    '<p class="sm" style="margin-top:10px">'+(updated?'Zest is now open to players of every age. Please read and accept the Terms and Privacy policy to keep playing.':'Zest is free, with no account needed. Please read and accept the Terms and Privacy policy.')+'</p>'+
+    '<p class="sm" style="margin-top:10px">'+(updated?'Please read and accept the updated Terms and Privacy policy to keep playing.':'Zest is free, with no account needed. Please read and accept the Terms and Privacy policy.')+'</p>'+
     '<button class="btn pri big" data-ok style="margin-top:20px">'+(updated?'Agree and continue':'Agree and play')+'</button><p class="legal">'+TERMS_LINE+'</p></div>');
   var c=Nav.cover(n,{noBack:true});
   qs(n,'[data-ok]').onclick=function(){agreeTerms();fx('tap');c.close();if(done)setTimeout(done,Q.fast?0:120)}}
@@ -38,8 +39,14 @@ function slate(id,level,o,prevCover){var p=P(id),secs=Q.fast?0.05:2.6;
   var bar=qs(n,'.prog i'),gone=false;if(bar.animate)bar.animate([{width:'0%'},{width:'100%'}],{duration:secs*1000,easing:'linear',fill:'forwards'});
   function go(){if(gone)return;gone=true;clearTimeout(tm);playPuzzle(id,level,o);setTimeout(function(){c.close()},Q.fast?0:120)}
   var tm=setTimeout(go,secs*1000+200);qs(n,'[data-go]').onclick=go}
-function ageChoices(box,done){box.innerHTML='<button class="btn sec wide" data-a="child">Under 13</button><button class="btn sec wide" data-a="teen">13 to 17</button><button class="btn sec wide" data-a="adult">18 or over</button>';
-  on(box,'[data-a]','click',function(e,x){var a=x.dataset.a;S().age=a;save();ev('age_set_'+a);qsa(box,'[data-a]').forEach(function(y){y.className='btn wide '+(y===x?'pri':'sec')});done(a)})}
+/* age bands (11 Nov 2026, owner): 13+ only, in the same bands the server uses for rankings. S().band = the band; S().age stays
+   'teen' (13 to 17: no sign-in, non-personalised ads) or 'adult' (18 and over) for every rule that reads it (ads.js, settings.js). */
+var AGE_BANDS=[['13-17','13 to 17','teen'],['18-24','18 to 24','adult'],['25-34','25 to 34','adult'],['35-44','35 to 44','adult'],['45-54','45 to 54','adult'],['55+','55 or over','adult']];
+try{AGE_BANDS.forEach(function(b){var n='age_b_'+b[0].replace('+','p').replace('-','_');if(window.EV_ALLOW&&EV_ALLOW.indexOf(n)<0)EV_ALLOW.push(n)})}catch(e){}
+function setBand(band){var b=AGE_BANDS.filter(function(x){return x[0]===band})[0];if(!b)return;var v=S();v.band=b[0];v.age=b[2];save();ev('age_set_'+b[2]);ev('age_b_'+b[0].replace('+','p').replace('-','_'))}
+function ageText(){var v=S(),b=AGE_BANDS.filter(function(x){return x[0]===v.band})[0];return b?b[1]:v.age==='teen'?'13 to 17':v.age==='adult'?'18 or over':'Not set'}
+function ageChoices(box,done){box.classList.add('agegrid2');box.innerHTML=AGE_BANDS.map(function(b){return '<button class="btn sec" data-b="'+b[0]+'">'+b[1]+'</button>'}).join('');
+  on(box,'[data-b]','click',function(e,x){setBand(x.dataset.b);qsa(box,'[data-b]').forEach(function(y){y.className='btn '+(y===x?'pri':'sec')});done(S().age)})}
 function onboardAfterWin(){var v=S();if(v.age||!FLAGS.ageAfterWin){finishOnboarding();return}
   var n=h5('<div class="ob" role="dialog" aria-modal="true" aria-label="Your age group"><div class="zcomp" data-zc="idle" style="width:80px;height:80px"></div><h1 style="font-size:1.625rem">One quick thing: your age group?</h1><p class="sm" style="margin-top:8px">It sets what Zest can offer you. It stays on this phone.</p><div class="agegrid" data-ages></div></div>');
   var c=Nav.cover(n,{noBack:true});if(window.ZD)ZD.mount(n);ageChoices(qs(n,'[data-ages]'),function(){setTimeout(function(){finishOnboarding();c.close()},Q.fast?0:260)})}
