@@ -55,11 +55,14 @@ window.__zestNotif=function(st){st=st||{};var was=Z.ns&&Z.ns.enabled;Z.ns={sdk:s
   if(waitAsk){var f=waitAsk;waitAsk=null;f(Z.ns)}if(was!==Z.ns.enabled)sync(true);paint()};
 function askSystem(done){if(SIM){setTimeout(function(){Z.ns.enabled=!!Z.simAnswer;sync(true);paint();done&&done(Z.ns)},60);return}
   waitAsk=done||function(){};send('notif:ask');setTimeout(function(){if(waitAsk===done&&done){waitAsk=null;done(Z.ns||{})}},120000)}
+/* Nav.tab ignores a switch while another is still animating (motion.js busy). At app start the boot's own switch to Today can still be
+   running when a tapped reminder asks for the Reel, so the Reel was sometimes lost (android:notifications, 9 Nov). Retry until it shows. */
+function toPlay(k){Nav.tab('play');setTimeout(function(){if(Nav.cur!=='play'&&!Nav.depth&&!Nav.overlays&&k<10)toPlay(k+1)},300)}
 window.__zestRemOpen=function(route){var n=0;(function go(){
     if(($('boot')||document.querySelector('.ob,.slate'))&&n++<40){setTimeout(go,250);return}   // after boot; never over the welcome
     if(!S().onb)return;ev(route==='reel'?'remind_open_reel':'remind_open_daily');
     for(var i=0;i<3&&Nav.overlays;i++)Nav.back();
-    Nav.popAll().then(function(){if(route==='reel'){Nav.tab('play');return}
+    Nav.popAll().then(function(){if(route==='reel'){toPlay(0);return}
       var d=todayDaily();Nav.tab('today').then(function(){if(!S().daily[d.day])startDaily(null)})})})()};
 
 /* ---------- the explainer: once after a win, back on Today with nothing else open ---------- */
