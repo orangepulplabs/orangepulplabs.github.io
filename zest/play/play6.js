@@ -16,7 +16,7 @@ var VIS=["switch-off", "jump-away", "tube-sort", "tilt-run", "slide-tiles", "mak
 /* 10 Nov 2026: iPhone/iPad visitors get the free Home Screen web app (/zest/app/) instead of Google Play (Zest/Docs/web-app-plan.md) */
 var IOS=/[?&]as=ios\b/.test(location.search)||/iPhone|iPad|iPod/.test(navigator.userAgent||'')||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 if(IOS){STORE='/zest/app/v6/?install';BETA=''}
-function lab(l){return IOS?String(l).replace(/Get Zest on Google Play|Get the app|Get Zest/,'Play Zest free on iPhone').replace(/in the Zest app/,'in Zest on iPhone'):l}
+function lab(l){l=String(l).replace('Get Zest on Google Play','Get it on Google Play');return IOS?l.replace(/Get it on Google Play|Get the app/,'Get it free on iPhone').replace(/in the Zest app/,'on your iPhone'):l}
 var NAPP=39,PITCH=(NAPP||VIS.length)+' puzzles, each with a true story. A new one every day. Free, works offline.';
 var FZ=window.FZ={idleMs:15000,pill:true,live:false,offered:false,cur:null,link:null};
 function vis(id){return VIS.indexOf(id)>=0}
@@ -85,6 +85,7 @@ var CSS='body.fzp .phone{padding-bottom:0}'+
   '.fz2{display:flex;align-items:center;justify-content:center;width:100%;min-height:50px;margin:10px 0 0;border-radius:16px;border:0;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line);color:var(--ink);font:700 1rem var(--font);text-decoration:none;cursor:pointer;padding:0 16px}'+
   '.fztx{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin:6px 0 0;padding:0 14px;border:0;background:none;color:var(--ink);font:700 .9375rem var(--font);text-decoration:underline;text-underline-offset:3px;cursor:pointer}'+
   '.fzsm{margin:10px 0 0;font:500 .8125rem/1.4 var(--font);color:var(--muted)}.fzsm a{color:inherit}'+
+  '.fzsteps{margin:12px 0 0;padding-left:1.3em;text-align:left;font:500 .875rem/1.45 var(--font);color:var(--muted)}.fzsteps li{margin:3px 0}.fzsteps b{color:var(--ink)}'+
   '.fzlink{display:block;width:100%;margin:8px 0 0;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 .8125rem var(--font)}.fzlink[hidden]{display:none}'+
   '.fzok{min-height:1.2em;margin:6px 0 0;font:600 .8125rem var(--font);color:var(--ok)}'+
   /* the landing card (no link, or a broken one) */
@@ -96,7 +97,7 @@ function brand(pill){return '<div class="fzh"><span class="fzb">'+MARK+'<span>Ze
 function wirePill(){var a=$('fzget'),x=$('fzpx');if(a)a.onclick=function(){zc('store_tap')};if(x)x.onclick=function(){FZ.pill=false;var p=$('fzpill');if(p)p.remove()}}
 var TERMS='<p class="zgt">By playing you agree to the <a href="https://orangepulplabs.com/zest/terms/" target="_blank" rel="noopener">Terms</a> and <a href="https://orangepulplabs.com/zest/privacy/" target="_blank" rel="noopener">Privacy policy</a>.</p>';
 function storeBtn(label){return '<a class="fzgo" id="fzstore" href="'+esc(STORE)+'"'+(IOS?'':' target="_blank" rel="noopener"')+'>'+esc(lab(label))+'</a>'}
-function storeNote(){if(IOS)return '<p class="fzsm">Free, no App Store needed: it runs from your Home Screen, offline.</p>';return '<p class="fzsm">For Android. <a href="/zest/iphone/">On iPhone? Play free.</a>'+(BETA?' Zest is in testing: <a href="'+esc(BETA)+'" id="fzbeta" target="_blank" rel="noopener">Join the beta</a>.':'')+'</p>'}
+function storeNote(){if(IOS)return '<ol class="fzsteps"><li>Tap the button above.</li><li>Tap Share, then <b>Add to Home Screen</b>.</li><li>Open it from your Home Screen. Free, no App Store.</li></ol>';return '<p class="fzsm">For Android. <a href="/zest/iphone/">On iPhone? Play free.</a>'+(BETA?' Zest is in testing: <a href="'+esc(BETA)+'" id="fzbeta" target="_blank" rel="noopener">Join the beta</a>.':'')+'</p>'}
 function storeBits(label){return storeBtn(label)+storeNote()}
 
 /* ---------- the one screen when there is no puzzle: no link, or a link that cannot be played ---------- */

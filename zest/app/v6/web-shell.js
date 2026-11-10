@@ -17,6 +17,9 @@
   var inApp=/FBAN|FBAV|Instagram|Line\/|GSA\/|WhatsApp|Snapchat|Twitter|LinkedInApp|musical_ly|TikTok/.test(ua);
   var browser=/CriOS/.test(ua)?'chrome':/FxiOS/.test(ua)?'firefox':/EdgiOS/.test(ua)?'edge':'safari';
   var PLAY='https://play.google.com/store/apps/details?id=com.orangepulplabs.zest',BETA='/beta/';
+  var iosV=+((/OS (\d+)_/.exec(ua)||[])[1]||0),iPad=/iPad/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  /* where the Share button is: iPhone Safari = bottom bar (iOS 26: the ... button at the bottom right first); iPad Safari and Chrome = top right */
+  var SPOT=inApp?'':(browser==='chrome'||iPad)?'top':browser==='safari'?(iosV>=26?'br':'bottom'):'';
   var W=window.ZWEB={iOS:iOS,android:android,home:home,inApp:inApp,browser:browser,update:null,log:[]};
   document.documentElement.classList.add(home?'zw-home':'zw-browser');
   function ev2(n){W.log.push(n);try{if(typeof ev==='function')ev(n)}catch(e){}}
@@ -54,7 +57,19 @@
     '.zw-pill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:9000;display:flex;align-items:center;gap:8px;'+
       'background:var(--ink,#1B1916);color:var(--bg,#F7F4EE);border:0;border-radius:999px;padding:10px 16px;font:650 .95rem var(--font,system-ui);box-shadow:0 6px 24px rgba(0,0,0,.18);max-width:calc(100% - 32px)}'+
     '.zw-pill[hidden]{display:none}.zw-pill .x{opacity:.7;padding-left:6px}'+
-    '.zw-box{margin-top:14px;padding:12px;border-radius:14px;background:var(--sunk,#eee)}.zw-box p{margin:0}';
+    '.zw-box{margin-top:14px;padding:12px;border-radius:14px;background:var(--sunk,#eee)}.zw-box p{margin:0}'+
+    '.zw-arrow{position:fixed;z-index:9700;pointer-events:none;width:56px;height:56px;color:var(--accent,#E8590C);filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}'+
+    '.zw-arrow svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}'+
+    '.zw-arrow.bottom{left:50%;bottom:calc(6px + env(safe-area-inset-bottom,0px));margin-left:-28px;animation:zwb 1s ease-in-out infinite}'+
+    '.zw-arrow.br{right:14px;bottom:calc(6px + env(safe-area-inset-bottom,0px));animation:zwb 1s ease-in-out infinite}'+
+    '.zw-arrow.top{right:18px;top:calc(4px + env(safe-area-inset-top,0px));transform:rotate(180deg);animation:zwt 1s ease-in-out infinite}'+
+    '@keyframes zwb{50%{translate:0 8px}}@keyframes zwt{50%{translate:0 -8px}}@media (prefers-reduced-motion:reduce){.zw-arrow{animation:none!important}}'+
+    '.zw-gate{position:fixed;inset:0;z-index:9600;background:var(--bg,#F7F4EE);color:var(--ink,#1B1916);overflow:auto;display:flex;flex-direction:column;'+
+      'padding:calc(28px + env(safe-area-inset-top,0px)) 22px calc(28px + env(safe-area-inset-bottom,0px))}'+
+    '.zw-gate .in{max-width:440px;width:100%;margin:auto}.zw-gate h1{font:700 1.9rem/1.12 var(--serif,Georgia,serif);margin:14px 0 6px}.zw-gate .lede{color:var(--muted,#675F55);margin:0}'+
+    '.zw-bdg{display:flex;align-items:center;gap:10px;width:100%;min-height:58px;padding:0 16px;margin-top:12px;border-radius:14px;background:#000;color:#fff;border:1px solid #A6A6A6;text-decoration:none;font:600 1rem var(--font,system-ui);cursor:pointer;text-align:left}'+
+    '.zw-bdg[hidden]{display:none}.zw-bdg svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}.zw-bdg span{display:flex;flex-direction:column;line-height:1.1}.zw-bdg small{font:500 .72rem var(--font,system-ui)}.zw-bdg b{font:600 1.2rem var(--font,system-ui)}'+
+    '.zw-gate .zw-steps{margin-top:16px}.zw-gate .sm{color:var(--muted,#675F55);font-size:.9rem}.zw-link{display:block;margin:18px auto 0;background:none;border:0;color:var(--ink,#1B1916);font:650 1rem var(--font,system-ui);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:10px}';
   function css(){if(document.getElementById('zw-css'))return;var s=document.createElement('style');s.id='zw-css';s.textContent=CSS;document.head.appendChild(s)}
   var SHARE='<svg viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>';
   var ADD='<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
@@ -69,34 +84,63 @@
   function quiet(){try{return !!(window.ZREM&&ZREM.quiet&&ZREM.quiet())}catch(e){return false}}
   function wins(){try{var v=S();return Object.keys(v.solved||v.done||v.wins||{}).length||(v.stats&&v.stats.wins)||0}catch(e){return 0}}
 
+  var ARW='<svg viewBox="0 0 24 24"><path d="M12 3v17M5 13l7 7 7-7"/></svg>';
+  function arrow(){if(!SPOT||home)return null;css();var a=node('<div class="zw-arrow '+SPOT+'" aria-hidden="true">'+ARW+'</div>');document.body.appendChild(a);return a}
+  function shareStep(){return SPOT==='br'?'Tap '+ico(DOTS)+' at the bottom right, then '+ico(SHARE)+' Share.'
+      :SPOT==='bottom'?'Tap '+ico(SHARE)+' Share in the bar at the bottom.'
+      :SPOT==='top'?'Tap '+ico(SHARE)+' Share at the top right.':'Open your browser\u2019s menu and tap '+ico(SHARE)+' Share.'}
+  W.arrow=arrow;W.spot=SPOT;
+
   /* ---------- the install guide (iPhone/iPad) ---------- */
   function guideHTML(){
-    var share=browser==='safari'?'Tap '+ico(SHARE)+' Share. If you don’t see it, tap '+ico(DOTS)+' first.'
-      :browser==='chrome'?'Tap '+ico(SHARE)+' Share, at the top right next to the address.'
-      :'Open your browser’s menu and tap '+ico(SHARE)+' Share.';
+    var share=shareStep();
     if(inApp)return '<div data-zwguide><p>This page is open inside another app, which can’t add it to your Home Screen.</p>'+
-      '<ol class="zw-steps"><li><span>Tap '+ico(DOTS)+' or '+ico(SHARE)+' and choose <b>Open in Safari</b>.</span></li><li><span>Then add Zest to your Home Screen from Safari.</span></li></ol>'+
+      '<ol class="zw-steps"><li><span>Tap '+ico(DOTS)+' or '+ico(SHARE)+' and choose <b>Open in Safari</b>.</span></li><li><span>Then add it to your Home Screen from Safari.</span></li></ol>'+
       '<div style="display:flex;flex-direction:column;gap:8px;margin-top:16px"><button class="btn pri wide" data-zwlink>Copy link</button><button class="btn ghost wide" data-zwno>Not now</button></div></div>';
     var has=wins()>0||!!(function(){try{return S().onb}catch(e){return 0}})();
-    return '<div data-zwguide><p>Zest works like an app from your Home Screen: full screen, offline, and your progress stays put. Free, no App Store needed.</p>'+
-      '<ol class="zw-steps"><li><span>'+share+'</span></li><li><span>Scroll down and tap '+ico(ADD)+' <b>Add to Home Screen</b>.</span></li><li><span>Tap <b>Add</b>, then open Zest from your Home Screen.</span></li></ol>'+
-      (has?'<div class="zw-box"><p class="sm">Your Home Screen Zest starts fresh. To bring today’s progress along, copy it first, then paste it there (Settings, Paste progress).</p><button class="btn sec wide" style="margin-top:10px" data-zwcopy>Copy my progress</button></div>':'')+
+    return '<div data-zwguide><p>From your Home Screen it works like an app: full screen, offline, and your progress stays put. Free, no App Store needed.</p>'+
+      '<ol class="zw-steps"><li><span>'+share+'</span></li><li><span>Scroll down and tap '+ico(ADD)+' <b>Add to Home Screen</b>.</span></li><li><span>Tap <b>Add</b>, then open it from your Home Screen.</span></li></ol>'+
+      (has?'<div class="zw-box"><p class="sm">The Home Screen app starts fresh. To bring today’s progress along, copy it first, then paste it there (Settings, Paste progress).</p><button class="btn sec wide" style="margin-top:10px" data-zwcopy>Copy my progress</button></div>':'')+
       '<div style="margin-top:16px"><button class="btn ghost wide" data-zwno>Not now</button></div></div>'}
   function showGuide(why){if(home)return;var t=K();t.guide=(t.guide|0)+1;t.guideAt=Date.now();setK(t);ev2('web_guide_'+(why||'open'));
-    var b=node(guideHTML()),sh=sheet(inApp?'Open in Safari':'Add Zest to your Home Screen',b);
+    var b=node(guideHTML()),sh=sheet(inApp?'Open in Safari':'Add it to your Home Screen',b),ar=inApp?null:arrow();
+    var cl0=sh.close;sh.close=function(){if(ar)ar.remove();return cl0.apply(this,arguments)};var iv=setInterval(function(){if(sh.el&&!sh.el.isConnected){clearInterval(iv);if(ar)ar.remove()}},500);
     var no=b.querySelector('[data-zwno]');if(no)no.onclick=function(){ev2('web_guide_later');sh.close()};
     var cp=b.querySelector('[data-zwcopy]');if(cp)cp.onclick=function(){copy(exportCode()).then(function(ok){ev2(ok?'web_progress_copied':'web_progress_copy_fail');
-      cp.textContent=ok?'Copied. Paste it in your Home Screen Zest':'Copy failed: try again';})};
+      cp.textContent=ok?'Copied. Paste it in the Home Screen app':'Copy failed: try again';})};
     var ln=b.querySelector('[data-zwlink]');if(ln)ln.onclick=function(){copy(location.href.split('?')[0]).then(function(ok){ln.textContent=ok?'Link copied: paste it in Safari':'Copy failed'})};
     W.lastSheet=sh;return sh}
   W.showGuide=showGuide;
 
+  /* ---------- the welcome screen in a browser, before playing: get it for iPhone / on Google Play, or play here ---------- */
+  var IPH='<svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M12 8.5v6M9 11.5h6"/></svg>';
+  var GPI='<svg viewBox="0 0 24 24"><path d="M5 3.5v17l9-8.5z"/><path d="M5 3.5l11 6.3-2 2.7M5 20.5l11-6.3-2-2.7M16 9.8l3.5 2.2-3.5 2.2"/></svg>';
+  function gateDue(){if(home)return false;if(/[?&](play|nogate)\b/.test(q))return false;if(/[?&]install\b/.test(q))return true;
+    try{if(sessionStorage.getItem('zw-gate'))return false}catch(e){}var onb=0;try{onb=S().onb}catch(e){}return !onb}
+  function gate(){css();ev2('web_gate');var t=K();t.gate=(t.gate|0)+1;setK(t);try{sessionStorage.setItem('zw-gate','1')}catch(e){}
+    var iBtn='<button class="zw-bdg" type="button" data-zgi>'+IPH+'<span><small>Available for</small><b>iPhone</b></span></button>';
+    var gBtn='<a class="zw-bdg" href="'+PLAY+'" data-zgp rel="noopener">'+GPI+'<span><small>Get it on</small><b>Google Play</b></span></a>'+
+      '<p class="sm" style="margin:6px 2px 0">In testing on Google Play: <a href="'+BETA+'">join the beta</a> to install it.</p>';
+    var steps='<div data-zgsteps'+(iOS?'':' hidden')+'><ol class="zw-steps">'+(iOS?'':'<li><span>Open <b>orangepulplabs.com/zest/iphone</b> on your iPhone.</span></li>')+
+      (inApp?'<li><span>Tap '+ico(DOTS)+' and choose <b>Open in Safari</b>.</span></li>':'')+
+      '<li><span>'+(iOS?shareStep():'Tap '+ico(SHARE)+' Share.')+'</span></li><li><span>Tap '+ico(ADD)+' <b>Add to Home Screen</b>, then <b>Add</b>.</span></li><li><span>Open it from your Home Screen.</span></li></ol></div>';
+    var body=iOS?('<h1>Put it on your Home Screen</h1><p class="lede">Free, no App Store. It opens full screen and works offline.</p>'+steps)
+      :android?('<h1>Get the app</h1><p class="lede">Free on Google Play, with reminders and rankings.</p>'+gBtn)
+      :('<h1>Get the app</h1><p class="lede">Free on iPhone and Android.</p>'+iBtn+steps+gBtn);
+    var g=node('<div class="zw-gate" role="dialog" aria-modal="true" aria-label="Get the app"><div class="in"><div aria-hidden="true" style="width:56px;height:56px;border-radius:14px;overflow:hidden"><img src="../icons/icon-192.png" alt="" width="56" height="56"></div>'+body+
+      '<button class="zw-link" type="button" data-zgx>'+(iOS||android?'Play in the browser for now':'Play in this browser')+'</button></div></div>');
+    document.body.appendChild(g);var ar=iOS&&!inApp?arrow():null;
+    var ib=g.querySelector('[data-zgi]');if(ib)ib.onclick=function(){var st=g.querySelector('[data-zgsteps]');st.hidden=!st.hidden;ev2('web_gate_iphone')};
+    var gp=g.querySelector('[data-zgp]');if(gp)gp.onclick=function(){ev2('web_gate_play')};
+    g.querySelector('[data-zgx]').onclick=function(){ev2('web_gate_browser');if(ar)ar.remove();g.remove()};W.gate=g;return g}
+  W.showGate=gate;
+
   /* ---------- Android in a browser: the Play app ---------- */
   function showPlay(){var t=K();t.play=(t.play|0)+1;setK(t);ev2('web_play_offer');
-    var b=node('<div data-zwplay><p>Zest is an Android app on Google Play: reminders, rankings and your progress in one place. Free.</p>'+
+    var b=node('<div data-zwplay><p>There is an Android app on Google Play, with reminders, rankings and your progress in one place. Free.</p>'+
       '<div style="display:flex;flex-direction:column;gap:8px;margin-top:16px"><a class="btn pri wide" href="'+PLAY+'" data-zwgo>Get it on Google Play</a>'+
       '<a class="btn sec wide" href="'+BETA+'">In testing: join the beta first</a><button class="btn ghost wide" data-zwno>Keep playing here</button></div></div>');
-    var sh=sheet('Zest is on Google Play',b);b.querySelector('[data-zwno]').onclick=function(){sh.close()};b.querySelector('[data-zwgo]').onclick=function(){ev2('web_play_go')};W.lastSheet=sh;return sh}
+    var sh=sheet('Get the Android app',b);b.querySelector('[data-zwno]').onclick=function(){sh.close()};b.querySelector('[data-zwgo]').onclick=function(){ev2('web_play_go')};W.lastSheet=sh;return sh}
 
   /* ---------- paste progress (home-screen app) ---------- */
   function paste(done){function use(txt){var o=readCode(txt);if(!o){say('That isn’t a Zest progress code');ev2('web_paste_bad');if(done)done(false);return}
@@ -114,7 +158,7 @@
   document.addEventListener('DOMContentLoaded',function(){css();
     try{var mw0=markWin;markWin=function(o){var r=mw0.apply(this,arguments);try{if(o&&o.id&&due())pend=Date.now()}catch(e){}return r}}catch(e){}
     try{var os0=openSettings;openSettings=function(){var sh=os0.apply(this,arguments);try{settingsRow(sh)}catch(e){}return sh}}catch(e){}
-    if(/[?&]install\b/.test(q)&&!home)setTimeout(function(){if(iOS)showGuide('link');else if(android)showPlay()},1200);
+    if(gateDue())gate();
     pastePill();
   });
   setInterval(function(){
