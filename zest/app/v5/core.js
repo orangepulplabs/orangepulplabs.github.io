@@ -20,12 +20,12 @@ var FLAGS_DEFAULT={
   share:true           // friend challenge share from the reward
 };
 var FLAGS=(function(){var f=Object.assign({},FLAGS_DEFAULT);try{var j=JSON.parse(localStorage.getItem('zv5.flags')||'{}');Object.keys(j).forEach(function(k){if(k in f)f[k]=!!j[k]})}catch(e){}
-  var m=/[?&]flags=([^&]+)/.exec(location.search);if(m)decodeURIComponent(m[1]).split(',').forEach(function(p){var kv=p.split(':');if(kv[0] in f)f[kv[0]]=kv[1]!=='0'&&kv[1]!=='false'});return f})();
+  var m=/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?/[?&]flags=([^&]+)/.exec(location.search):null;if(m)decodeURIComponent(m[1]).split(',').forEach(function(p){var kv=p.split(':');if(kv[0] in f)f[kv[0]]=kv[1]!=='0'&&kv[1]!=='false'});return f})();
 function flagSet(k,v){FLAGS[k]=!!v;try{var j=JSON.parse(localStorage.getItem('zv5.flags')||'{}');j[k]=!!v;localStorage.setItem('zv5.flags',JSON.stringify(j))}catch(e){}}
-var Q=(function(){var s=location.search;return {dev:/[?&]dev\b/.test(s),fast:/[?&]fast\b/.test(s),reset:/[?&]reset\b/.test(s),demo:/[?&]demo\b/.test(s),
+var Q=(function(){var s=/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?location.search:'';return {dev:/[?&]dev\b/.test(s),fast:/[?&]fast\b/.test(s),reset:/[?&]reset\b/.test(s),demo:/[?&]demo\b/.test(s),
   day:(/[?&]day=(\d{4}-\d{2}-\d{2})/.exec(s)||[])[1]||null,theme:(/[?&]theme=(light|dark)/.exec(s)||[])[1]||null,api:(/[?&]api=([^&]+)/.exec(s)||[])[1]||null}})();
-var API=Q.api?decodeURIComponent(Q.api):'https://zest-api-demo.orangepulplabs.workers.dev';   // the demo service only; never production from v5
-if(API.indexOf('https://zest-api-demo.')!==0&&API.indexOf('http://127.0.0.1')!==0)API='https://zest-api-demo.orangepulplabs.workers.dev';
+var API=Q.api?decodeURIComponent(Q.api):'https://zest-api.orangepulplabs.workers.dev';   // the demo service only; never production from v5
+if(API!=='https://zest-api.orangepulplabs.workers.dev'&&API.indexOf('http://127.0.0.1')!==0)API='https://zest-api.orangepulplabs.workers.dev';
 
 /* ---------- state ---------- */
 function v5Defaults(){return {onb:0,agreeAt:0,age:null,first:null,sessions:0,lastOpen:null,lastSeenDay:null,theme:'light',accent:'',

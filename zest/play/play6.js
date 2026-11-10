@@ -1,10 +1,12 @@
 /* Zest friend page layer (orangepulplabs.com/zest/play/), 6 Nov 2026: ONE challenge, then the app.
    Built by site-gen.py: ["switch-off", "jump-away", "tube-sort", "tilt-run", "slide-tiles", "make-target", "balance-weights", "zero-one", "four-by-four", "dodecahedron-tour", "river-ferry", "seven-pieces", "code-cracker", "dot-loop", "bridge-walk", "four-shades", "word-steps", "word-square", "scramble", "tiger-and-herd", "blockade", "seed-pits", "who-owns-the-zebra", "living-stones", "link-across"] (the puzzles of the current release), "https://play.google.com/store/apps/details?id=com.orangepulplabs.zest" (FRIEND_STORE_URL in site-gen.py), "https://orangepulplabs.com/beta/" (the tester
-   sign-up page), ["slide-tiles", "make-target", "tilt-run", "four-by-four", "zero-one", "code-cracker", "tube-sort", "scramble", "word-steps", "balance-weights", "bridge-walk", "dodecahedron-tour", "switch-off", "jump-away", "river-ferry", "blockade", "four-shades", "link-across", "seven-pieces", "living-stones", "seed-pits", "tiger-and-herd", "word-square", "dot-loop"] (the app's daily pool, in the app's order), ["sun-mirrors", "crate-push", "picture-rows", "gear-train", "lucas-tower", "pancake-flip", "bezzel-queens", "quilt-tiles", "shunting-yard", "huarong-pass", "reversi-flip", "aqueduct", "rolling-die", "rect-cut"]/"2026-12-01" (1.2.6: v6/daily6.js), 39 (the app's puzzle count) and "<svg class=\"fzm\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"18 20 72 66\" aria-hidden=\"true\"><path d=\"M22 50h64a32 32 0 0 1-64 0z\" fill=\"#F7F4EE\" stroke=\"currentColor\" stroke-width=\"3.2\" stroke-linejoin=\"round\"/>\n  <path d=\"M28 50h52a26 26 0 0 1-52 0z\" fill=\"#F7A35C\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/>\n  <g stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\"><path d=\"M54 50v26M54 50L36 68M54 50l18 18M54 50L30 58M54 50l24 8\"/></g>\n  <path d=\"M54 50c-6-8-18-12-30-10M54 50c6-8 18-12 30-10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M54 50V30\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>\n  <path d=\"M54 31c2-6 8-9 13-8-2 6-7 9-13 8z\" fill=\"#6E9B5A\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"/></svg>" (the Zest mark) are filled in at build time.
+   sign-up page), ["slide-tiles", "make-target", "tilt-run", "four-by-four", "zero-one", "code-cracker", "tube-sort", "scramble", "word-steps", "balance-weights", "bridge-walk", "dodecahedron-tour", "switch-off", "jump-away", "river-ferry", "blockade", "four-shades", "link-across", "seven-pieces", "living-stones", "seed-pits", "tiger-and-herd", "word-square", "dot-loop"] (the app's daily pool, in the app's order), ["sun-mirrors", "crate-push", "picture-rows", "gear-train", "lucas-tower", "pancake-flip", "bezzel-queens", "quilt-tiles", "shunting-yard", "huarong-pass", "reversi-flip", "aqueduct", "rolling-die", "rect-cut"]/"2026-12-01" (1.2.6: v6/daily6.js), 39 (the app's puzzle count),
+   "One short puzzle a day, and the true story behind it." (ZEST_PITCH), ["Tap Share. On iOS 26, tap ··· first, then Share.", "Tap Add to Home Screen, then Add.", "Open Zest from your Home Screen."] (IOS_STEPS: the same Home Screen steps as the site and the web app) and "<svg class=\"fzm\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"18 20 72 66\" aria-hidden=\"true\"><path d=\"M22 50h64a32 32 0 0 1-64 0z\" fill=\"#F7F4EE\" stroke=\"currentColor\" stroke-width=\"3.2\" stroke-linejoin=\"round\"/>\n  <path d=\"M28 50h52a26 26 0 0 1-52 0z\" fill=\"#F7A35C\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/>\n  <g stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\"><path d=\"M54 50v26M54 50L36 68M54 50l18 18M54 50L30 58M54 50l24 8\"/></g>\n  <path d=\"M54 50c-6-8-18-12-30-10M54 50c6-8 18-12 30-10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M54 50V30\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>\n  <path d=\"M54 31c2-6 8-9 13-8-2 6-7 9-13 8z\" fill=\"#6E9B5A\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"/></svg>" (the Zest mark) are filled in at build time.
+   The store button is the official Google Play badge (Android, computers) or our own "Available for iPhone" badge (iPhone/iPad: the web app).
    Loaded after app4d, challenge, delight, the v6 kit, the one v6 puzzle override (plus trim6.js and teach.js), and before app4b boots.
    - ?c=<token>: only that puzzle, styled like the app's puzzle page (slim Zest header, name + level, the goal line, the board, Rules / Undo /
      Restart / Hint, the stuck chip in its own row, "A friend got N moves"). No tab bar, no home, no other puzzles.
-   - The win plays on the board (ZK.win), then a sheet: the result, "Play more in the Zest app" (the store), "Challenge a friend back" (a link
+   - The win plays on the board (ZK.win), then a sheet: the result, the store badge, "Challenge a friend back" (a link
      to the same board with your score, Web Share or copy) and "Try again".
    - Before the win: a small dismissible "Get the app" pill in the header; Back, or sitting idle in a lost position, opens the same sheet
      with "Keep playing".
@@ -16,8 +18,7 @@ var VIS=["switch-off", "jump-away", "tube-sort", "tilt-run", "slide-tiles", "mak
 /* 10 Nov 2026: iPhone/iPad visitors get the free Home Screen web app (/zest/app/) instead of Google Play (Zest/Docs/web-app-plan.md) */
 var IOS=/[?&]as=ios\b/.test(location.search)||/iPhone|iPad|iPod/.test(navigator.userAgent||'')||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 if(IOS){STORE='/zest/app/v6/?install';BETA=''}
-function lab(l){l=String(l).replace('Get Zest on Google Play','Get it on Google Play');return IOS?l.replace(/Get it on Google Play|Get the app/,'Get it free on iPhone').replace(/in the Zest app/,'on your iPhone'):l}
-var NAPP=39,PITCH=(NAPP||VIS.length)+' puzzles, each with a true story. A new one every day. Free, works offline.';
+var NAPP=39,PITCH=(NAPP||VIS.length)+' puzzles, each with a true story. A new one every day. Free, works offline.',ONE="One short puzzle a day, and the true story behind it.",STEPS=["Tap Share. On iOS 26, tap ··· first, then Share.", "Tap Add to Home Screen, then Add.", "Open Zest from your Home Screen."];
 var FZ=window.FZ={idleMs:15000,pill:true,live:false,offered:false,cur:null,link:null};
 function vis(id){return VIS.indexOf(id)>=0}
 /* the curation: hidden puzzles are not playable (their file may be loaded because it also holds a visible one) */
@@ -80,11 +81,13 @@ var CSS='body.fzp .phone{padding-bottom:0}'+
   '.fzvs2 div{background:var(--surface);border-radius:16px;padding:10px 6px;box-shadow:0 0 0 1px var(--line)}.fzvs2 .me{box-shadow:0 0 0 2px var(--accent)}'+
   '.fzvs2 b{display:block;font:700 1.875rem/1 var(--disp)}.fzvs2 small{display:block;margin-top:4px;font:600 .8125rem var(--font);color:var(--muted)}'+
   '.fzpitch{margin:14px auto 0;max-width:30em;font:600 1rem/1.4 var(--font);color:var(--ink)}'+
-  '.fzgo{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:56px;margin:14px 0 0;border-radius:18px;background:var(--accent);color:var(--on-accent);font:800 1.0625rem var(--font);text-decoration:none;text-align:center;padding:0 16px}'+
-  '.fzgo:focus-visible,.fz2:focus-visible,.fztx:focus-visible{outline:3px solid var(--ink);outline-offset:2px}'+
+  '.fzgp,.fzbdg{display:flex;align-items:center;justify-content:center;width:max-content;max-width:100%;height:56px;margin:14px auto 0;border-radius:12px;text-decoration:none}.fzgp img{display:block;height:56px;width:auto}'+
+  '.fzbdg{gap:10px;padding:0 18px 0 14px;background:#000;color:#fff;border:1px solid #A6A6A6;font:600 1rem var(--font)}.fzbdg svg{width:28px;height:28px;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}'+
+  '.fzbdg span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.05;text-align:left}.fzbdg small{font:500 .72rem var(--font)}.fzbdg b{font:600 1.375rem var(--font)}'+
+  '.fzgp:focus-visible,.fzbdg:focus-visible,.fz2:focus-visible,.fztx:focus-visible{outline:3px solid var(--ink);outline-offset:2px}'+
   '.fz2{display:flex;align-items:center;justify-content:center;width:100%;min-height:50px;margin:10px 0 0;border-radius:16px;border:0;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line);color:var(--ink);font:700 1rem var(--font);text-decoration:none;cursor:pointer;padding:0 16px}'+
   '.fztx{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin:6px 0 0;padding:0 14px;border:0;background:none;color:var(--ink);font:700 .9375rem var(--font);text-decoration:underline;text-underline-offset:3px;cursor:pointer}'+
-  '.fzsm{margin:10px 0 0;font:500 .8125rem/1.4 var(--font);color:var(--muted)}.fzsm a{color:inherit}'+
+  '.fzsm{margin:10px 0 0;font:500 .8125rem/1.4 var(--font);color:var(--muted)}.fzsm a{color:inherit;display:inline-flex;align-items:center;min-height:44px}'+
   '.fzsteps{margin:12px 0 0;padding-left:1.3em;text-align:left;font:500 .875rem/1.45 var(--font);color:var(--muted)}.fzsteps li{margin:3px 0}.fzsteps b{color:var(--ink)}'+
   '.fzlink{display:block;width:100%;margin:8px 0 0;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 .8125rem var(--font)}.fzlink[hidden]{display:none}'+
   '.fzok{min-height:1.2em;margin:6px 0 0;font:600 .8125rem var(--font);color:var(--ok)}'+
@@ -96,14 +99,17 @@ try{var st=document.createElement('style');st.id='fz-css';st.textContent=CSS;doc
 function brand(pill){return '<div class="fzh"><span class="fzb">'+MARK+'<span>Zest</span></span>'+(pill&&FZ.pill?'<span class="fzpill" id="fzpill"><a href="'+esc(STORE)+'" id="fzget"'+(IOS?'':' target="_blank" rel="noopener"')+'>Get the app</a><button type="button" id="fzpx" aria-label="Hide this">×</button></span>':'')+'</div>'}
 function wirePill(){var a=$('fzget'),x=$('fzpx');if(a)a.onclick=function(){zc('store_tap')};if(x)x.onclick=function(){FZ.pill=false;var p=$('fzpill');if(p)p.remove()}}
 var TERMS='<p class="zgt">By playing you agree to the <a href="https://orangepulplabs.com/zest/terms/" target="_blank" rel="noopener">Terms</a> and <a href="https://orangepulplabs.com/zest/privacy/" target="_blank" rel="noopener">Privacy policy</a>.</p>';
-function storeBtn(label){return '<a class="fzgo" id="fzstore" href="'+esc(STORE)+'"'+(IOS?'':' target="_blank" rel="noopener"')+'>'+esc(lab(label))+'</a>'}
-function storeNote(){if(IOS)return '<ol class="fzsteps"><li>Tap the button above.</li><li>Tap Share, then <b>Add to Home Screen</b>.</li><li>Open it from your Home Screen. Free, no App Store.</li></ol>';return '<p class="fzsm">For Android. <a href="/zest/iphone/">On iPhone? Play free.</a>'+(BETA?' Zest is in testing: <a href="'+esc(BETA)+'" id="fzbeta" target="_blank" rel="noopener">Join the beta</a>.':'')+'</p>'}
-function storeBits(label){return storeBtn(label)+storeNote()}
+var IPH='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M12 8.5v6M9 11.5h6"/></svg>';
+function storeBtn(){return IOS?'<a class="fzbdg" id="fzstore" href="'+esc(STORE)+'">'+IPH+'<span><small>Available for</small><b>iPhone</b></span></a>'
+  :'<a class="fzgp" id="fzstore" href="'+esc(STORE)+'" target="_blank" rel="noopener"><img src="/img/badges/google-play.png" alt="Get it on Google Play" width="188" height="56"></a>'}
+function storeNote(){if(IOS)return '<p class="fzsm">Open the game, then:</p><ol class="fzsteps">'+STEPS.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ol>';
+  return '<p class="fzsm">'+(BETA?'In testing on Google Play: <a href="'+esc(BETA)+'" id="fzbeta" target="_blank" rel="noopener">join the beta</a>. ':'')+'<a href="/zest/iphone/">On iPhone? Play free.</a></p>'}
+function storeBits(){return storeBtn()+storeNote()}
 
 /* ---------- the one screen when there is no puzzle: no link, or a link that cannot be played ---------- */
 function landing(bad){FZ.live=false;newRun();var s=$('screen');if(s)s.classList.remove('fz','pz5');
-  var h=bad?'This link didn’t work.':'Zest',one=bad?'It may be cut off, or that puzzle has moved on. Here is today’s puzzle instead, or get them all in the app.':'Short logic puzzles, each with a true story. A new one every day.';
-  show('<div class="fzl" data-fz="'+(bad?'bad':'land')+'"><div class="fzcard">'+MARK+'<h1>'+h+'</h1><p class="fzone">'+one+'</p>'+storeBtn('Get Zest on Google Play')+
+  var h=bad?'This link didn’t work.':'Zest',one=bad?'It may be cut off, or that puzzle has moved on. Here is today’s puzzle instead, or get them all in the app.':ONE;
+  show('<div class="fzl" data-fz="'+(bad?'bad':'land')+'"><div class="fzcard">'+MARK+'<h1>'+h+'</h1><p class="fzone">'+one+'</p>'+storeBtn()+
     '<a class="fz2" id="fzdaily" href="'+esc(dailyHref())+'">'+(todayPick().plain?'Try a puzzle':'Try today’s puzzle')+'</a>'+storeNote()+'</div>'+TERMS+'</div>',false,{back:null});
   var a=$('fzstore');if(a)a.onclick=function(){zc('store_tap')}}
 FZ.landing=landing;
@@ -174,7 +180,7 @@ FZ.close=closeSheet;
 /* Back, or idle in a lost position: the app pitch, with Keep playing */
 function giveUp(why){if(!FZ.live)return;if(FZ.layer){closeSheet();return}
   var d=sheet(why,'<h2 id="fzst">'+(why==='stuck'?'Tricky one?':'Before you go')+'</h2>'+
-    '<p class="fzpitch">'+(why==='stuck'?'Undo goes back to the last good spot. Or take a break: ':'Liked it? ')+PITCH+'</p>'+storeBits('Play more in the Zest app')+
+    '<p class="fzpitch">'+(why==='stuck'?'Undo goes back to the last good spot. Or take a break: ':'Liked it? ')+PITCH+'</p>'+storeBits()+
     '<button type="button" class="fz2" id="fzkeep">Keep playing</button>');
   d.querySelector('#fzkeep').onclick=function(){closeSheet()}}
 FZ.giveUp=giveUp;
@@ -212,7 +218,7 @@ function winSheet(id,level,o,r,q){var p=PUZZLES[id],fo=o.friend||{},ft=fo.t!=nul
     '<div class="fzvs2"><div class="me"><b class="num">'+me+'</b><small>You</small></div><div><b class="num">'+ft+'</b><small>'+esc(who)+'</small></div></div>',
   url=backLink(me,r.hints),c=FZ.cur||{};FZ.link=url;
   var d=sheet('win','<p class="fzk">'+esc(p.name)+' · Level '+level+'</p><h2 id="fzst">'+head+'</h2><div class="fzst">'+starsRow(Math.max(1,q.stars))+'</div>'+vs+
-    '<p class="fzpitch">'+PITCH+'</p>'+storeBits('Play more in the Zest app')+
+    '<p class="fzpitch">'+PITCH+'</p>'+storeBits()+
     (url?'<button type="button" class="fz2" id="fzback" data-link="'+esc(url)+'">Challenge a friend back</button><input class="fzlink" id="fzlink" readonly hidden aria-label="Your challenge link"><p class="fzok" id="fzok" role="status" aria-live="polite"></p>':'')+
     '<button type="button" class="fztx" id="fzagain">Try again</button>');
   var text=c.daily?'I solved today’s Zest puzzle, '+p.name+', in '+plural(me,'move')+'. Your turn?':'I solved '+p.name+' level '+level+' in '+plural(me,'move')+' on Zest. Can you beat it?';

@@ -6,4 +6,4 @@
      "birthday"  asks for the birth date; the service keeps only the age band. Needs Google's sensitive-scope review.
    apiBase: the ranking and sync service. Production by default. On localhost only, ?api=<url> overrides it.
    aimUrl: where the Aim game page is served from (shown in an iframe on the Challenges tab). */
-var ZCONFIG={googleClientId:"583294696691-v3ubuab9nhs218lqhsh12no04h38dvlr.apps.googleusercontent.com",ageScope:"none",apiBase:"https://zest-api-demo.orangepulplabs.workers.dev",aimUrl:"/site/zest/index.html"};
+var ZCONFIG={googleClientId:"583294696691-v3ubuab9nhs218lqhsh12no04h38dvlr.apps.googleusercontent.com",ageScope:"none",apiBase:"https://zest-api.orangepulplabs.workers.dev",aimUrl:""};

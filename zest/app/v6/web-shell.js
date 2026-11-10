@@ -6,7 +6,9 @@
    - Android in a browser: after the first win, "Zest is on Google Play" (the app is the better home on Android)
    - moving progress: Safari and the home-screen app keep separate storage on iPhone, so "Copy my progress" (browser) and
      "Paste progress" (home-screen app, Settings, and a pill on the first screens) carry the save as a short text code
-   - Reminders and sign-in are app-only for now: their Settings rows are hidden by CSS in the web build
+   - reminders: only in the Home Screen app (Web Push, iOS 16.4+); elsewhere the Reminders rows are hidden (.zw-nopush). Sign-in is
+     Android-only for now. Turning reminders off (or losing permission) deletes the push address on our service (POST /v1/push/stop)
+   - the Home Screen steps (STEPS) are the same words as the website's (IOS_STEPS in ~/dev/site-gen.py, which checks this file)
    Copy rules: no brain or health claims, no pressure, no emoji. */
 (function(){
   try{var fl=JSON.parse(localStorage.getItem('zv5.flags')||'{}');fl.ads=false;fl.reminders=false;localStorage.setItem('zv5.flags',JSON.stringify(fl))}catch(e){}
@@ -43,15 +45,19 @@
      remind6 builds the 7-day plan and talks to "the app" through ZestNative. Here: the plan's words are kept for the service worker
      (cache 'zpush'), and only its times go to our service (POST /v1/push/plan), which sends an empty push at each time (zest-api src/push.js).
      Permission is asked only from remind6's own explainer (Allow) or a Settings switch, as on Android. */
-  var DEMO='https://zest-api-demo.orangepulplabs.workers.dev';
-  function api(){try{return (typeof API!=='undefined'&&API)||DEMO}catch(e){return DEMO}}
+  var PROD='https://zest-api.orangepulplabs.workers.dev';
+  function api(){try{return (typeof API!=='undefined'&&API)||PROD}catch(e){return PROD}}
   function u8(b){b=b.replace(/-/g,'+').replace(/_/g,'/');var r=atob(b+'==='.slice((b.length+3)%4)),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
   function granted(){try{return Notification.permission==='granted'}catch(e){return false}}
   function tell(){try{if(window.__zestNotif)window.__zestNotif({sdk:34,enabled:granted()})}catch(e){}}
   function subscription(create){return navigator.serviceWorker.ready.then(function(reg){return reg.pushManager.getSubscription().then(function(s){if(s||!create)return s;
       return fetch(api()+'/v1/push/key').then(function(r){return r.json()}).then(function(k){return reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(k.key)})})})})}
   var lastItems=null;
-  function postPlan(){if(!lastItems||!granted())return Promise.resolve(null);return subscription(false).then(function(s){if(!s)return null;
+  /* reminders off (an empty plan) or permission gone: forget the push address on our service and drop the browser's subscription */
+  function stopPush(){return subscription(false).then(function(s){if(!s)return null;
+      return fetch(api()+'/v1/push/stop',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({endpoint:s.endpoint})})
+        .then(function(r){W.log.push('push:stop '+r.status);return s.unsubscribe()})}).catch(function(e){W.log.push('push:stoperr '+e)})}
+  function postPlan(){if(!lastItems)return Promise.resolve(null);if(!granted()||!lastItems.length)return stopPush();return subscription(true).then(function(s){if(!s)return null;
       return fetch(api()+'/v1/push/plan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({endpoint:s.endpoint,at:lastItems.map(function(x){return x.at})})})
         .then(function(r){W.log.push('push:plan '+r.status);return r.status})}).catch(function(e){W.log.push('push:err '+e)})}
   function keepWords(items){try{caches.open('zpush').then(function(c){return c.put(new URL('../push-plan',location.href).href,new Response(JSON.stringify(items),{headers:{'content-type':'application/json'}}))})}catch(e){}}
@@ -62,7 +68,7 @@
       else if(k==='notif'&&v==='ask'){var p;try{p=Notification.requestPermission()}catch(e){p=null}   /* in the tap, before any await: iOS needs that */
         Promise.resolve(p).then(function(){if(!granted()){tell();return}return subscription(true).then(function(){return postPlan()}).catch(function(e){W.log.push('push:sub '+e)}).then(tell)})}
       else if(k==='notif'&&v==='settings')say('Turn them on in iPhone Settings, then Notifications, then Zest.')}};
-    W.push={post:postPlan,sub:subscription};
+    W.push={post:postPlan,sub:subscription,stop:stopPush};
   }
   // a tapped reminder opens ./v6/?rem=daily|reel (or messages an open window): go where remind6 would on Android
   function remOpen(r){if(r!=='daily'&&r!=='reel')return;var n=0;(function go(){if(window.__zestRemOpen){window.__zestRemOpen(r)}else if(n++<40)setTimeout(go,250)})()}
@@ -102,7 +108,7 @@
     '.zw-bdg{display:flex;align-items:center;gap:10px;width:100%;min-height:58px;padding:0 16px;margin-top:12px;border-radius:14px;background:#000;color:#fff;border:1px solid #A6A6A6;text-decoration:none;font:600 1rem var(--font,system-ui);cursor:pointer;text-align:left}'+
     '.zw-bdg[hidden]{display:none}.zw-bdg svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}.zw-bdg span{display:flex;flex-direction:column;line-height:1.1}.zw-bdg small{font:500 .72rem var(--font,system-ui)}.zw-bdg b{font:600 1.2rem var(--font,system-ui)}'+
     '.zw-gp{display:block;margin-top:12px}.zw-gp img{display:block;height:58px;width:auto;max-width:100%}'+
-    '.zw-gate .zw-steps{margin-top:16px}.zw-gate .sm{color:var(--muted,#675F55);font-size:.9rem}.zw-link{display:block;margin:18px auto 0;background:none;border:0;color:var(--ink,#1B1916);font:650 1rem var(--font,system-ui);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:10px}';
+    '.zw-gate .zw-steps{margin-top:16px}.zw-gate .sm,[data-zwplay] .sm{color:var(--muted,#675F55);font-size:.9rem}.zw-link{display:block;margin:18px auto 0;background:none;border:0;color:var(--ink,#1B1916);font:650 1rem var(--font,system-ui);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:10px}';
   function css(){if(document.getElementById('zw-css'))return;var s=document.createElement('style');s.id='zw-css';s.textContent=CSS;document.head.appendChild(s)}
   var SHARE='<svg viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>';
   var ADD='<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
@@ -119,9 +125,17 @@
 
   var ARW='<svg viewBox="0 0 24 24"><path d="M12 3v17M5 13l7 7 7-7"/></svg>';
   function arrow(){if(!SPOT||home)return null;css();var a=node('<div class="zw-arrow '+SPOT+'" aria-hidden="true">'+ARW+'</div>');document.body.appendChild(a);return a}
-  function shareStep(){return SPOT==='br'?'Tap '+ico(DOTS)+' at the bottom right, then '+ico(SHARE)+' Share.'
-      :SPOT==='bottom'?'Tap '+ico(SHARE)+' Share in the bar at the bottom.'
-      :SPOT==='top'?'Tap '+ico(SHARE)+' Share at the top right.':'Open your browser\u2019s menu and tap '+ico(SHARE)+' Share.'}
+  /* the Home Screen steps: the same words as the website (IOS_STEPS in ~/dev/site-gen.py). Only the Share step changes where Share is
+     not in Safari's place (Chrome and iPad: top right; an unknown browser: its menu). */
+  var STEPS=["Tap Share. On iOS 26, tap \u00b7\u00b7\u00b7 first, then Share.","Tap Add to Home Screen, then Add.","Open Zest from your Home Screen."];
+  var HEAD='Add it to your Home Screen',LEDE='Free, no App Store. Full screen and offline, like an app.';
+  function step(i){var t=E(STEPS[i]);
+    if(i===0){if(SPOT==='top')return 'Tap '+ico(SHARE)+' Share at the top right.';if(!SPOT)return 'Open your browser\u2019s menu and tap '+ico(SHARE)+' Share.';
+      return t.replace('Tap Share','Tap '+ico(SHARE)+' Share').replace('tap \u00b7\u00b7\u00b7','tap '+ico(DOTS))}
+    if(i===1)return t.replace('Tap Add to Home Screen','Tap '+ico(ADD)+' <b>Add to Home Screen</b>').replace(/Add\.$/,'<b>Add</b>.');
+    return t}
+  function stepsHTML(){return '<li><span>'+step(0)+'</span></li><li><span>'+step(1)+'</span></li><li><span>'+step(2)+'</span></li>'}
+  var shareStep=function(){return step(0)};
   W.arrow=arrow;W.spot=SPOT;
 
   /* ---------- the install guide (iPhone/iPad) ---------- */
@@ -131,12 +145,12 @@
       '<ol class="zw-steps"><li><span>Tap '+ico(DOTS)+' or '+ico(SHARE)+' and choose <b>Open in Safari</b>.</span></li><li><span>Then add it to your Home Screen from Safari.</span></li></ol>'+
       '<div style="display:flex;flex-direction:column;gap:8px;margin-top:16px"><button class="btn pri wide" data-zwlink>Copy link</button><button class="btn ghost wide" data-zwno>Not now</button></div></div>';
     var has=wins()>0||!!(function(){try{return S().onb}catch(e){return 0}})();
-    return '<div data-zwguide><p>From your Home Screen it works like an app: full screen, offline, and your progress stays put. Free, no App Store needed.</p>'+
-      '<ol class="zw-steps"><li><span>'+share+'</span></li><li><span>Scroll down and tap '+ico(ADD)+' <b>Add to Home Screen</b>.</span></li><li><span>Tap <b>Add</b>, then open it from your Home Screen.</span></li></ol>'+
+    return '<div data-zwguide><p>'+LEDE+'</p>'+
+      '<ol class="zw-steps">'+stepsHTML()+'</ol>'+
       (has?'<div class="zw-box"><p class="sm">The Home Screen app starts fresh. To bring today’s progress along, copy it first, then paste it there (Settings, Paste progress).</p><button class="btn sec wide" style="margin-top:10px" data-zwcopy>Copy my progress</button></div>':'')+
       '<div style="margin-top:16px"><button class="btn ghost wide" data-zwno>Not now</button></div></div>'}
   function showGuide(why){if(home)return;var t=K();t.guide=(t.guide|0)+1;t.guideAt=Date.now();setK(t);ev2('web_guide_'+(why||'open'));
-    var b=node(guideHTML()),sh=sheet(inApp?'Open in Safari':'Add it to your Home Screen',b),ar=inApp?null:arrow();
+    var b=node(guideHTML()),sh=sheet(inApp?'Open in Safari':HEAD,b),ar=inApp?null:arrow();
     var cl0=sh.close;sh.close=function(){if(ar)ar.remove();return cl0.apply(this,arguments)};var iv=setInterval(function(){if(sh.el&&!sh.el.isConnected){clearInterval(iv);if(ar)ar.remove()}},500);
     var no=b.querySelector('[data-zwno]');if(no)no.onclick=function(){ev2('web_guide_later');sh.close()};
     var cp=b.querySelector('[data-zwcopy]');if(cp)cp.onclick=function(){copy(exportCode()).then(function(ok){ev2(ok?'web_progress_copied':'web_progress_copy_fail');
@@ -153,15 +167,15 @@
   function gate(){css();ev2('web_gate');var t=K();t.gate=(t.gate|0)+1;setK(t);try{sessionStorage.setItem('zw-gate','1')}catch(e){}
     var iBtn='<button class="zw-bdg" type="button" data-zgi>'+IPH+'<span><small>Available for</small><b>iPhone</b></span></button>';
     var gBtn='<a class="zw-gp" href="'+PLAY+'" data-zgp rel="noopener"><img src="../icons/google-play.png" alt="Get it on Google Play" width="188" height="56"></a>'+
-      '<p class="sm" style="margin:6px 2px 0">In testing on Google Play: <a href="'+BETA+'">join the beta</a> to install it.</p>';
+      '<p class="sm" style="margin:6px 2px 0">In testing on Google Play: <a href="'+BETA+'">join the beta</a></p>';
     var steps='<div data-zgsteps'+(iOS?'':' hidden')+'><ol class="zw-steps">'+(iOS?'':'<li><span>Open <b>orangepulplabs.com/zest/iphone</b> on your iPhone.</span></li>')+
       (inApp?'<li><span>Tap '+ico(DOTS)+' and choose <b>Open in Safari</b>.</span></li>':'')+
-      '<li><span>'+(iOS?shareStep():'Tap '+ico(SHARE)+' Share.')+'</span></li><li><span>Tap '+ico(ADD)+' <b>Add to Home Screen</b>, then <b>Add</b>.</span></li><li><span>Open it from your Home Screen.</span></li></ol></div>';
-    var body=iOS?('<h1>Put it on your Home Screen</h1><p class="lede">Free, no App Store. It opens full screen and works offline.</p>'+steps)
+      stepsHTML()+'</ol></div>';
+    var body=iOS?('<h1>'+HEAD+'</h1><p class="lede">'+LEDE+'</p>'+steps)
       :android?('<h1>Get the app</h1><p class="lede">Free on Google Play, with reminders and rankings.</p>'+gBtn)
       :('<h1>Get the app</h1><p class="lede">Free on iPhone and Android.</p>'+iBtn+steps+gBtn);
     var g=node('<div class="zw-gate" role="dialog" aria-modal="true" aria-label="Get the app"><div class="in"><div aria-hidden="true" style="width:56px;height:56px;border-radius:14px;overflow:hidden"><img src="../icons/icon-192.png" alt="" width="56" height="56"></div>'+body+
-      '<button class="zw-link" type="button" data-zgx>'+(iOS||android?'Play in the browser for now':'Play in this browser')+'</button></div></div>');
+      '<button class="zw-link" type="button" data-zgx>Or play in your browser</button></div></div>');
     document.body.appendChild(g);var ar=iOS&&!inApp?arrow():null;
     var ib=g.querySelector('[data-zgi]');if(ib)ib.onclick=function(){var st=g.querySelector('[data-zgsteps]');st.hidden=!st.hidden;ev2('web_gate_iphone')};
     var gp=g.querySelector('[data-zgp]');if(gp)gp.onclick=function(){ev2('web_gate_play')};
@@ -171,8 +185,9 @@
   /* ---------- Android in a browser: the Play app ---------- */
   function showPlay(){var t=K();t.play=(t.play|0)+1;setK(t);ev2('web_play_offer');
     var b=node('<div data-zwplay><p>There is an Android app on Google Play, with reminders, rankings and your progress in one place. Free.</p>'+
-      '<div style="display:flex;flex-direction:column;gap:8px;margin-top:16px"><a class="btn pri wide" href="'+PLAY+'" data-zwgo>Get it on Google Play</a>'+
-      '<a class="btn sec wide" href="'+BETA+'">In testing: join the beta first</a><button class="btn ghost wide" data-zwno>Keep playing here</button></div></div>');
+      '<a class="zw-gp" href="'+PLAY+'" data-zwgo rel="noopener"><img src="../icons/google-play.png" alt="Get it on Google Play" width="188" height="56"></a>'+
+      '<p class="sm" style="margin:6px 2px 0">In testing on Google Play: <a href="'+BETA+'">join the beta</a></p>'+
+      '<div style="margin-top:16px"><button class="btn ghost wide" data-zwno>Keep playing here</button></div></div>');
     var sh=sheet('Get the Android app',b);b.querySelector('[data-zwno]').onclick=function(){sh.close()};b.querySelector('[data-zwgo]').onclick=function(){ev2('web_play_go')};W.lastSheet=sh;return sh}
 
   /* ---------- paste progress (home-screen app) ---------- */
