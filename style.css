@@ -195,8 +195,19 @@ footer.site-foot{border-top:1px solid var(--line);padding:clamp(40px,6vw,72px) 0
 .soon{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:0 20px;border-radius:16px;border:1.5px dashed var(--chip);color:var(--muted);font:600 15px var(--font)}
 .dlnote{flex-basis:100%;margin:4px 0 0;font:500 14px var(--font);color:var(--muted)}
 .dlnote a{color:inherit}
-.gp.ios{background:var(--ink);color:var(--bg)}
-.zos-ios .os-a,.zos-android .os-i,.zos-ios .os-d,.zos-android .os-d{display:none!important}
+.badge{display:inline-flex;align-items:center;height:56px;border-radius:12px;text-decoration:none;transition:transform .15s}
+.badge:hover{transform:translateY(-1px)}.badge img{display:block;height:56px;width:auto}
+.gpfake,.ibadge{display:inline-flex;align-items:center;gap:10px;height:56px;padding:0 18px 0 14px;border-radius:12px;background:#000;color:#fff;border:1px solid #A6A6A6;font:600 16px var(--font);cursor:pointer}
+.ibadge svg{width:28px;height:28px;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ibadge span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.05;text-align:left}
+.ibadge small{font:500 11.5px var(--font);letter-spacing:.02em}.ibadge b{font:600 22px var(--font);letter-spacing:-.01em}
+.iguide{max-width:min(560px,calc(100% - 32px));width:100%;border:0;border-radius:24px;padding:28px 24px 24px;background:var(--bg);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.iguide::backdrop{background:rgba(0,0,0,.5)}.iguide h2{font:700 28px/1.15 var(--display);margin:4px 0 8px}.igl{color:var(--muted);margin:0}
+.igx{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:0;background:var(--ph);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.iguide .isteps{grid-template-columns:1fr;gap:10px;margin-top:18px}.iguide .isteps li{padding:14px 16px}.iguide .isteps h3{margin:8px 0 4px;font-size:16.5px}.iguide .isteps p{font-size:15px}
+.iguide .mock{height:96px;margin-top:10px}.igo{margin-top:18px;width:100%}
+.ig-steps{counter-reset:n}.ig-steps li{counter-increment:n}.ig-steps .num::before{content:counter(n)}.ig-desk{display:none;margin-top:18px}.zos-desk .ig-desk{display:block}.zos-desk .iguide .ig-steps li:first-child,.zos-desk .igo{display:none}
+.zos-ios .dlnote.os-a,.zos-android .dlnote.os-i,.zos-ios .os-d,.zos-android .os-d{display:none!important}.zos-ios .ibadge{order:-1}
 .zos-ios .gp.ios{background:var(--accent);color:var(--on-accent)}
 .dl .dlnote{order:3}
 .ios-hero{padding:56px 0 24px}.ios-hero h1{font:700 clamp(34px,6vw,56px)/1.08 var(--display);margin:10px 0 14px;letter-spacing:-.01em}
