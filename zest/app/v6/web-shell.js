@@ -2,8 +2,8 @@
    Injected only in the web copy (tool/build_web.py), first script on the page, in place of the Android app's app-shell.js.
    - same flags as the app: ad placeholders off, v5's old nudge off
    - offline: registers ../sw.js (scope /zest/app/); a new version waits and is offered on Today, never mid-puzzle
-   - iPhone/iPad in a browser: after the first win, a 3-step "Add to Home Screen" guide (twice at most), and a Settings row
-   - Android in a browser: after the first win, "Zest is on Google Play" (the app is the better home on Android)
+   - no "Get the app" screen before playing (only with ?install); iPhone/iPad in a browser: after 3 puzzles solved, a 3-step "Add to Home Screen" guide (twice at most), and a Settings row
+   - Android in a browser: after 3 puzzles solved, "Zest is on Google Play" (the app is the better home on Android)
    - moving progress: Safari and the home-screen app keep separate storage on iPhone, so "Copy my progress" (browser) and
      "Paste progress" (home-screen app, Settings, and a pill on the first screens) carry the save as a short text code
    - reminders: only in the Home Screen app (Web Push, iOS 16.4+); elsewhere the Reminders rows are hidden (.zw-nopush). Sign-in is
@@ -27,6 +27,11 @@
   var PUSHOK=home&&'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window||/[?&]as=pushtest\b/.test(q);
   document.documentElement.classList.add(PUSHOK?'zw-push':'zw-nopush');
   function ev2(n){W.log.push(n);try{if(typeof ev==='function')ev(n)}catch(e){}}
+  /* Home Screen counts (10 Nov 2026): two anonymous daily totals in the usual usage counts (no identifier; off with Settings > Share anonymous counts).
+     web_home_install: the first open from the Home Screen icon on this phone. web_home_open: at most once a day per phone, from the icon. */
+  window.addEventListener('load',function(){try{if(window.EV_ALLOW)['web_home_install','web_home_open'].forEach(function(n){if(EV_ALLOW.indexOf(n)<0)EV_ALLOW.push(n)});
+    if(!home)return;var k=K(),d=typeof T==='function'?T():new Date().toISOString().slice(0,10);
+    if(!k.inst){k.inst=1;ev2('web_home_install')}if(k.open!==d){k.open=d;ev2('web_home_open')}setK(k)}catch(e){}});
   function K(){var t={};try{var st=JSON.parse(localStorage.getItem('zv5.web')||'{}');if(st&&typeof st==='object')t=st}catch(e){}return t}
   function setK(t){try{localStorage.setItem('zv5.web',JSON.stringify(t))}catch(e){}}
 
@@ -121,7 +126,7 @@
     ov.firstChild.appendChild(body);ov.addEventListener('click',function(e){if(e.target===ov)ov.remove()});document.body.appendChild(ov);return {close:function(){ov.remove()},el:ov}}
   function say(t){try{if(typeof toast==='function'){toast(t);return}}catch(e){}W.log.push('toast:'+t)}
   function quiet(){try{return !!(window.ZREM&&ZREM.quiet&&ZREM.quiet())}catch(e){return false}}
-  function wins(){try{var v=S();return Object.keys(v.solved||v.done||v.wins||{}).length||(v.stats&&v.stats.wins)||0}catch(e){return 0}}
+  function wins(){var n=K().wins|0;try{n=Math.max(n,Object.keys(S().cards||{}).length)}catch(e){}return n}   // puzzles won here (counted by the markWin hook), or stories collected
 
   var ARW='<svg viewBox="0 0 24 24"><path d="M12 3v17M5 13l7 7 7-7"/></svg>';
   function arrow(){if(!SPOT||home)return null;css();var a=node('<div class="zw-arrow '+SPOT+'" aria-hidden="true">'+ARW+'</div>');document.body.appendChild(a);return a}
@@ -162,8 +167,7 @@
   /* ---------- the welcome screen in a browser, before playing: get it for iPhone / on Google Play, or play here ---------- */
   var IPH='<svg viewBox="0 0 22 36" aria-hidden="true"><defs><linearGradient id="ibsun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F7C76B"/><stop offset="1" stop-color="#E8590C"/></linearGradient></defs><rect x="1.5" y="1" width="19" height="34" rx="5" fill="#000" stroke="#fff" stroke-width="1.5"/><rect x="3.6" y="3" width="14.8" height="30" rx="3.3" fill="url(#ibsun)"/><rect x="8" y="4.3" width="6" height="1.9" rx=".95" fill="#000"/><rect x="7.5" y="30.2" width="7" height="1.3" rx=".65" fill="#fff" opacity=".9"/></svg>';
   var GPI='<svg viewBox="0 0 24 24"><path d="M5 3.5v17l9-8.5z"/><path d="M5 3.5l11 6.3-2 2.7M5 20.5l11-6.3-2-2.7M16 9.8l3.5 2.2-3.5 2.2"/></svg>';
-  function gateDue(){if(home)return false;if(/[?&](play|nogate)\b/.test(q))return false;if(/[?&]install\b/.test(q))return true;
-    try{if(sessionStorage.getItem('zw-gate'))return false}catch(e){}var onb=0;try{onb=S().onb}catch(e){}return !onb}
+  function gateDue(){return !home&&/[?&]install\b/.test(q)}   // 10 Nov 2026 (owner): the web app goes straight into the game; the app offer comes after a few wins (due)
   function gate(){css();ev2('web_gate');var t=K();t.gate=(t.gate|0)+1;setK(t);try{sessionStorage.setItem('zw-gate','1')}catch(e){}
     var iBtn='<button class="zw-bdg" type="button" data-zgi>'+IPH+'<span><small>Available for</small><b>iPhone</b></span></button>';
     var gBtn='<a class="zw-gp" href="'+PLAY+'" data-zgp rel="noopener"><img src="../icons/google-play.png" alt="Get it on Google Play" width="188" height="56"></a>'+
@@ -200,11 +204,12 @@
   W.paste=paste;
 
   /* ---------- hooks (wrapped once the game's scripts have run) ---------- */
+  var WINS_BEFORE_OFFER=3;   // puzzles solved before the browser offers the app (Android: Google Play; iPhone: Add to Home Screen)
   var pend=0;
-  function due(){if(home)return false;var t=K();if(iOS){if((t.guide|0)>=2)return false;if((t.guide|0)===1&&Date.now()-(t.guideAt|0)<3*864e5)return false;return true}
+  function due(){if(home||wins()<WINS_BEFORE_OFFER)return false;var t=K();if(iOS){if((t.guide|0)>=2)return false;if((t.guide|0)===1&&Date.now()-(t.guideAt|0)<3*864e5)return false;return true}
     if(android)return (t.play|0)<1;return false}
   document.addEventListener('DOMContentLoaded',function(){css();
-    try{var mw0=markWin;markWin=function(o){var r=mw0.apply(this,arguments);try{if(o&&o.id&&due())pend=Date.now()}catch(e){}return r}}catch(e){}
+    try{var mw0=markWin;markWin=function(o){var r=mw0.apply(this,arguments);try{if(o&&o.id){var t=K();t.wins=(t.wins|0)+1;setK(t);if(due())pend=Date.now()}}catch(e){}return r}}catch(e){}
     try{var os0=openSettings;openSettings=function(){var sh=os0.apply(this,arguments);try{settingsRow(sh)}catch(e){}return sh}}catch(e){}
     if(gateDue())gate();
     pastePill();

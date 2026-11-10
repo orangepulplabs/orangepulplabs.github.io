@@ -172,6 +172,11 @@ html:has(dialog[open]){overflow:hidden}
 .ig-steps{counter-reset:n}.ig-steps li{counter-increment:n}.ig-steps .num::before{content:counter(n)}.ig-desk{display:none;margin-top:18px}.zos-desk .ig-desk{display:block}.zos-desk .igo,.zos-desk .ig-then{display:none}
 .zos-ios .os-a.dlnote,.zos-ios .os-a.fine{display:none!important}.zos-ios .ibadge{order:-1}
 .dl .dlnote{order:3}
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:34px}
+.playnow{min-height:58px;padding:0 30px;font-size:18px;border-radius:16px;box-shadow:0 8px 22px -10px var(--accent)}
+.playnow svg{width:20px;height:20px}.ctanote{font:500 14px var(--font);color:var(--muted)}
+.also{margin:26px 0 0;font:600 12px var(--font);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dl.dl2{margin-top:10px}
 .ios-hero{padding:56px 0 24px}.ios-hero h1{font:700 clamp(34px,6vw,56px)/1.08 var(--display);margin:10px 0 14px;letter-spacing:-.01em}
 .ios-hero .zlede{max-width:34em}
 .isteps{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));counter-reset:s}
