@@ -177,6 +177,7 @@ html:has(dialog[open]){overflow:hidden}
 .playnow svg{width:20px;height:20px}.ctanote{font:500 14px var(--font);color:var(--muted)}
 .also{margin:26px 0 0;font:600 12px var(--font);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .dl.dl2{margin-top:10px}
+.icard .side .playnow{order:-2;box-sizing:border-box;width:188px;min-height:56px;padding:0 18px;font-size:17px}.icard .side small.or{order:-1;margin:4px 0 -2px;text-align:center;color:var(--muted)}
 .ios-hero{padding:56px 0 24px}.ios-hero h1{font:700 clamp(34px,6vw,56px)/1.08 var(--display);margin:10px 0 14px;letter-spacing:-.01em}
 .ios-hero .zlede{max-width:34em}
 .isteps{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));counter-reset:s}
@@ -207,7 +208,7 @@ body.inst{min-height:100vh;overflow-x:hidden}
 .zos-ios .icard .side .ibadge{order:-1}
 .ifoot{position:fixed;left:0;right:0;bottom:14px;z-index:2;display:flex;justify-content:center;gap:8px}
 .ifoot a{font:600 13px var(--font);color:var(--ink);text-decoration:none;background:var(--surface);border:1px solid var(--line);min-height:44px;display:inline-flex;align-items:center;padding:0 16px;border-radius:999px}
-@media (max-width:640px){.icard{grid-template-columns:1fr;padding:24px 20px}.icard .side{padding:18px 0 0;border-left:0;border-top:1px solid var(--line)}.icard .side .badge,.icard .side .ibadge{width:100%}.ibg{grid-template-columns:repeat(6,1fr);gap:16px}}
+@media (max-width:640px){.icard{grid-template-columns:1fr;padding:24px 20px}.icard .side{padding:18px 0 0;border-left:0;border-top:1px solid var(--line)}.icard .side .badge,.icard .side .ibadge,.icard .side .playnow{width:100%}.ibg{grid-template-columns:repeat(6,1fr);gap:16px}}
 .zphones{position:relative;height:min(80svh,800px);min-height:420px;display:flex;justify-content:center;align-items:center;isolation:isolate}
 .zsun{position:absolute;z-index:-1;width:min(100%,760px);aspect-ratio:1;border-radius:50%;background:var(--tint)}
 .zsun::after{content:"";position:absolute;inset:-5%;border-radius:50%;border:1.5px solid var(--chip);transform:translate(3%,2%)}
