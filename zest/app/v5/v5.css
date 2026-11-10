@@ -396,6 +396,14 @@ svg{flex:none}
 .ob .btn{margin-top:28px;width:100%;max-width:320px}
 .ob .legal{margin-top:14px;font-size:.8125rem;color:var(--muted);max-width:320px}
 .ob .legal a{color:inherit}
+/* the welcome = the first puzzle's story (10 Nov 2026) */
+.ob1{justify-content:flex-start;text-align:left;align-items:stretch;overflow-y:auto}
+.ob1 .ob1-top{display:flex;align-items:center;gap:10px;font:600 .9375rem var(--font);color:var(--muted)}.ob1 .ob1-top .mark{width:40px;height:40px;flex:none}.ob1 .ob1-top .mark svg{width:40px;height:40px}
+.ob1 .ob1-art{margin-top:16px;border-radius:22px;overflow:hidden;background:var(--sunk);display:flex;align-items:center;justify-content:center;max-height:34vh;min-height:150px}.ob1 .ob1-art svg{max-height:34vh;width:auto;max-width:100%}
+.ob1 .ob1-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.ob1 h1{margin-top:8px;text-align:left}.ob1 .ob1-hook{margin:8px 0 0;line-height:1.5;max-width:40ch}
+.ob1 .btn{max-width:none;margin-top:auto}.ob1 .legal{max-width:none;text-align:center}
+.ob1 .btn[data-go]{margin-top:24px}
 .fan3{position:relative;width:220px;height:120px;margin-top:22px}
 .fan3 .art{position:absolute;top:0;left:50%;width:92px;height:92px;margin-left:-46px;border-radius:18px;padding:8px;box-shadow:var(--sh2);background:var(--surface)}
 .slate{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:calc(24px + env(safe-area-inset-top,0px)) var(--gut) 24px;background:var(--bg)}

@@ -133,7 +133,7 @@
   /* the Home Screen steps: the same words as the website (IOS_STEPS in ~/dev/site-gen.py). Only the Share step changes where Share is
      not in Safari's place (Chrome and iPad: top right; an unknown browser: its menu). */
   var STEPS=["Tap Share. On iOS 26, tap \u00b7\u00b7\u00b7 first, then Share.","Tap Add to Home Screen, then Add.","Open Zest from your Home Screen."];
-  var HEAD='Add it to your Home Screen',LEDE='Free, no App Store. Full screen and offline, like an app.';
+  var HEAD='Add it to your Home Screen',LEDE='Free. Opens full screen and works offline, like any app.';
   function step(i){var t=E(STEPS[i]);
     if(i===0){if(SPOT==='top')return 'Tap '+ico(SHARE)+' Share at the top right.';if(!SPOT)return 'Open your browser\u2019s menu and tap '+ico(SHARE)+' Share.';
       return t.replace('Tap Share','Tap '+ico(SHARE)+' Share').replace('tap \u00b7\u00b7\u00b7','tap '+ico(DOTS))}
@@ -211,6 +211,7 @@
   document.addEventListener('DOMContentLoaded',function(){css();
     try{var mw0=markWin;markWin=function(o){var r=mw0.apply(this,arguments);try{if(o&&o.id){var t=K();t.wins=(t.wins|0)+1;setK(t);if(due())pend=Date.now()}}catch(e){}return r}}catch(e){}
     try{var os0=openSettings;openSettings=function(){var sh=os0.apply(this,arguments);try{settingsRow(sh)}catch(e){}return sh}}catch(e){}
+    try{onboardAfterWin=function(){finishOnboarding()}}catch(e){}   // 11 Nov 2026: no age question after the first win on the web (no sign-in or rankings here); Settings still has Age group
     if(gateDue())gate();
     pastePill();
   });

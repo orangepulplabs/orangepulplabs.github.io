@@ -16,7 +16,7 @@ var FLAGS_DEFAULT={
   interstitial:true,   // one interstitial between reel runs (capped)
   native:true,         // native "Sponsored" card in Almanac and story sheet
   iap:false,           // FUTURE in-app purchase slots: DISABLED (owner's Play account would show a home address)
-  sendCounts:false,    // send allowlisted anonymous counts to the demo API once a day
+  sendCounts:true,     // send allowlisted anonymous counts once a day (on since 11 Nov 2026: was never switched on; privacy policy 2a, Settings > Share anonymous counts turns it off)
   share:true           // friend challenge share from the reward
 };
 var FLAGS=(function(){var f=Object.assign({},FLAGS_DEFAULT);try{var j=JSON.parse(localStorage.getItem('zv5.flags')||'{}');Object.keys(j).forEach(function(k){if(k in f)f[k]=!!j[k]})}catch(e){}
@@ -28,7 +28,7 @@ var API=Q.api?decodeURIComponent(Q.api):'https://zest-api.orangepulplabs.workers
 if(API!=='https://zest-api.orangepulplabs.workers.dev'&&API.indexOf('http://127.0.0.1')!==0)API='https://zest-api.orangepulplabs.workers.dev';
 
 /* ---------- state ---------- */
-function v5Defaults(){return {onb:0,agreeAt:0,age:null,first:null,sessions:0,lastOpen:null,lastSeenDay:null,theme:'light',accent:'',
+function v5Defaults(){return {onb:0,agreeAt:0,tos:'',age:null,first:null,sessions:0,lastOpen:null,lastSeenDay:null,theme:'light',accent:'',
   daily:{},played:{},cards:{},facts:[],chain:{n:0,best:0,rest:1,last:null,restUsed:{}},weekGoal:4,weeksMet:0,weekMetMarks:{},
   reel:{best:0,last:0,runs:0,pts:0,seen:0},ads:{rw:{},it:{},lastInter:0,runsSince:0,shown:{}},hints:{day:null,left:3},
   season:{m:null,n:0,got:[]},remind:{asked:0,on:0,time:'19:00'},ev:{},sent:null,tiers:{},dayOffset:0,firstWinMs:0}}
@@ -65,7 +65,7 @@ var EV_ALLOW=['onb_agree','first_round_started','first_round_finished','round_st
 function ev(name){try{var v=S(),t=T();var day=v.ev[t]=v.ev[t]||{};day[name]=(day[name]||0)+1;var ks=Object.keys(v.ev).sort();while(ks.length>14)delete v.ev[ks.shift()];save()}catch(e){}}
 function evFlush(){if(!FLAGS.sendCounts||db().st.usage===0||navigator.onLine===false)return;var v=S(),t=T();if(v.sent===t)return;var y=addDays(t,-1),src=v.ev[y];if(!src)return;
   var events={};Object.keys(src).forEach(function(k){if(EV_ALLOW.indexOf(k)>=0)events[k]=src[k]});if(!Object.keys(events).length){v.sent=t;save();return}
-  fetch(API+'/v1/ev',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({day:y,events:events})}).then(function(r){if(r.status===204||r.ok){v.sent=t;save()}}).catch(function(){})}
+  fetch(API+'/v1/ev',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({day:y,events:events,plat:(window.ZM&&ZM.platform&&ZM.platform())||''})}).then(function(r){if(r.status===204||r.ok){v.sent=t;save()}}).catch(function(){})}
 
 /* ---------- feel: sound + haptic through the shared ZD (delight.js), respecting the player's switches ---------- */
 function fx(kind,elx){try{if(!window.ZD)return;if(elx&&kind!=='tap')ZD.pop(elx,kind==='best'||kind==='daily'?kind:'ok');ZD.sound(kind==='tap'?'tap':kind==='best'?'best':kind==='daily'?'daily':kind==='soft'?'soft':kind==='round'?'round':'ok');ZD.haptic(kind==='tap'?'tap':kind==='best'||kind==='daily'?'best':kind==='soft'?'soft':'ok')}catch(e){}}

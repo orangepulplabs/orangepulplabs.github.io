@@ -144,7 +144,7 @@ function mount(c){if(c.ctrl||c.solved&&c.el.querySelector('.zk-board'))return;va
   /* re-fit when the board redraws itself (debounced; never while a finger is on the board) */
   try{if(c.mo)c.mo.disconnect();var t=0;c.mo=new MutationObserver(function(){clearTimeout(t);t=setTimeout(function(){if(!c.down)fit(c)},90)});c.mo.observe(host,{childList:true,subtree:true})}catch(e){}
   if(R.onMount)try{R.onMount(c)}catch(e){console.error(e)}   /* teach2: confusion watch on the new board */
-  fit(c);requestAnimationFrame(function(){fit(c)});setTimeout(function(){fit(c)},350);setTimeout(function(){if(!c.down&&!c.mv)fit(c)},1000)}   /* the last one: after the board's entrance animations settle */
+  fit(c);requestAnimationFrame(function(){fit(c)});setTimeout(function(){fit(c)},350);setTimeout(function(){if(!c.down&&!c.mv)fit(c);c.settled=true},1000)}   /* the last one: after the board's entrance animations settle */
 function moves(c){qs(c.el,'[data-m]').textContent=String(c.mv);qs(c.el,'[data-mw]').textContent=c.mv===1?'move':'moves'}
 /* Scale the board to the space it has: down if it does not fit, up (to MAXUP) if it is small; transform keeps taps exact and the margins
    give the space back to the layout. The board's width is the box of what it draws: a full-width element only counts if it paints
@@ -154,12 +154,14 @@ function fit(c){var h=qs(c.el,'[data-host]'),mid=qs(c.el,'.rmid');if(!h||!mid||!
   h.style.transform='';h.style.margin='';h.style.transformOrigin='';var hr=h.getBoundingClientRect(),hh=h.scrollHeight,l=1e9,r=-1e9;
   [].forEach.call(h.querySelectorAll('*'),function(e){var b=e.getBoundingClientRect();if(b.width<2||b.height<2)return;if(b.width>=hr.width-1&&!painted(e))return;l=Math.min(l,b.left);r=Math.max(r,b.right)});
   var bw=r>l?Math.max(r-l,1):hr.width,cx=r>l?(l+r)/2-(hr.left+hr.width/2):0,aw=mid.clientWidth-4,ah=mid.clientHeight-12;if(!hh||ah<60)return;
-  var sc=Math.min(MAXUP,ah/hh,aw/bw);c.scale=sc;if(Math.abs(sc-1)<.01)return;
+  var sc=Math.min(MAXUP,ah/hh,aw/bw);
+  if(c.settled&&c.scale&&Math.abs(sc-c.scale)/c.scale<.02)sc=c.scale;   // once settled, a hint mark or a chip never nudges the board (fix124:first-move); a new level re-fits
+  c.scale=sc;if(Math.abs(sc-1)<.01)return;
   h.style.transformOrigin=(50+100*cx/hr.width).toFixed(2)+'% 50%';h.style.transform='translateX('+(-cx).toFixed(1)+'px) scale('+sc.toFixed(3)+')';h.style.margin=(hh*(sc-1)/2).toFixed(1)+'px 0'}
 window.addEventListener('resize',function(){R.cards.forEach(function(c){if(c.ctrl)fit(c)})});
-function replay(c){if(c.ctrl)try{c.ctrl.destroy&&c.ctrl.destroy()}catch(e){}c.ctrl=null;c.zr=null;if(c.mo){c.mo.disconnect();c.mo=null}c.solved=false;c.el.classList.remove('solved','rhinting');
+function replay(c){c.settled=false;if(c.ctrl)try{c.ctrl.destroy&&c.ctrl.destroy()}catch(e){}c.ctrl=null;c.zr=null;if(c.mo){c.mo.disconnect();c.mo=null}c.solved=false;c.el.classList.remove('solved','rhinting');
   var h=qs(c.el,'[data-host]');h.style.transform='';h.style.margin='';h.innerHTML='<p class="rload">Loading…</p>';mount(c);ev('reel_replay')}
-function unmount(c){if(!c.ctrl)return;try{c.ctrl.destroy&&c.ctrl.destroy()}catch(e){}c.ctrl=null;c.zr=null;if(c.mo){c.mo.disconnect();c.mo=null}if(!c.solved){var h=qs(c.el,'[data-host]');h.innerHTML='<p class="rload">Loading…</p>';h.style.transform='';h.style.margin=''}}
+function unmount(c){c.settled=false;if(!c.ctrl)return;try{c.ctrl.destroy&&c.ctrl.destroy()}catch(e){}c.ctrl=null;c.zr=null;if(c.mo){c.mo.disconnect();c.mo=null}if(!c.solved){var h=qs(c.el,'[data-host]');h.innerHTML='<p class="rload">Loading…</p>';h.style.transform='';h.style.margin=''}}
 function focus(i){if(i!==R.cur)hintSeen();R.cur=i;
   while(R.cards.length<i+3)addCard();
   R.cards.forEach(function(c,k){if(Math.abs(k-i)<=1)mount(c);else if(Math.abs(k-i)>2)unmount(c)})

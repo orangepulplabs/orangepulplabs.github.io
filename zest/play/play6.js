@@ -109,7 +109,7 @@ function storeBits(){return storeBtn()+storeNote()}
 
 /* ---------- the one screen when there is no puzzle: no link, or a link that cannot be played ---------- */
 function landing(bad){FZ.live=false;newRun();var s=$('screen');if(s)s.classList.remove('fz','pz5');
-  var h=bad?'This link didn’t work.':'Zest',one=bad?'It may be cut off, or that puzzle has moved on. Here is today’s puzzle instead, or get them all in the app.':ONE;
+  var h=bad?'This link didn’t work.':'Zest',one=bad?'It may be incomplete, or that puzzle has moved on. Try today’s puzzle instead, or get every puzzle in the app.':ONE;
   show('<div class="fzl" data-fz="'+(bad?'bad':'land')+'"><div class="fzcard">'+MARK+'<h1>'+h+'</h1><p class="fzone">'+one+'</p>'+storeBtn()+
     '<a class="fz2" id="fzdaily" href="'+esc(dailyHref())+'">'+(todayPick().plain?'Try a puzzle':'Try today’s puzzle')+'</a>'+storeNote()+'</div>'+TERMS+'</div>',false,{back:null});
   var a=$('fzstore');if(a)a.onclick=function(){zc('store_tap')}}
@@ -117,7 +117,7 @@ FZ.landing=landing;
 friendBroken=function(){landing(true)};
 
 /* ---------- the challenge ---------- */
-function friendNote(f){return f.old?'This one is a little old, but you can still play it for fun.':f.off?'This link looks a bit off, so here is the puzzle without a score.':''}
+function friendNote(f){return f.old?'This challenge is from an earlier day. You can still play it.':f.off?'This link looks damaged, so the puzzle opens without a score.':''}
 friendStart=function(f){if(!f||f.broken){landing(true);return}zc('friend_start');
   FZ.cur={id:f.id,level:f.level,tag:f.tag||'',seed:f.seed,daily:!!f.daily,t:f.t,who:f.who,hints:f.hints||0};
   playPuzzle(f.id,f.level,{tag:f.tag,friend:{t:f.t,hints:f.hints,r:f.r,who:f.who,note:friendNote(f)},exit:main,from:main,guest:true})};
@@ -181,7 +181,7 @@ FZ.close=closeSheet;
 /* Back, or idle in a lost position: the app pitch, with Keep playing */
 function giveUp(why){if(!FZ.live)return;if(FZ.layer){closeSheet();return}
   var d=sheet(why,'<h2 id="fzst">'+(why==='stuck'?'Tricky one?':'Before you go')+'</h2>'+
-    '<p class="fzpitch">'+(why==='stuck'?'Undo goes back to the last good spot. Or take a break: ':'Liked it? ')+PITCH+'</p>'+storeBits()+
+    '<p class="fzpitch">'+(why==='stuck'?'Undo takes you back to your last good position. Or take a break: ':'Liked it? ')+PITCH+'</p>'+storeBits()+
     '<button type="button" class="fz2" id="fzkeep">Keep playing</button>');
   d.querySelector('#fzkeep').onclick=function(){closeSheet()}}
 FZ.giveUp=giveUp;

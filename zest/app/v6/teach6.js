@@ -1,7 +1,8 @@
 /* v6 teaching in the app (1.2.2, owner-approved "recommended mix"). Loaded after runner6.js; uses teach.js (ZT).
    - Puzzle page: the goal line above the board, a "Rules" pill next to Undo / Restart / Hint (3 numbered steps in a sheet),
      the nudge (4 s idle before the first move: the hint hand on a suggested first move), and the goal picture for Tube Sort and Slide Tiles.
-   - First launch: a 3-screen intro (one puzzle a day / keep your streak / collect them all) before the welcome.
+   - First launch: the 3-screen intro is OFF since 10 Nov 2026 (owner: fewer screens before the first puzzle; Docs/website-mobile/first-play.md).
+     intro() stays as window.ztIntro, unused; the welcome (onboarding.js) is the only screen before play.
    - Today: a one-time tip on the streak (day chain) chip, the first time it shows.
    Seen flags live in the app state: S().teach = {intro:1, tip:1} (zv6 in the browser).
    ?demo (the test fixtures) skips the intro and the tip unless ?teach is also given, so older tests are unchanged. */
@@ -52,8 +53,6 @@ function intro(then){var i=0,n=h5('<div class="ob zt-intro" role="dialog" aria-m
   var sx=null;n.addEventListener('pointerdown',function(e){sx=e.clientX});n.addEventListener('pointerup',function(e){if(sx!=null&&e.clientX-sx<-50&&i<SL.length-1){i++;show()}sx=null});
   show();return c}
 window.ztIntro=intro;
-var w0=welcome;
-welcome=function(){if(!QUIET&&!TS().intro&&!S().onb)return intro(w0);return w0.apply(this,arguments)};
 
 /* ---------- the streak tip: once, the first time the chain chip shows on Today ---------- */
 var tr0=todayRender;
