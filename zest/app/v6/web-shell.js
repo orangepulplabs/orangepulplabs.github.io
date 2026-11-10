@@ -101,6 +101,7 @@
     '.zw-gate .in{max-width:440px;width:100%;margin:auto}.zw-gate h1{font:700 1.9rem/1.12 var(--serif,Georgia,serif);margin:14px 0 6px}.zw-gate .lede{color:var(--muted,#675F55);margin:0}'+
     '.zw-bdg{display:flex;align-items:center;gap:10px;width:100%;min-height:58px;padding:0 16px;margin-top:12px;border-radius:14px;background:#000;color:#fff;border:1px solid #A6A6A6;text-decoration:none;font:600 1rem var(--font,system-ui);cursor:pointer;text-align:left}'+
     '.zw-bdg[hidden]{display:none}.zw-bdg svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}.zw-bdg span{display:flex;flex-direction:column;line-height:1.1}.zw-bdg small{font:500 .72rem var(--font,system-ui)}.zw-bdg b{font:600 1.2rem var(--font,system-ui)}'+
+    '.zw-gp{display:block;margin-top:12px}.zw-gp img{display:block;height:58px;width:auto;max-width:100%}'+
     '.zw-gate .zw-steps{margin-top:16px}.zw-gate .sm{color:var(--muted,#675F55);font-size:.9rem}.zw-link{display:block;margin:18px auto 0;background:none;border:0;color:var(--ink,#1B1916);font:650 1rem var(--font,system-ui);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:10px}';
   function css(){if(document.getElementById('zw-css'))return;var s=document.createElement('style');s.id='zw-css';s.textContent=CSS;document.head.appendChild(s)}
   var SHARE='<svg viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>';
@@ -151,7 +152,7 @@
     try{if(sessionStorage.getItem('zw-gate'))return false}catch(e){}var onb=0;try{onb=S().onb}catch(e){}return !onb}
   function gate(){css();ev2('web_gate');var t=K();t.gate=(t.gate|0)+1;setK(t);try{sessionStorage.setItem('zw-gate','1')}catch(e){}
     var iBtn='<button class="zw-bdg" type="button" data-zgi>'+IPH+'<span><small>Available for</small><b>iPhone</b></span></button>';
-    var gBtn='<a class="zw-bdg" href="'+PLAY+'" data-zgp rel="noopener">'+GPI+'<span><small>Get it on</small><b>Google Play</b></span></a>'+
+    var gBtn='<a class="zw-gp" href="'+PLAY+'" data-zgp rel="noopener"><img src="../icons/google-play.png" alt="Get it on Google Play" width="188" height="56"></a>'+
       '<p class="sm" style="margin:6px 2px 0">In testing on Google Play: <a href="'+BETA+'">join the beta</a> to install it.</p>';
     var steps='<div data-zgsteps'+(iOS?'':' hidden')+'><ol class="zw-steps">'+(iOS?'':'<li><span>Open <b>orangepulplabs.com/zest/iphone</b> on your iPhone.</span></li>')+
       (inApp?'<li><span>Tap '+ico(DOTS)+' and choose <b>Open in Safari</b>.</span></li>':'')+
