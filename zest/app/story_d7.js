@@ -1,0 +1,21 @@
+var STORY=window.STORY||{};
+STORY['odd-one-out']={paras:[
+'Picture a father and his son bent over the same drawing, trying to work out why a figure that looks perfectly solid cannot be built. Lionel Penrose was a British psychiatrist and geneticist; his son Roger was a mathematician.',
+'In 1958 they published a short paper called “Impossible Objects: A Special Type of Visual Illusion” in the British Journal of Psychology. The figure was inspired by the work of the Dutch artist M. C. Escher, whose pictures they had seen at an exhibition during a mathematics congress.',
+'People still enjoy impossible figures because each corner looks fine on its own and the trouble only shows when you go all the way round. The frames in this puzzle are our own drawings, built from flat strips, and the odd one is the loop that no stack of strips could make.'],
+fact:'A father and son published their impossible-figure paper in a psychology journal in 1958.',links:[{t:'Penrose triangle (Wikipedia)',u:'https://en.wikipedia.org/wiki/Penrose_triangle'}]};
+STORY['four-shades']={paras:[
+'On 23 October 1852 a man named Francis Guthrie was colouring a map of the counties of England and noticed something odd: four colours seemed to be enough, however the counties were arranged.',
+'His brother Frederick passed the question to Augustus De Morgan at University College London, and there it stayed, open, for over a century. Then in June 1976 Kenneth Appel and Wolfgang Haken of the University of Illinois announced a proof. It reduced the problem to nearly 2,000 cases that a computer checked, which made it one of the first big theorems to lean on a machine.',
+'People still like colouring maps because the rule is so small and the surprise so large. Every region you tap has only a handful of neighbours, yet the whole map must fit together. Give it a go, and notice how often the last region has just one colour left.'],
+fact:'The 1976 four colour proof was among the first major proofs to rely on a computer.',links:[{t:'Four colour theorem (Wikipedia)',u:'https://en.wikipedia.org/wiki/Four_color_theorem'},{t:'The Four-Color Problem (UC Riverside wiki)',u:'https://wiki.math.ucr.edu/index.php/The_Four-Color_Problem'}]};
+STORY['sprout-lines']={paras:[
+'In 1967, in Cambridge, two mathematicians sat down with paper and pencil and invented a game that needs almost nothing else. John Horton Conway and Michael Stewart Paterson called it Sprouts.',
+'The idea is simple: draw a line between two spots, or from a spot back to itself, and put a new spot on the line, and never let a spot take more than three lines. Martin Gardner’s column in Scientific American helped the game spread, and it became a craze in mathematics departments. A game that starts with n spots must end within 3n minus 1 moves, yet who should win in general is still an open question.',
+'This one-player version asks for a target number of lines instead of a winner. Draw carefully and you can keep the game alive. Draw a loop too soon and the spots run out of room.'],
+fact:'A Sprouts game that starts with n spots must end within 3n minus 1 moves.',links:[{t:'Sprouts! (Michael Malk, CUNY)',u:'https://web.york.cuny.edu/~malk/tidbits/tidbit-sprouts.html'},{t:'Sprouts (nRich)',u:'https://nrich.maths.org/2413'}]};
+STORY['link-across']={paras:[
+'In 1942 the Danish mathematician and poet Piet Hein invented a board game about one idea: join your two sides before your opponent joins theirs. That December it appeared in a Danish newspaper under the name Polygon.',
+'Legend says John Nash later found the same game at Princeton, in the late 1940s, though sources give different years and Hein himself doubted it was fully independent. Because the board always fills up with exactly one side connected, the game can never end in a draw, and that fact made it a favourite with people who think about strategy.',
+'Here you get a small board and a position where a win is hiding. Find the chain, watch the computer try to block it, and see how few moves it takes.'],
+fact:'This connection game can never end in a draw: one side always links up.',links:[{t:'Piet Hein’s connection game (Wikipedia)',u:'https://en.wikipedia.org/wiki/Hex_(board_game)'}]};

@@ -50,7 +50,11 @@ var BY_LEVEL={
 ZT.goal=function(id,inst){var t=T[id];if(inst&&BY_LEVEL[id]){try{var g=BY_LEVEL[id](inst);if(g)return g}catch(e){}}return t?t[0]:''};
 ZT.steps=function(id,how){var t=T[id];if(t)return t[1].slice();var s=String(how||'').split(/(?<=[.!?])\s+/).filter(Boolean);while(s.length>3)s[1]=s[1]+' '+s.splice(2,1)[0];return s};
 ZT.stepsHtml=function(id,how){return '<ol class="zt-steps">'+ZT.steps(id,how).map(function(x,i){return '<li><i>'+(i+1)+'</i><span>'+esc(x)+'</span></li>'}).join('')+'</ol>'};
-ZT.label=function(id){return VERB[id]||'Try tapping here'};
+/* teach2 (7 Nov): the 14 new puzzles keep their verb in their batch data (BE_DATA, BATCH_F_DATA, BATCH_G_DATA), which was never copied here,
+   so Picture Rows and Gear Train said "Try tapping here" on a drag. Read it from there when this table has none. */
+function dataVerb(id){var L=[window.BE_DATA,window.BATCH_F_DATA,window.BATCH_G_DATA];for(var i=0;i<L.length;i++){var d=L[i]&&L[i][id];if(d&&d.verb)return d.verb}return null}
+ZT.VERB=VERB;
+ZT.label=function(id){return VERB[id]||(ZT.T2&&!ZT.T2.on?null:dataVerb(id))||'Try tapping here'};   /* ?off in the teach2 preview shows the shipped wording */
 var BOOK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/><path d="M9 7h6"/></svg>';
 ZT.BOOK=BOOK;
 

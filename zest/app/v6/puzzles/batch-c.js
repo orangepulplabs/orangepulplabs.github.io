@@ -1,0 +1,7 @@
+/* v6 batch c loader. Agent c appends an id to DONE only when puzzles/<id>.js is complete and passes its tests.
+   GALLERY entries: {id, before, after, verdict}. Loaded synchronously by index.html and gallery.html. */
+(function(){var DONE=['word-steps','word-square','scramble'];   /* 1.2.1: KEEP-FIX passes added (Docs/v6/strict-review.md '1.2.1 fixes') */   /* strict review 4 Nov (Docs/v6/strict-review.md) cut: scramble, last-letter-chain, word-square, hidden-rule-sort, rule-check, odd-one-out, temple-circles */var GALLERY=[{id:'word-square',before:31,after:34,verdict:'PASS 1.2.1 (17 levels, strict 34): drag rows to their slot, par = rows out of order'},{id:'scramble',before:31,after:34,verdict:'PASS 1.2.1 (17 levels, strict 34): every tile is a move, dead-start chip'},{id:'word-steps',before:28,after:34,verdict:'PASS (strict 34): moves land without travel; mid levels short'}];
+var MINE=["scramble", "last-letter-chain", "word-square", "hidden-rule-sort", "rule-check", "odd-one-out", "temple-circles", "missing-e"];var fx=(location.search.match(/[?&]fx=([^&]*)/)||[])[1];if(fx)fx.split(',').forEach(function(id){if(id&&MINE.indexOf(id)>=0&&DONE.indexOf(id)<0)DONE.push(id)});   /* 1.2.1 test hook: ?fx=id loads a hidden puzzle of this batch for re-scoring */
+window.V6_GALLERY_EXTRA=(window.V6_GALLERY_EXTRA||[]).concat(GALLERY);
+document.write('<script src="puzzles/c-common.js"><\/script>');
+DONE.forEach(function(id){document.write('<script src="puzzles/'+id+'.js"><\/script>')});})();

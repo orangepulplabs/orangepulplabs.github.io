@@ -1,0 +1,5 @@
+/* About entries for wave 2 file 6: Dot Dash Decoder, Two Ways to Cube. Facts only from the puzzle research files (04 and 02): verified or secondary; disputed items left out. */
+if(typeof ABOUT!=='undefined'){
+ABOUT['dot-dash-decoder']={from:'Morse code sends letters as short signals, called dots, and longer signals, called dashes. Samuel Morse and Alfred Vail worked on the telegraph in the 1830s, and the code is named after Morse. Who designed the letter patterns is disputed, and Morse kept the patent rights.',research:null,links:[{t:'Alfred Vail (Wikipedia)',u:'https://en.wikipedia.org/wiki/Alfred_Vail'}]};
+ABOUT['two-ways-to-cube']={from:'In an often-told exchange, the mathematician G. H. Hardy visited Srinivasa Ramanujan in a nursing home in Putney, London, and remarked that the number of his taxi, 1729, was rather dull. Ramanujan replied that it was the smallest number that can be written as a sum of two cubes in two different ways. Hardy’s own account appears in Ramanujan: Twelve Lectures (1940).',research:null,links:[{t:'1729 (number), Wikipedia',u:'https://en.wikipedia.org/wiki/1729_(number)'}]};
+}

@@ -1,6 +1,6 @@
 /* Zest friend page layer (orangepulplabs.com/zest/play/), 6 Nov 2026: ONE challenge, then the app.
    Built by site-gen.py: ["switch-off", "jump-away", "tube-sort", "tilt-run", "slide-tiles", "make-target", "balance-weights", "zero-one", "four-by-four", "dodecahedron-tour", "river-ferry", "seven-pieces", "code-cracker", "dot-loop", "bridge-walk", "four-shades", "word-steps", "word-square", "scramble", "tiger-and-herd", "blockade", "seed-pits", "who-owns-the-zebra", "living-stones", "link-across"] (the puzzles of the current release), "https://play.google.com/store/apps/details?id=com.orangepulplabs.zest" (FRIEND_STORE_URL in site-gen.py), "https://orangepulplabs.com/beta/" (the tester
-   sign-up page), ["slide-tiles", "make-target", "tilt-run", "four-by-four", "zero-one", "code-cracker", "tube-sort", "scramble", "word-steps", "balance-weights", "bridge-walk", "dodecahedron-tour", "switch-off", "jump-away", "river-ferry", "blockade", "four-shades", "link-across", "seven-pieces", "living-stones", "seed-pits", "tiger-and-herd", "word-square", "dot-loop"] (the app's daily pool, in the app's order) and "<svg class=\"fzm\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"18 20 72 66\" aria-hidden=\"true\"><path d=\"M22 50h64a32 32 0 0 1-64 0z\" fill=\"#F7F4EE\" stroke=\"currentColor\" stroke-width=\"3.2\" stroke-linejoin=\"round\"/>\n  <path d=\"M28 50h52a26 26 0 0 1-52 0z\" fill=\"#F7A35C\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/>\n  <g stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\"><path d=\"M54 50v26M54 50L36 68M54 50l18 18M54 50L30 58M54 50l24 8\"/></g>\n  <path d=\"M54 50c-6-8-18-12-30-10M54 50c6-8 18-12 30-10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M54 50V30\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>\n  <path d=\"M54 31c2-6 8-9 13-8-2 6-7 9-13 8z\" fill=\"#6E9B5A\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"/></svg>" (the Zest mark) are filled in at build time.
+   sign-up page), ["slide-tiles", "make-target", "tilt-run", "four-by-four", "zero-one", "code-cracker", "tube-sort", "scramble", "word-steps", "balance-weights", "bridge-walk", "dodecahedron-tour", "switch-off", "jump-away", "river-ferry", "blockade", "four-shades", "link-across", "seven-pieces", "living-stones", "seed-pits", "tiger-and-herd", "word-square", "dot-loop"] (the app's daily pool, in the app's order), ["sun-mirrors", "crate-push", "picture-rows", "gear-train", "lucas-tower", "pancake-flip", "bezzel-queens", "quilt-tiles", "shunting-yard", "huarong-pass", "reversi-flip", "aqueduct", "rolling-die", "rect-cut"]/"2026-12-01" (1.2.6: v6/daily6.js), 39 (the app's puzzle count) and "<svg class=\"fzm\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"18 20 72 66\" aria-hidden=\"true\"><path d=\"M22 50h64a32 32 0 0 1-64 0z\" fill=\"#F7F4EE\" stroke=\"currentColor\" stroke-width=\"3.2\" stroke-linejoin=\"round\"/>\n  <path d=\"M28 50h52a26 26 0 0 1-52 0z\" fill=\"#F7A35C\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/>\n  <g stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\"><path d=\"M54 50v26M54 50L36 68M54 50l18 18M54 50L30 58M54 50l24 8\"/></g>\n  <path d=\"M54 50c-6-8-18-12-30-10M54 50c6-8 18-12 30-10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M54 50V30\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>\n  <path d=\"M54 31c2-6 8-9 13-8-2 6-7 9-13 8z\" fill=\"#6E9B5A\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"/></svg>" (the Zest mark) are filled in at build time.
    Loaded after app4d, challenge, delight, the v6 kit, the one v6 puzzle override (plus trim6.js and teach.js), and before app4b boots.
    - ?c=<token>: only that puzzle, styled like the app's puzzle page (slim Zest header, name + level, the goal line, the board, Rules / Undo /
      Restart / Hint, the stuck chip in its own row, "A friend got N moves"). No tab bar, no home, no other puzzles.
@@ -13,7 +13,11 @@
    Nothing is stored: localStorage is kept in memory for every visitor (even one with an old Zest profile on this site), no cookies. */
 (function(){
 var VIS=["switch-off", "jump-away", "tube-sort", "tilt-run", "slide-tiles", "make-target", "balance-weights", "zero-one", "four-by-four", "dodecahedron-tour", "river-ferry", "seven-pieces", "code-cracker", "dot-loop", "bridge-walk", "four-shades", "word-steps", "word-square", "scramble", "tiger-and-herd", "blockade", "seed-pits", "who-owns-the-zebra", "living-stones", "link-across"],STORE="https://play.google.com/store/apps/details?id=com.orangepulplabs.zest",BETA="https://orangepulplabs.com/beta/",POOL=["slide-tiles", "make-target", "tilt-run", "four-by-four", "zero-one", "code-cracker", "tube-sort", "scramble", "word-steps", "balance-weights", "bridge-walk", "dodecahedron-tour", "switch-off", "jump-away", "river-ferry", "blockade", "four-shades", "link-across", "seven-pieces", "living-stones", "seed-pits", "tiger-and-herd", "word-square", "dot-loop"],MARK="<svg class=\"fzm\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"18 20 72 66\" aria-hidden=\"true\"><path d=\"M22 50h64a32 32 0 0 1-64 0z\" fill=\"#F7F4EE\" stroke=\"currentColor\" stroke-width=\"3.2\" stroke-linejoin=\"round\"/>\n  <path d=\"M28 50h52a26 26 0 0 1-52 0z\" fill=\"#F7A35C\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/>\n  <g stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\"><path d=\"M54 50v26M54 50L36 68M54 50l18 18M54 50L30 58M54 50l24 8\"/></g>\n  <path d=\"M54 50c-6-8-18-12-30-10M54 50c6-8 18-12 30-10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M54 50V30\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>\n  <path d=\"M54 31c2-6 8-9 13-8-2 6-7 9-13 8z\" fill=\"#6E9B5A\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linejoin=\"round\"/></svg>";
-var PITCH=VIS.length+' puzzles, each with a true story. A new one every day. Free, works offline.';
+/* 10 Nov 2026: iPhone/iPad visitors get the free Home Screen web app (/zest/app/) instead of Google Play (Zest/Docs/web-app-plan.md) */
+var IOS=/[?&]as=ios\b/.test(location.search)||/iPhone|iPad|iPod/.test(navigator.userAgent||'')||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+if(IOS){STORE='/zest/app/v6/?install';BETA=''}
+function lab(l){return IOS?String(l).replace(/Get Zest on Google Play|Get the app|Get Zest/,'Play Zest free on iPhone').replace(/in the Zest app/,'in Zest on iPhone'):l}
+var NAPP=39,PITCH=(NAPP||VIS.length)+' puzzles, each with a true story. A new one every day. Free, works offline.';
 var FZ=window.FZ={idleMs:15000,pill:true,live:false,offered:false,cur:null,link:null};
 function vis(id){return VIS.indexOf(id)>=0}
 /* the curation: hidden puzzles are not playable (their file may be loaded because it also holds a visible one) */
@@ -38,8 +42,21 @@ var CYC={};
 function cyc(c){if(CYC[c])return CYC[c];var o=pzShuffle(POOL,pzRng('v5cycle|'+c));
   if(c>0){var w=Math.min(30,Math.floor(POOL.length/2)),tail=cyc(c-1).slice(-w);o=o.filter(function(id){return tail.indexOf(id)<0}).concat(o.filter(function(id){return tail.indexOf(id)>=0}))}
   return CYC[c]=o}
-function todayPick(){var n=Math.max(0,ZC.dayIdx());return {id:cyc(Math.floor(n/POOL.length))[n%POOL.length],level:1,day:ZC.dayStr(n)}}
-function dailyHref(){var d=todayPick(),t=null;try{t=ZC.encodeChallenge({id:d.id,level:d.level,daily:d.day,hints:0})}catch(e){}return t?'./?c='+t:'./'}
+/* 1.2.6: the app's daily6.js keeps the 1.2.5 pool (POOL) until the first cycle boundary on or after LATE_FROM, then runs the full pool
+   (POOL + LATE) in its own cycles seeded 'v6late|c', the last half of the previous cycle moved to the end (same as daily6.js). The new
+   puzzles are not playable on this page (no challenge row yet), so on a day the app picks one, the link is a plain level-1 challenge of the
+   old rotation's puzzle for that day, and the button says "Try a puzzle". */
+var LATE=["sun-mirrors", "crate-push", "picture-rows", "gear-train", "lucas-tower", "pancake-flip", "bezzel-queens", "quilt-tiles", "shunting-yard", "huarong-pass", "reversi-flip", "aqueduct", "rolling-die", "rect-cut"],LATE_FROM="2026-12-01",ALL=POOL.concat(LATE.filter(function(id){return POOL.indexOf(id)<0})),LC={};
+function lateStart(){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(LATE_FROM||''),L=POOL.length;if(!m||!LATE.length)return Infinity;
+  var f=Math.max(0,Math.round((Date.UTC(+m[1],+m[2]-1,+m[3])-Date.UTC(2026,0,1))/864e5));return Math.ceil(f/L)*L}
+function lcyc(c){if(LC[c])return LC[c];var o=pzShuffle(ALL,pzRng('v6late|'+c)),w=Math.min(30,Math.floor(ALL.length/2));
+  var tail=(c>0?lcyc(c-1):cyc(lateStart()/POOL.length-1)).slice(-w);
+  o=o.filter(function(id){return tail.indexOf(id)<0}).concat(o.filter(function(id){return tail.indexOf(id)>=0}));return LC[c]=o}
+function todayPick(){var n=Math.max(0,ZC.dayIdx()),b=lateStart(),old=cyc(Math.floor(n/POOL.length))[n%POOL.length];
+  if(n<b)return {id:old,level:1,day:ZC.dayStr(n)};
+  var m=n-b,id=lcyc(Math.floor(m/ALL.length))[m%ALL.length];
+  return vis(id)?{id:id,level:1,day:ZC.dayStr(n)}:{id:old,level:1,day:ZC.dayStr(n),plain:true}}
+function dailyHref(){var d=todayPick(),t=null;try{t=ZC.encodeChallenge(d.plain?{id:d.id,level:d.level,seed:0,target:0,hints:0}:{id:d.id,level:d.level,daily:d.day,hints:0})}catch(e){}return t?'./?c='+t:'./'}
 FZ.today=todayPick;
 
 /* ---------- the look: one stylesheet, the app's tokens from v4.css (light and dark) ---------- */
@@ -75,18 +92,18 @@ var CSS='body.fzp .phone{padding-bottom:0}'+
   '.fzl .fzcard svg{width:64px;height:58px}.fzl h1{font:700 2rem/1.15 var(--disp);margin:10px 0 0;letter-spacing:-.01em}.fzl .fzone{margin:10px auto 0;max-width:24em;font:500 1.0625rem/1.45 var(--font);color:var(--ink)}'+
   '.fzl .zgt{text-align:center;margin-top:16px}';
 try{var st=document.createElement('style');st.id='fz-css';st.textContent=CSS;document.head.appendChild(st)}catch(e){}
-function brand(pill){return '<div class="fzh"><span class="fzb">'+MARK+'<span>Zest</span></span>'+(pill&&FZ.pill?'<span class="fzpill" id="fzpill"><a href="'+esc(STORE)+'" id="fzget" target="_blank" rel="noopener">Get the app</a><button type="button" id="fzpx" aria-label="Hide this">×</button></span>':'')+'</div>'}
+function brand(pill){return '<div class="fzh"><span class="fzb">'+MARK+'<span>Zest</span></span>'+(pill&&FZ.pill?'<span class="fzpill" id="fzpill"><a href="'+esc(STORE)+'" id="fzget"'+(IOS?'':' target="_blank" rel="noopener"')+'>Get the app</a><button type="button" id="fzpx" aria-label="Hide this">×</button></span>':'')+'</div>'}
 function wirePill(){var a=$('fzget'),x=$('fzpx');if(a)a.onclick=function(){zc('store_tap')};if(x)x.onclick=function(){FZ.pill=false;var p=$('fzpill');if(p)p.remove()}}
 var TERMS='<p class="zgt">By playing you agree to the <a href="https://orangepulplabs.com/zest/terms/" target="_blank" rel="noopener">Terms</a> and <a href="https://orangepulplabs.com/zest/privacy/" target="_blank" rel="noopener">Privacy policy</a>.</p>';
-function storeBtn(label){return '<a class="fzgo" id="fzstore" href="'+esc(STORE)+'" target="_blank" rel="noopener">'+esc(label)+'</a>'}
-function storeNote(){return '<p class="fzsm">For Android. Coming soon to the App Store.'+(BETA?' Zest is in testing: <a href="'+esc(BETA)+'" id="fzbeta" target="_blank" rel="noopener">Join the beta</a>.':'')+'</p>'}
+function storeBtn(label){return '<a class="fzgo" id="fzstore" href="'+esc(STORE)+'"'+(IOS?'':' target="_blank" rel="noopener"')+'>'+esc(lab(label))+'</a>'}
+function storeNote(){if(IOS)return '<p class="fzsm">Free, no App Store needed: it runs from your Home Screen, offline.</p>';return '<p class="fzsm">For Android. <a href="/zest/iphone/">On iPhone? Play free.</a>'+(BETA?' Zest is in testing: <a href="'+esc(BETA)+'" id="fzbeta" target="_blank" rel="noopener">Join the beta</a>.':'')+'</p>'}
 function storeBits(label){return storeBtn(label)+storeNote()}
 
 /* ---------- the one screen when there is no puzzle: no link, or a link that cannot be played ---------- */
 function landing(bad){FZ.live=false;newRun();var s=$('screen');if(s)s.classList.remove('fz','pz5');
   var h=bad?'This link didn’t work.':'Zest',one=bad?'It may be cut off, or that puzzle has moved on. Here is today’s puzzle instead, or get them all in the app.':'Short logic puzzles, each with a true story. A new one every day.';
   show('<div class="fzl" data-fz="'+(bad?'bad':'land')+'"><div class="fzcard">'+MARK+'<h1>'+h+'</h1><p class="fzone">'+one+'</p>'+storeBtn('Get Zest on Google Play')+
-    '<a class="fz2" id="fzdaily" href="'+esc(dailyHref())+'">Try today’s puzzle</a>'+storeNote()+'</div>'+TERMS+'</div>',false,{back:null});
+    '<a class="fz2" id="fzdaily" href="'+esc(dailyHref())+'">'+(todayPick().plain?'Try a puzzle':'Try today’s puzzle')+'</a>'+storeNote()+'</div>'+TERMS+'</div>',false,{back:null});
   var a=$('fzstore');if(a)a.onclick=function(){zc('store_tap')}}
 FZ.landing=landing;
 friendBroken=function(){landing(true)};

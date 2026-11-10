@@ -115,6 +115,7 @@ ZK.at=function(host,el){var h=host.getBoundingClientRect(),r=el.getBoundingClien
 
 /* ---------- ghost hand ---------- */
 var HAND='<svg viewBox="0 0 46 54" width="46" height="54" aria-hidden="true"><path d="M15 4c2.4 0 4.2 1.9 4.2 4.3v15.2l1.3-.4c2.2-.6 4.3.5 5 2.4l.3.9 1.2-.3c2.2-.5 4.2.7 4.8 2.7l.2.8 1.1-.2c2.3-.3 4.3 1.3 4.5 3.6l.6 8.1c.4 5.6-3.2 10.7-8.6 12.2l-3.4.9c-4.8 1.3-9.9-.6-12.7-4.7L3.6 37.2c-1.3-1.9-.8-4.5 1.1-5.8 1.7-1.1 3.9-.9 5.3.5l.8.8V8.3C10.8 5.9 12.7 4 15 4z" fill="#fff" stroke="#1B1916" stroke-width="2.4" stroke-linejoin="round"/></svg>';
+ZK.HAND=HAND;   /* teach2: the Show me demo (teach2.js) draws the same hand */
 function seenMap(){try{return JSON.parse(localStorage.getItem('zv6ghost')||'{}')||{}}catch(e){return{}}}
 ZK.ghostSeen=function(id){return !!seenMap()[id]};
 ZK.ghostDone=function(id){try{var m=seenMap();if(m[id])return;m[id]=1;localStorage.setItem('zv6ghost',JSON.stringify(m))}catch(e){}};

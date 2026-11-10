@@ -195,6 +195,23 @@ footer.site-foot{border-top:1px solid var(--line);padding:clamp(40px,6vw,72px) 0
 .soon{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:0 20px;border-radius:16px;border:1.5px dashed var(--chip);color:var(--muted);font:600 15px var(--font)}
 .dlnote{flex-basis:100%;margin:4px 0 0;font:500 14px var(--font);color:var(--muted)}
 .dlnote a{color:inherit}
+.gp.ios{background:var(--ink);color:var(--bg)}
+.zos-ios .os-a,.zos-android .os-i,.zos-ios .os-d,.zos-android .os-d{display:none!important}
+.zos-ios .gp.ios{background:var(--accent);color:var(--on-accent)}
+.dl .dlnote{order:3}
+.ios-hero{padding:56px 0 24px}.ios-hero h1{font:700 clamp(34px,6vw,56px)/1.08 var(--display);margin:10px 0 14px;letter-spacing:-.01em}
+.ios-hero .zlede{max-width:34em}
+.isteps{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));counter-reset:s}
+.isteps li{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+.isteps .num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--tint);color:var(--link);font:700 15px var(--font)}
+.isteps h3{margin:12px 0 6px;font:700 18px/1.3 var(--font)}.isteps p{margin:0;color:var(--muted);font-size:15.5px}
+.isteps .mock{margin-top:14px;height:120px;border-radius:14px;background:var(--ph);display:grid;place-items:center}
+.isteps .mock svg{width:100%;height:100%}
+.ifacts{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:28px 0 0;padding:0;list-style:none}
+.ifacts li{display:flex;gap:12px;align-items:flex-start}.ifacts b{display:block}.ifacts small{color:var(--muted);font-size:15px}
+.ifacts span.i{flex:none;width:40px;height:40px;border-radius:12px;background:var(--tint);color:var(--link);display:grid;place-items:center}
+.iurl{display:inline-block;margin-top:8px;padding:10px 14px;border-radius:12px;background:var(--ph);font:700 17px var(--font);letter-spacing:.01em}
+.zos-ios .ios-desk,.zos-android .ios-desk{display:none}.zos-desk .ios-phone{display:none}
 .zphones{position:relative;height:min(80svh,800px);min-height:420px;display:flex;justify-content:center;align-items:center;isolation:isolate}
 .zsun{position:absolute;z-index:-1;width:min(100%,760px);aspect-ratio:1;border-radius:50%;background:var(--tint)}
 .zsun::after{content:"";position:absolute;inset:-5%;border-radius:50%;border:1.5px solid var(--chip);transform:translate(3%,2%)}
