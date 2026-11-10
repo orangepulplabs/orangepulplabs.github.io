@@ -2,7 +2,7 @@
  "name": "Zest: Story & Logic Puzzles",
  "short_name": "Zest",
  "id": "/zest/app/",
- "start_url": "./v6/?src=home",
+ "start_url": "./?src=home",
  "scope": "./",
  "display": "standalone",
  "orientation": "portrait",

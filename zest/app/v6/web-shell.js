@@ -60,7 +60,7 @@
   function postPlan(){if(!lastItems)return Promise.resolve(null);if(!granted()||!lastItems.length)return stopPush();return subscription(true).then(function(s){if(!s)return null;
       return fetch(api()+'/v1/push/plan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({endpoint:s.endpoint,at:lastItems.map(function(x){return x.at})})})
         .then(function(r){W.log.push('push:plan '+r.status);return r.status})}).catch(function(e){W.log.push('push:err '+e)})}
-  function keepWords(items){try{caches.open('zpush').then(function(c){return c.put(new URL('../push-plan',location.href).href,new Response(JSON.stringify(items),{headers:{'content-type':'application/json'}}))})}catch(e){}}
+  function keepWords(items){try{caches.open('zpush').then(function(c){return c.put(new URL('../push-plan',document.baseURI).href,new Response(JSON.stringify(items),{headers:{'content-type':'application/json'}}))})}catch(e){}}
   if(PUSHOK){
     window.ZestNative={postMessage:function(m){m=String(m||'');var i=m.indexOf(':'),k=m.slice(0,i),v=m.slice(i+1);W.log.push('native:'+k);
       if(k==='remind'){try{var o=JSON.parse(v);lastItems=o.items||[];keepWords(lastItems);postPlan()}catch(e){}}
@@ -70,7 +70,7 @@
       else if(k==='notif'&&v==='settings')say('Turn them on in iPhone Settings, then Notifications, then Zest.')}};
     W.push={post:postPlan,sub:subscription,stop:stopPush};
   }
-  // a tapped reminder opens ./v6/?rem=daily|reel (or messages an open window): go where remind6 would on Android
+  // a tapped reminder opens ./?rem=daily|reel (or messages an open window): go where remind6 would on Android
   function remOpen(r){if(r!=='daily'&&r!=='reel')return;var n=0;(function go(){if(window.__zestRemOpen){window.__zestRemOpen(r)}else if(n++<40)setTimeout(go,250)})()}
   try{navigator.serviceWorker.addEventListener('message',function(e){if(e.data&&e.data.rem)remOpen(e.data.rem)})}catch(e){}
   var remQ=/[?&]rem=(daily|reel)\b/.exec(q);if(remQ)window.addEventListener('load',function(){setTimeout(function(){remOpen(remQ[1])},300)});
@@ -105,8 +105,8 @@
     '.zw-gate{position:fixed;inset:0;z-index:9600;background:var(--bg,#F7F4EE);color:var(--ink,#1B1916);overflow:auto;display:flex;flex-direction:column;'+
       'padding:calc(28px + env(safe-area-inset-top,0px)) 22px calc(28px + env(safe-area-inset-bottom,0px))}'+
     '.zw-gate .in{max-width:440px;width:100%;margin:auto}.zw-gate h1{font:700 1.9rem/1.12 var(--serif,Georgia,serif);margin:14px 0 6px}.zw-gate .lede{color:var(--muted,#675F55);margin:0}'+
-    '.zw-bdg{display:flex;align-items:center;gap:10px;width:100%;min-height:58px;padding:0 16px;margin-top:12px;border-radius:14px;background:#000;color:#fff;border:1px solid #A6A6A6;text-decoration:none;font:600 1rem var(--font,system-ui);cursor:pointer;text-align:left}'+
-    '.zw-bdg[hidden]{display:none}.zw-bdg svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}.zw-bdg span{display:flex;flex-direction:column;line-height:1.1}.zw-bdg small{font:500 .72rem var(--font,system-ui)}.zw-bdg b{font:600 1.2rem var(--font,system-ui)}'+
+    '.zw-bdg{display:flex;align-items:center;gap:13px;width:100%;min-height:58px;padding:0 17px;margin-top:12px;border-radius:14px;background:#000;color:#fff;border:1px solid #A6A6A6;text-decoration:none;font:600 1rem var(--font,system-ui);cursor:pointer;text-align:left}'+
+    '.zw-bdg[hidden]{display:none}.zw-bdg svg{width:21px;height:34px;flex:none}.zw-bdg span{display:flex;flex-direction:column;gap:3px;line-height:1}.zw-bdg small{font:600 .66rem var(--font,system-ui);letter-spacing:.07em;text-transform:uppercase}.zw-bdg b{font:600 1.45rem var(--font,system-ui);letter-spacing:-.015em}'+
     '.zw-gp{display:block;margin-top:12px}.zw-gp img{display:block;height:58px;width:auto;max-width:100%}'+
     '.zw-gate .zw-steps{margin-top:16px}.zw-gate .sm,[data-zwplay] .sm{color:var(--muted,#675F55);font-size:.9rem}.zw-link{display:block;margin:18px auto 0;background:none;border:0;color:var(--ink,#1B1916);font:650 1rem var(--font,system-ui);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:10px}';
   function css(){if(document.getElementById('zw-css'))return;var s=document.createElement('style');s.id='zw-css';s.textContent=CSS;document.head.appendChild(s)}
@@ -160,7 +160,7 @@
   W.showGuide=showGuide;
 
   /* ---------- the welcome screen in a browser, before playing: get it for iPhone / on Google Play, or play here ---------- */
-  var IPH='<svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M12 8.5v6M9 11.5h6"/></svg>';
+  var IPH='<svg viewBox="0 0 22 36" aria-hidden="true"><defs><linearGradient id="ibsun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F7C76B"/><stop offset="1" stop-color="#E8590C"/></linearGradient></defs><rect x="1.5" y="1" width="19" height="34" rx="5" fill="#000" stroke="#fff" stroke-width="1.5"/><rect x="3.6" y="3" width="14.8" height="30" rx="3.3" fill="url(#ibsun)"/><rect x="8" y="4.3" width="6" height="1.9" rx=".95" fill="#000"/><rect x="7.5" y="30.2" width="7" height="1.3" rx=".65" fill="#fff" opacity=".9"/></svg>';
   var GPI='<svg viewBox="0 0 24 24"><path d="M5 3.5v17l9-8.5z"/><path d="M5 3.5l11 6.3-2 2.7M5 20.5l11-6.3-2-2.7M16 9.8l3.5 2.2-3.5 2.2"/></svg>';
   function gateDue(){if(home)return false;if(/[?&](play|nogate)\b/.test(q))return false;if(/[?&]install\b/.test(q))return true;
     try{if(sessionStorage.getItem('zw-gate'))return false}catch(e){}var onb=0;try{onb=S().onb}catch(e){}return !onb}

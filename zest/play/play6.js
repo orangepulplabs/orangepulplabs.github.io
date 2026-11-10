@@ -18,7 +18,7 @@ var VIS=["switch-off", "jump-away", "tube-sort", "tilt-run", "slide-tiles", "mak
 /* 10 Nov 2026: iPhone/iPad visitors get the free Home Screen web app (/zest/app/) instead of Google Play (Zest/Docs/web-app-plan.md) */
 var AS=(/[?&]as=(ios|android|desk)\b/.exec(location.search)||[])[1];   /* ?as= forces a device (tests, previews), as on the rest of the site */
 var IOS=AS?AS==='ios':/iPhone|iPad|iPod/.test(navigator.userAgent||'')||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-if(IOS){STORE='/zest/app/v6/?install';BETA=''}
+if(IOS){STORE='/zest/app/?install';BETA=''}
 var NAPP=39,PITCH=(NAPP||VIS.length)+' puzzles, each with a true story. A new one every day. Free, works offline.',ONE="One short puzzle a day, and the true story behind it.",STEPS=["Tap Share. On iOS 26, tap ··· first, then Share.", "Tap Add to Home Screen, then Add.", "Open Zest from your Home Screen."];
 var FZ=window.FZ={idleMs:15000,pill:true,live:false,offered:false,cur:null,link:null};
 function vis(id){return VIS.indexOf(id)>=0}
