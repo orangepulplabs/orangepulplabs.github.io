@@ -13,7 +13,7 @@
   if(Q.dev){var d=h5('<button class="chip" style="position:absolute;left:12px;bottom:calc(var(--tabh) + 12px);z-index:40" data-dev>DEV</button>');$('app').appendChild(d);d.onclick=openDev}
   try{localStorage.removeItem('zv5.blocked')}catch(e){}   // Zest is for all ages since 10 Nov 2026: lift the old under-13 stop
   Nav.tab('today',{first:true}).then(function(){var b=$('boot');b.classList.add('gone');setTimeout(function(){b.remove()},300);
-    var fr=friendFromUrl();if(fr&&!fr.broken){friendStart(fr)}else{if(fr&&fr.broken)toast('That link did not open. Here is today\'s story.');if(!S().onb)welcome();else if(needTerms())termsGate(true)}
+    var fr=friendFromUrl();if(fr&&!fr.broken){friendStart(fr)}else{if(fr&&fr.broken)toast('That link did not open, so here is today\'s puzzle.');if(!S().onb)welcome();else if(needTerms())termsGate(true)}
     S().lastSeenDay=T();save();setTimeout(evFlush,3000)});
   document.addEventListener('visibilitychange',function(){if(!document.hidden){var nt=T();if(S().lastSeenDay!==nt){Nav.refresh('today')}S().lastSeenDay=nt;save()}});
 })();

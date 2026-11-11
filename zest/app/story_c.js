@@ -35,25 +35,31 @@ fact:'An ancient Chinese manual asks for a number with remainders 2, 3 and 2 by 
 links:[{t:'Sun Zi (MacTutor)',u:'https://mathshistory.st-andrews.ac.uk/Biographies/Sun_Zi/'}]};
 
 STORY['balance-weights']={paras:[
-'Picture a two-pan balance and a small box of weights. The puzzle asks how few weights you need to weigh every whole number of pounds from 1 to 40. Fewer is better, and the tidy answer is more surprising than it looks.',
-'In 1612 the French mathematician Claude Gaspard Bachet de Meziriac published a book of number puzzles, and one asked for exactly this. The set 1, 3, 9 and 27 does the job when weights may go on either pan, so four weights are enough for every target from 1 to 40.',
-'In Zest you place weights on both pans until the scale settles level, for each target. Your score is the number of weights you use. The puzzle is old, tidy and friendly, and a good excuse to try a few targets and see the pattern.'],
-fact:'A 1612 puzzle book asked for the fewest weights to weigh 1 to 40 pounds.',
-links:[{t:'Bachet (MacTutor, Dictionary of Scientific Biography)',u:'https://mathshistory.st-andrews.ac.uk/DSB/Bachet.pdf'}]};
+'In 1612 a French poet and mathematician asked how few weights you need to weigh every whole pound from 1 to 40. He was Claude Gaspard Bachet de Meziriac, and the question sat in his book Problèmes plaisans et délectables qui se font par les nombres: pleasant and delectable problems that are done by numbers. Around it were card tricks, ferry-crossing puzzles and sums in bases other than ten.',
+'Bachet was born in Bourg-en-Bresse in 1581, and by the time he was six both his parents had died. The Jesuits looked after him. He wrote poems in French, Italian and Latin, translated seven of Ovid’s Epistulae heroidum, married Philiberte de Chabeu in 1620 and had seven children.',
+'The answer is four weights, 1, 3, 9 and 27, as long as weights can go on either pan. Bachet was not the first to crack it. MacTutor credits Fibonacci, in 1202, with the first solution.',
+'Another of Bachet’s books had a stranger afterlife. In 1621 he translated the Arithmetica of Diophantus into Latin, and it was in that translation that Pierre de Fermat wrote the margin note now known as Fermat’s Last Theorem. In 1634 Bachet was too ill to attend when Richelieu created the Académie française, and he was elected a member the following year.',
+'In Zest you put weights on both pans until the scale balances for each target. Use as few weights as you can.'],
+fact:'Bachet’s puzzle book ran to at least five editions, the last in 1959.',
+links:[{t:'Bachet (MacTutor, Dictionary of Scientific Biography)',u:'https://mathshistory.st-andrews.ac.uk/DSB/Bachet.pdf'},{t:'Bachet (MacTutor biography)',u:'https://mathshistory.st-andrews.ac.uk/Biographies/Bachet/'},{t:'Claude Gaspar Bachet de Méziriac',u:'https://en.wikipedia.org/wiki/Claude_Gaspar_Bachet_de_M%C3%A9ziriac'}]};
 
 STORY['bridge-walk']={paras:[
-'The Prussian city of Königsberg, now Kaliningrad in Russia, had a river running through it, the Pregel, and seven bridges crossing it. Townspeople liked to wonder whether one walk could cross every bridge exactly once.',
-'Leonhard Euler, working in St Petersburg, showed that no such walk exists. His paper was presented to the St Petersburg Academy in 1735 and printed in a volume dated 1736. His argument is generally treated as the first result in graph theory.',
-'In Zest you draw one unbroken line that crosses each bridge once, starting from any land. A check counts the bridges on each shore as a hint. Fewer moves score higher. The puzzle is a tiny doorway into a whole field of mathematics that studies networks.'],
-fact:'Euler showed in 1735 that Königsberg’s seven bridges cannot be walked once each.',
-links:[{t:'Seven Bridges of Königsberg',u:'https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg'},{t:'Leonhard Euler publishes the Königsberg bridges problem',u:'https://historyofinformation.com/detail.php?id=3406'}]};
+'Of the seven Königsberg bridges that started graph theory, only two from Euler’s day still stand. Königsberg, in Prussia, sat on both banks of the river Pregel, around two large islands, Kneiphof and Lomse. Seven bridges joined the four pieces of land, and the question was whether one walk could cross every bridge exactly once.',
+'Leonhard Euler, working in St Petersburg, proved that it can’t. His trick was to throw away the map: only the pieces of land and the bridges between them mattered. Every time you walk onto a piece of land you must walk off it again, so apart from the start and the finish, each one needs an even number of bridges. In Königsberg one had five and the other three had three each.',
+'His paper was presented to the St Petersburg Academy on 26 August 1735, and sources date the printed version to 1736 or 1741. It is usually counted as the first result in graph theory, the mathematics of networks. It came in a hard year for him: in 1735 he nearly died of fever.',
+'The bridges fared worse than the proof. Two did not survive the bombing of the city in the Second World War, and two more were later pulled down and replaced by a highway. Königsberg is now Kaliningrad, in Russia. With five bridges on the old sites, the walk Euler ruled out is now possible, as long as you start on one island and finish on the other. The University of Canterbury in Christchurch keeps a model of the bridges in a lawn, with short bushes for rivers.',
+'In Zest you draw one unbroken line that crosses every bridge once. The number of bridges on each shore is a clue to where you can start.'],
+fact:'Of the three bridges left in the city today, one was rebuilt in 1935.',
+links:[{t:'Seven Bridges of Königsberg',u:'https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg'},{t:'Leonhard Euler publishes the Königsberg bridges problem',u:'https://historyofinformation.com/detail.php?id=3406'},{t:'Leonhard Euler',u:'https://en.wikipedia.org/wiki/Leonhard_Euler'}]};
 
 STORY['dodecahedron-tour']={paras:[
-'Imagine a dodecahedron, a solid with twelve flat faces, and a path that must touch every corner exactly once and return to the start. It is a puzzle you can hold in your hands, and it takes a little patience.',
-'In 1857 the Irish mathematician William Rowan Hamilton presented his Icosian game at the British Association meeting in Dublin. He sold the rights to the London toymakers Jaques and Son, who marketed it from 1859 as The Icosian Game. It did not sell well, but the idea lived on.',
-'A loop that visits every corner once is now called a Hamiltonian cycle, a standard idea in graph theory. In Zest you drag a path along the edges, corner to corner, and the game checks each step as you go. Enjoy finding a route that closes neatly.'],
-fact:'William Rowan Hamilton presented his dodecahedron path game in Dublin in 1857.',
-links:[{t:'Icosian game',u:'https://en.wikipedia.org/wiki/Icosian_game'},{t:'The Icosian Calculus (Trinity College Dublin)',u:'https://www.maths.tcd.ie/pub/HistMath/People/Hamilton/Icosian'}]};
+'Ireland’s Royal Astronomer sold a puzzle game to a London toymaker in the 1850s, for a fee of just £25. In 1857 William Rowan Hamilton showed it at the Dublin meeting of the British Association for the Advancement of Science. You had to find a path along the edges of a twelve-faced solid that visits every corner once and comes back to the start.',
+'Hamilton had been appointed Andrews Professor of Astronomy and Royal Astronomer of Ireland before he had finished his degree. By his own account, on 16 October 1843, walking along the Royal Canal in Dublin with his wife, he hit on the key equation of quaternions and carved it into Broom Bridge with his penknife. The game was meant to illustrate another algebra of his, the icosian calculus, and he outlined both in letters to his friend John T. Graves in late 1856.',
+'At Graves’s suggestion he sold the rights to Jaques and Son, who sold it from 1859 as The Icosian Game and as The Travellers Dodecahedron, or a voyage around the world. One version was a flat wooden board with holes for numbered pegs. It was not a commercial success, and few copies survive; one is in the library of the Royal Irish Academy in Dublin.',
+'Hamilton wasn’t even first to the idea. Knight’s tours on a chessboard go back to the 9th century, and Thomas Kirkman in England was studying the same kind of path at about the same time. Hamilton visited Kirkman in 1861 and gave him a copy of the game. Still, the name stuck to Hamilton: a loop that visits every point once is called a Hamiltonian cycle.',
+'In Zest you drag a path from corner to corner, and the game checks each step.'],
+fact:'Another surviving copy is in the Conservatoire national des arts et métiers in Paris.',
+links:[{t:'Icosian game',u:'https://en.wikipedia.org/wiki/Icosian_game'},{t:'The Icosian Calculus (Trinity College Dublin)',u:'https://www.maths.tcd.ie/pub/HistMath/People/Hamilton/Icosian'},{t:'William Rowan Hamilton',u:'https://en.wikipedia.org/wiki/William_Rowan_Hamilton'}]};
 
 STORY['hundred-drawers']={paras:[
 'Picture a row of small drawers, each with a numbered card inside. Open one, and its card names the next drawer to open. Follow the chain and see where it leads. Some chains loop back on themselves, and finding the loop is the whole game.',

@@ -229,10 +229,10 @@
 
   function settingsRow(sh){var root=sh&&sh.el;if(!root||root.querySelector('[data-zwset]'))return;
     var rows='';
-    if(!home&&iOS)rows+='<div class="row" data-zwrow="guide"><span class="rt"><b>Add to Home Screen</b><small>Full screen, offline, progress kept</small></span><button class="btn sec" data-zwg>How</button></div>';
+    if(!home&&iOS)rows+='<div class="row" data-zwrow="guide"><span class="rt"><b>Add to Home Screen</b><small>Opens full screen and works offline</small></span><button class="btn sec" data-zwg>How</button></div>';
     if(!home&&android)rows+='<div class="row" data-zwrow="play"><span class="rt"><b>Get the Android app</b><small>On Google Play</small></span><button class="btn sec" data-zwp>Open</button></div>';
     rows+='<div class="row" data-zwrow="copy"><span class="rt"><b>Copy my progress</b><small>As a code, to move it to another browser or phone</small></span><button class="btn sec" data-zwc>Copy</button></div>';
-    rows+='<div class="row" data-zwrow="paste"><span class="rt"><b>Paste progress</b><small>Replaces the progress here</small></span><button class="btn sec" data-zwv>Paste</button></div>';
+    rows+='<div class="row" data-zwrow="paste"><span class="rt"><b>Paste progress</b><small>Replaces the progress on this device</small></span><button class="btn sec" data-zwv>Paste</button></div>';
     var box=node('<div class="sect" data-zwset><div class="sh"><h2>This device</h2></div><div class="card list" style="padding:4px 16px">'+rows+'</div></div>');
     var first=root.querySelector('.sect');if(first&&first.parentNode)first.parentNode.insertBefore(box,first.nextSibling);else root.appendChild(box);
     var g=box.querySelector('[data-zwg]');if(g)g.onclick=function(){showGuide('settings')};

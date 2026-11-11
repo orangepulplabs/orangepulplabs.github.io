@@ -29,8 +29,8 @@ window.ztRulesSheet=rulesSheet;
 
 /* ---------- the intro: 3 screens, once, before the welcome ---------- */
 var SL=[['1','One puzzle a day','A new puzzle every morning. About 2 minutes.'],
-  ['flame','Keep your streak','Play once a day to keep it going. Miss a day and it starts again.'],
-  ['star','Collect them all','Each puzzle you solve adds a story to your collection.']];
+  ['flame','Keep your streak','Solve a puzzle each day. Rest days cover the days you miss.'],
+  ['star','Collect them all','Solve a puzzle and you get its story.']];
 var ART={'1':'<svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M11 14l1.5-1v5"/></svg>',
   flame:'<svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4 0 7-2.7 7-6.6 0-3.6-2.4-5.6-4-8.4-.6 2-1.6 3-3 3.4.4-3-1-6-3.5-7.4.3 3.4-1.6 5.6-3 7.6C4.7 12 5 13.7 5 15.4 5 19.3 8 22 12 22z"/></svg>',
   star:'<svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2.6l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 16.9l-5.8 3.2 1.4-6.4L2.7 9.3l6.5-.7z"/></svg>'};
@@ -60,7 +60,7 @@ todayRender=function(root,first){var r=tr0.apply(this,arguments);try{tip(root)}c
 function tip(root){if(QUIET||TS().tip||!S().onb||qs(root,'.zt-tip'))return;var chip=qs(root,'[data-chain]');if(!chip)return;
   setTimeout(function(){if(TS().tip||qs(root,'.zt-tip')||!chip.isConnected||Nav.overlays>0||Nav.depth>0||Nav.cur!=='today')return;
     var pad=qs(root,'.pad')||root,pr=pad.getBoundingClientRect(),cr=chip.getBoundingClientRect();
-    var t=h5('<div class="zt-tip" role="dialog" aria-label="Your streak" data-tip>Your streak. Play one puzzle a day to keep it going. Miss a day and it starts again.<button data-ok>OK</button></div>');
+    var t=h5('<div class="zt-tip" role="dialog" aria-label="Your streak" data-tip>Your streak. Solve a puzzle each day to grow it. If you miss a day, a saved rest day keeps it going.<button data-ok>OK</button></div>');
     if(getComputedStyle(pad).position==='static')pad.style.position='relative';
     t.style.top=(cr.bottom-pr.top+10)+'px';t.style.right=Math.max(12,pr.right-cr.right)+'px';t.style.setProperty('--ax',Math.max(14,cr.width/2-6)+'px');
     pad.appendChild(t);TS().tip=1;save();ev('streak_tip');Nav.anim(t,[{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],220);

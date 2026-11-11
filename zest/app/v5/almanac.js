@@ -25,12 +25,12 @@ function almSearch(root,q){var res=qs(root,'[data-res]'),main=qs(root,'[data-mai
   main.hidden=true;var re=new RegExp('(^|[^a-z])'+q.replace(/[^a-z0-9 ]/g,''),'i'),sc=[];
   PUZZLE_ORDER.forEach(function(id){var p=P(id),s=0;if(re.test(p.name))s=3;else if(re.test(fam(id).name))s=2;else if(re.test(hook(id))||re.test(kick(id)))s=1;if(s)sc.push([s,id])});
   sc.sort(function(a,b){return b[0]-a[0]});
-  res.innerHTML=sc.length?'<div class="sect"><div class="grid">'+sc.slice(0,40).map(function(x){return gridCard(x[1])}).join('')+'</div></div>':'<div class="empty"><p>Nothing for "'+esc(q)+'".</p><div class="chips"><button class="chip" data-try="tower">tower</button><button class="chip" data-try="words">words</button><button class="chip" data-try="18">1800s</button></div></div>';
+  res.innerHTML=sc.length?'<div class="sect"><div class="grid">'+sc.slice(0,40).map(function(x){return gridCard(x[1])}).join('')+'</div></div>':'<div class="empty"><p>No stories match "'+esc(q)+'". Try one of these:</p><div class="chips"><button class="chip" data-try="tower">tower</button><button class="chip" data-try="words">words</button><button class="chip" data-try="18">1800s</button></div></div>';
   wireGrid(res);qsa(res,'[data-try]').forEach(function(b){b.onclick=function(){var i=qs(root,'[data-q]');i.value=b.dataset.try;almSearch(root,i.value)}})}
 function pageShell(title,body){return h5('<section aria-label="'+esc(title)+'"><div class="pghead"><button class="ibtn" data-back aria-label="Back">'+icon('back')+'</button><span class="pt">'+esc(title)+'</span></div><div class="pgbody">'+body+'</div></section>')}
 function openChapter(fid,season){var f=FAMILIES.filter(function(x){return x.id===fid})[0],ids=famCards(fid),got=famCount(fid);
   var sec=pageShell(f.name,'<p class="sm">'+esc(f.blurb)+'</p><div class="pbar" style="margin-top:12px"><i style="width:'+(got/ids.length*100)+'%"></i></div><p class="sm num" style="margin-top:6px">'+got+' of '+ids.length+' collected</p>'+
-    (season&&FLAGS.season?'<div class="card" style="margin-top:14px"><p class="kick">'+esc(seasonFor(T()).month)+' season</p><p style="margin-top:6px">Every puzzle here and every daily adds a stamp. At 10: an indigo accent. At 20: a season card frame.</p></div>':'')+
+    (season&&FLAGS.season?'<div class="card" style="margin-top:14px"><p class="kick">'+esc(seasonFor(T()).month)+' season</p><p style="margin-top:6px">Each daily puzzle, and each level you solve in this chapter, adds a stamp. 10 stamps earn an indigo accent, and 20 earn a season card frame.</p></div>':'')+
     '<div class="sect"><div class="grid">'+ids.map(gridCard).join('')+'</div></div>');
   qs(sec,'[data-back]').onclick=function(){Nav.pop()};wireGrid(sec);
   Nav.push({name:'chapter',el:sec,notabs:false,onShow:function(el){qsa(el,'.gcard').forEach(function(g){var id=g.dataset.id,n=h5(gridCard(id));if(n.className!==g.className){g.replaceWith(n);n.onclick=function(){openCard(id,qs(n,'.art'))}}})}})}
@@ -53,6 +53,6 @@ function previewSheet(id){var st=window.STORY&&STORY[id],p=P(id);var b=h5('<div 
 /* past days: the last 14 days as rows, newest first (audit 14-01, 14-02) */
 function openPast(){var v=S(),t=T(),rows='';ev('archive_opened');for(var i=1;i<=14;i++){var k=addDays(t,-i);if(v.first&&k<addDays(v.first,-7))break;var d=dailyFor(k,99),dn=v.daily[k];
     rows+='<button class="row" data-day="'+k+'"><span class="art tile">'+art(d.id,'tile')+'</span><span class="rt"><b>'+esc(P(d.id).name)+'</b><small>'+esc(dayLabel(k,{weekday:'short',day:'numeric',month:'short'}))+' · #'+d.no+'</small></span>'+(dn?'<span class="chip acc">'+icon('check')+dn.stars+'★</span>':icon('chev','chev'))+'</button>'}
-  var sec=pageShell('Past days','<div class="list">'+rows+'</div><p class="sm" style="margin-top:12px">Past days are practice: they add to your collection and level, not to today.</p>');
+  var sec=pageShell('Past days','<div class="list">'+rows+'</div><p class="sm" style="margin-top:12px">A past puzzle counts like today&rsquo;s: you get its story, and the day counts toward your streak and week.</p>');
   qs(sec,'[data-back]').onclick=function(){Nav.pop()};qsa(sec,'[data-day]').forEach(function(b){b.onclick=function(){var k=b.dataset.day,d=dailyFor(k,99);playPuzzle(d.id,d.level,{past:k})}});
   Nav.push({name:'past',el:sec,notabs:false})}

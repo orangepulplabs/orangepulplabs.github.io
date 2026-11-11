@@ -18,7 +18,7 @@ function termsGate(updated,done){
 function welcome(){var id=FIRST_PUZZLE,p=P(id);
   /* 10 Nov 2026 (owner, Docs/website-mobile/first-play.md): one screen before play. The welcome IS the first puzzle's story (art, year, name,
      hook) with one explicit "Agree and play"; the tap accepts the Terms and opens the board (no 3-screen intro, no separate story slate). */
-  var n=h5('<div class="ob ob1" role="dialog" aria-modal="true" aria-label="Welcome to Zest"><div class="ob1-top"><div class="mark">'+MARK+'</div><span>Every puzzle has a true story.</span></div>'+
+  var n=h5('<div class="ob ob1" role="dialog" aria-modal="true" aria-label="Welcome to Zest"><div class="ob1-top"><div class="mark">'+MARK+'</div><span>A puzzle from history, every day.</span></div>'+
     '<div class="art hero ob1-art">'+art(id,'hero')+'</div><div class="meta ob1-meta">'+kickChip(id)+'<span class="chip">Your first puzzle</span></div>'+
     '<h1>'+esc(p.name)+'</h1><p class="sm ob1-hook">'+esc(storyHook(id))+'</p>'+
     (FLAGS.ageAfterWin?'':'<div class="agegrid" data-ages></div>')+
@@ -48,7 +48,7 @@ function ageText(){var v=S(),b=AGE_BANDS.filter(function(x){return x[0]===v.band
 function ageChoices(box,done){box.classList.add('agegrid2');box.innerHTML=AGE_BANDS.map(function(b){return '<button class="btn sec" data-b="'+b[0]+'">'+b[1]+'</button>'}).join('');
   on(box,'[data-b]','click',function(e,x){setBand(x.dataset.b);qsa(box,'[data-b]').forEach(function(y){y.className='btn '+(y===x?'pri':'sec')});done(S().age)})}
 function onboardAfterWin(){var v=S();if(v.age||!FLAGS.ageAfterWin){finishOnboarding();return}
-  var n=h5('<div class="ob" role="dialog" aria-modal="true" aria-label="Your age group"><div class="zcomp" data-zc="idle" style="width:80px;height:80px"></div><h1 style="font-size:1.625rem">One quick thing: your age group?</h1><p class="sm" style="margin-top:8px">It sets what Zest can offer you. It stays on this phone.</p><div class="agegrid" data-ages></div></div>');
+  var n=h5('<div class="ob" role="dialog" aria-modal="true" aria-label="Your age group"><div class="zcomp" data-zc="idle" style="width:80px;height:80px"></div><h1 style="font-size:1.625rem">Which age group are you in?</h1><p class="sm" style="margin-top:8px">Zest uses it to decide which features you get. It stays on this phone.</p><div class="agegrid" data-ages></div></div>');
   var c=Nav.cover(n,{noBack:true});if(window.ZD)ZD.mount(n);ageChoices(qs(n,'[data-ages]'),function(){setTimeout(function(){finishOnboarding();c.close()},Q.fast?0:260)})}
 function finishOnboarding(){keepGuest();var v=S();v.onb=1;db().p=Object.assign(db().p||{},{done:1});save();Nav.popAll().then(function(){Nav.refresh('today');Nav.refresh('almanac');setTimeout(function(){toast('Your first story is in the Almanac')},400)})}
 

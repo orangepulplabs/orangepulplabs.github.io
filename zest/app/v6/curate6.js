@@ -42,6 +42,6 @@ if(typeof FIRST_PUZZLE!=='undefined'&&!VIS[FIRST_PUZZLE])FIRST_PUZZLE=VIS['switc
 if(window.ZC&&ZC.fromSearch){var fs0=ZC.fromSearch;ZC.fromSearch=function(){var f=fs0.apply(ZC,arguments);window.__v6link=f;return f}}
 if(typeof friendFromUrl==='function'){var ff0=friendFromUrl;friendFromUrl=function(){window.__v6link=null;var r=ff0.apply(this,arguments),f=window.__v6link;
   if(r&&r.broken&&f&&((f.ok===false&&f.why==='retired')||(f.ok&&f.id&&PUZZLES[f.id]&&!VIS[f.id]))){
-    setTimeout(function(){try{toast('That puzzle has moved on. Here is today’s story.',3200)}catch(e){}},60);return null}
+    setTimeout(function(){try{toast('That puzzle has moved on, so here is today’s puzzle.',3200)}catch(e){}},60);return null}
   return r}}
 })();

@@ -27,8 +27,8 @@ function h24(t){return String(+t.slice(0,2))+':'+t.slice(3,5)}
 
 /* ---------- copy: a few variants each, picked by the day so the words change from day to day ---------- */
 var MORNING=[function(n){return 'Today: '+n},function(n){return 'Today\u2019s puzzle: '+n},function(n){return n+' is today\u2019s puzzle'},function(n){return 'New today: '+n}];
-var EVENING=[['The Reel','3 tougher puzzles are waiting in the Reel.'],['A few harder ones','The Reel has tougher levels ready to swipe through.'],
-  ['Evening Reel','Swipe through a few harder puzzles. Stop whenever you like.'],['The Reel is ready','A handful of tougher puzzles, one swipe at a time.']];
+var EVENING=[['The Reel','Harder levels are ready in the Reel.'],['A few harder ones','Harder levels of the puzzles you know, one swipe at a time.'],
+  ['Evening Reel','A few harder levels, if you have a minute.'],['The Reel is ready','Harder levels, one swipe at a time.']];
 function dayNo(k){return Math.max(0,daysBetween('2026-01-01',k))}
 function hookLine(id){var h='';try{h=storyHook(id)||''}catch(e){}if(!h||h.length>120){try{var a=window.ART&&ART[id];if(a&&a.hook&&a.hook.length<=120)h=a.hook}catch(e){}}
   if(h.length>120)h=h.slice(0,117).replace(/\s+\S*$/,'')+'\u2026';return h}
@@ -75,7 +75,7 @@ function showAsk(){var r=R(),a=r.ask;Z.shown++;a.n=(a.n|0)+1;a.pd=playDays();a.d
   var both=r.daily.on&&r.reel.on,q=both?'Get a daily puzzle at '+h24(r.daily.t)+' and a Reel nudge at '+h24(r.reel.t)+'?':r.daily.on?'Get a daily puzzle at '+h24(r.daily.t)+'?':'Get a Reel nudge at '+h24(r.reel.t)+'?';
   var b=h5('<div data-remask><p style="font-weight:700">'+esc(q)+'</p><p class="sm" style="margin-top:6px">Skipped on days you have already played. Change the times or turn them off in Settings.</p>'+
     '<div style="display:flex;flex-direction:column;gap:8px;margin-top:16px"><button class="btn pri wide" data-yes>'+icon('bell')+'Allow</button><button class="btn ghost wide" data-no>Not now</button></div></div>');
-  var picked=false,sh=Nav.sheet({title:'Two small reminders',body:b,onClose:function(){if(!picked){picked=true}}});
+  var picked=false,sh=Nav.sheet({title:'Want reminders?',body:b,onClose:function(){if(!picked){picked=true}}});
   qs(b,'[data-no]').onclick=function(){picked=true;a.res='later';save();ev('remind_ask_later');sh.close()};
   qs(b,'[data-yes]').onclick=function(){picked=true;sh.close();ev('remind_ask_allow');
     askSystem(function(ns){a.res=ns&&ns.enabled?'granted':'denied';save();if(ns&&ns.enabled)toast('Reminders on. Change them any time in Settings.')})}}
@@ -99,7 +99,7 @@ function section(){var r=R();
     '<input class="remt" type="time" step="300" data-rt="'+k+'" value="'+esc(r[k].t)+'" aria-label="'+esc(label)+' time"'+(r[k].on?'':' disabled')+'>'+
     '<button class="sw" role="switch" data-rk="'+k+'" aria-checked="'+(!!r[k].on)+'" aria-labelledby="rem-'+k+'"></button></div>'}
   return h5('<div class="sect" data-rems><div class="sh"><h2>Reminders</h2></div><div class="card list" style="padding:4px 16px">'+
-    row('daily','Daily puzzle','Not sent once today\u2019s is solved')+row('reel','Reel','Not sent once you have played the Reel')+
+    row('daily','Daily puzzle','Skipped once you have solved today\u2019s puzzle')+row('reel','Reel','Skipped once you have played the Reel that day')+
     '<div class="remst" data-remst hidden><span class="rt"><b>Notifications are off</b><small>Turn them on in iPhone Settings, Notifications, Zest.</small></span><button class="btn sec" data-remopen>Open settings</button></div>'+
     '<p class="sm" data-remweb style="padding:10px 0" hidden>Add it to your Home Screen to get reminders.</p></div></div>')}
 function mountSettings(sh){var root=sh&&sh.el;if(!root||qs(root,'[data-rems]'))return;

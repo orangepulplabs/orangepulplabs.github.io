@@ -10,7 +10,7 @@ var FAMILIES=[
  {id:'F7',name:'Paths and Crossings',blurb:'Routes, loops and graphs'},
  {id:'F8',name:'Shapes and Builds',blurb:'Fitting, tiling and constructing'},
  {id:'F9',name:'Board Battles',blurb:'Traditional board games and their puzzle positions'},
- {id:'F10',name:'Rules, Toggles and Placements',blurb:'Hidden rules, grids and placements'}];
+ {id:'F10',name:'Grids, Pegs and Stacks',blurb:'Lights, number grids, peg jumps and stacks to sort'}];
 var PZ_THEME={
  'slide-tiles':'F8','disc-tower':'F10','few-swaps':'F10','make-target':'F6','digit-span':'F4','tilt-run':'F7','four-by-four':'F10','zero-one':'F10','code-cracker':'F5','tube-sort':'F10','scramble':'F3','word-steps':'F3',
  'parallel-or-not':'F1','missing-triangle':'F1','quick-dots':'F4','digit-shuffle':'F6','remainder-riddle':'F6','balance-weights':'F5','bridge-walk':'F7','dodecahedron-tour':'F7','hundred-drawers':'F10','risk-deck':'F5','on-the-tip':'F3','sharp-or-round':'F2'};

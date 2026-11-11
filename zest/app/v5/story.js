@@ -13,11 +13,11 @@ function storySheet(id){var p=P(id),st=(window.STORY&&STORY[id])||null,ab=(windo
     '<div class="sect">'+Ads.native('Story sheet, under Worth knowing')+'</div>'+
     '<div class="srcs list">'+links.map(function(l){var host='';try{host=new URL(l.u).hostname.replace(/^www\./,'')}catch(e){}return '<a class="row" href="'+esc(l.u)+'" target="_blank" rel="noopener">'+icon('link','chev')+'<span class="rt"><b>'+esc(l.t)+'</b><small>'+esc(host)+'</small></span></a>'}).join('')+
     '<button class="row" data-report>'+icon('flag','chev')+'<span class="rt"><b>Report a mistake</b></span></button></div>'+
-    '<p class="legal">Told to the best of our knowledge. Spot an error? Tell us above.</p></div>');
+    '<p class="legal">Told as accurately as we can. If you find a mistake, report it above.</p></div>');
   var sh=Nav.sheet({title:'',body:body,full:true,cls:'storysh'});
   qs(body,'[data-report]').onclick=function(){reportMistake(id)};return sh}
-function reportMistake(id){var R=[['wrong_fact','A fact looks wrong'],['wrong_date','A date or name looks wrong'],['broken_link','A link does not work'],['unclear','It is confusing'],['other','Something else']];
+function reportMistake(id){var R=[['wrong_fact','A fact looks wrong'],['wrong_date','A date or name looks wrong'],['broken_link','A link does not work'],['unclear','Something is unclear'],['other','Something else']];
   var b=h5('<div><p class="sm">Pick one. This sends nothing about you.</p><div class="list" style="margin-top:8px"></div></div>'),list=qs(b,'.list');
   var sh=Nav.sheet({title:'Report a mistake',body:b});
   R.forEach(function(r){var row=h5('<button class="row"><span class="rt"><b>'+esc(r[1])+'</b></span>'+icon('chev','chev')+'</button>');row.onclick=function(){sh.close();
-    fetch(API+'/v1/flag',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({item:id,reason:r[0]})}).then(function(x){toast(x.status===204||x.ok?'Thanks. We will check it.':'Could not send. Try later.')}).catch(function(){toast('Could not send. Try later.')})};list.appendChild(row)})}
+    fetch(API+'/v1/flag',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({item:id,reason:r[0]})}).then(function(x){toast(x.status===204||x.ok?'Thanks. We will check it.':'Could not send. Check your connection and try again.')}).catch(function(){toast('Could not send. Check your connection and try again.')})};list.appendChild(row)})}

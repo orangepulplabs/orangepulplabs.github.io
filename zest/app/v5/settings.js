@@ -2,17 +2,17 @@
    Age list: the six AGE_BANDS from 13 to 17 up to 55 or over (Zest is 13+; never asks about under 13; changing it never deletes anything). Sign-in is for adults and lives in the Android build (no sign-in from this prototype). */
 var CONTACT5='orangepulplabs@gmail.com';
 function openSettings(){var v=S(),st=db().st,b=h5('<div>'+
-  '<div class="sect" style="margin-top:4px"><div class="sh"><h2>Appearance</h2></div><div class="seg" role="group" aria-label="Theme" data-seg="theme"><button data-v="light">Light</button><button data-v="dark">Dark</button><button data-v="auto">Phone</button></div>'+
+  '<div class="sect" style="margin-top:4px"><div class="sh"><h2>Appearance</h2></div><div class="seg" role="group" aria-label="Theme" data-seg="theme"><button data-v="light">Light</button><button data-v="dark">Dark</button><button data-v="auto">Device</button></div>'+
   ((v.season.got||[]).indexOf('indigo')>=0?'<div class="seg" role="group" aria-label="Accent" data-seg="accent" style="margin-top:8px"><button data-v="">Orange</button><button data-v="indigo">Indigo</button></div>':'')+'</div>'+
-  '<div class="sect"><div class="sh"><h2>Feel</h2></div><div class="card list" style="padding:4px 16px">'+
+  '<div class="sect"><div class="sh"><h2>Sound and motion</h2></div><div class="card list" style="padding:4px 16px">'+
     swRow('sfx','Sound',st.sfx)+swRow('hap','Vibration',st.hap)+swRow('rm','Reduce motion',reduced())+'</div></div>'+
-  '<div class="sect"><div class="sh"><h2>Rhythm</h2></div><div class="card list" style="padding:4px 16px">'+
+  '<div class="sect"><div class="sh"><h2>Your week</h2></div><div class="card list" style="padding:4px 16px">'+
     '<button class="row" data-remind><span class="rt"><b>Daily nudge</b></span><span class="sm" data-rv>'+(v.remind.on?esc(fmtTime(v.remind.time)):'Off')+'</span>'+icon('chev','chev')+'</button>'+
-    '<button class="row" data-goal><span class="rt"><b>Week goal</b></span><span class="sm">'+v.weekGoal+' days</span>'+icon('chev','chev')+'</button></div></div>'+
+    '<button class="row" data-goal><span class="rt"><b>Weekly goal</b></span><span class="sm">'+v.weekGoal+' days</span>'+icon('chev','chev')+'</button></div></div>'+
   '<div class="sect"><div class="sh"><h2>You</h2></div><div class="card list" style="padding:4px 16px">'+
     '<button class="row" data-age><span class="rt"><b>Age group</b></span><span class="sm" data-agev>'+ageText()+'</span>'+icon('chev','chev')+'</button>'+
-    (v.age==='adult'?'<button class="row" data-signin><span class="rt"><b>Sign in with Google</b><small>Keep progress on a new phone. Adults only.</small></span>'+icon('chev','chev')+'</button>':'')+
-    swRow('usage','Share anonymous counts',st.usage!==0,'A daily total per event. No identifier.')+'</div></div>'+
+    (v.age==='adult'?'<button class="row" data-signin><span class="rt"><b>Sign in with Google</b><small>Keep your progress if you change phones. 18 and over.</small></span>'+icon('chev','chev')+'</button>':'')+
+    swRow('usage','Share anonymous counts',st.usage!==0,'Daily totals, such as how many puzzles were solved. Nothing that identifies you.')+'</div></div>'+
   (FLAGS.iap?'<div class="sect"><div class="sh"><h2>Later</h2><span class="chip">Disabled</span></div><div class="card list" style="padding:4px 16px">'+IAP_SLOTS.map(function(x){return '<div class="row" aria-disabled="true"><span class="rt"><b>'+esc(x.t)+'</b><small>'+esc(x.d)+'</small></span><span class="chip">Soon</span></div>'}).join('')+'</div></div>':'')+
   '<div class="sect"><div class="sh"><h2>About</h2></div><div class="card list" style="padding:4px 16px">'+
     '<button class="row" data-research><span class="rt"><b>What the research says</b></span>'+icon('chev','chev')+'</button>'+

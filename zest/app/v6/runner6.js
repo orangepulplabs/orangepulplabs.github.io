@@ -19,7 +19,7 @@ finishPuzzle=function(st,res){var p=P(st.id);if(!p||!p.v6||!window.ZK)return v5f
   var sec=document.querySelector('.pz5'),root=sec&&sec.querySelector('.pzroot'),host=root&&(root.querySelector('.zk-stage')||root),board=host&&host.querySelector('.zk-board');
   var next=st.level<p.levels?st.level+1:null,big=bigMoment(st,win);
   if(sec){var bar=sec.querySelector('.pzbar');if(bar)bar.style.visibility='hidden';var hh=sec.querySelector('.pzh');if(hh)hh.textContent=''}
-  var shown=false;function toReward(){if(shown)return;shown=true;if(typeof sr.winLine==='string')R.par=null;showReward(R);
+  var shown=false;function toReward(){if(shown)return;shown=true;if(typeof sr.winLine==='string'){R.par=null;R.winLine=sr.winLine}showReward(R);if(document.querySelector('.rw.w2'))return;   /* W2 (win6.js) shows R.winLine itself */
     if(typeof sr.winLine==='string')try{var bg=[].slice.call(document.querySelectorAll('[data-big]')).pop(),bl=bg&&bg.parentNode.querySelector('.bigl');if(bg){bg.style.display='none';bg.removeAttribute('data-big')}if(bl)bl.textContent=sr.winLine+(r.hints?' · with a hint':'')}catch(e){}}   /* 1.2.1: no '1 moves' on the reward page either */
   if(!host||Q.fast){setTimeout(toReward,0);return}
   var mvs=moves+(moves===1?' move':' moves'),line=par?(moves<=par?mvs+', the fewest possible':mvs+' · fewest '+par):'';if(typeof sr.winLine==='string')line=sr.winLine;   /* 1.2.1: a puzzle whose move count is not a tap count (zebra: checks) words its own line */

@@ -80,7 +80,7 @@ try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',functio
 
 /* ---------- content helpers ---------- */
 function P(id){return (window.PUZZLES&&PUZZLES[id])||null}
-function art(id,kind){var a=window.ART&&ART[id];return a?(kind==='hero'?a.hero:a.tile):''}
+function art(id,kind){var a=window.ART&&ART[id];return a?(kind==='hero'?(a.hero||a.tile||''):(a.tile||'')):''}
 /* story hook: the story's own first sentence (a curiosity line), falls back to the instruction hook */
 function storyHook(id){var st=window.STORY&&STORY[id];if(st&&st.paras&&st.paras[0]){var f=st.paras[0].split(/(?<=[.!?])\s/)[0];if(f.length<=150)return f}return hook(id)}
 function hook(id){if(HOOK_FIX[id])return HOOK_FIX[id];var a=window.ART&&ART[id];return (a&&a.hook)||(P(id)&&P(id).blurb)||''}

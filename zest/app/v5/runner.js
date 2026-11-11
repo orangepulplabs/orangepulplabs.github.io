@@ -54,21 +54,21 @@ function showReward(R){var p=P(R.id),v=S(),w=R.win,o=R.o,isDaily=!!o.daily,newCa
   var parHtml=R.par?'<div class="parbar" aria-hidden="true"><i style="width:0"></i><b style="left:calc('+Math.min(100,R.par/Math.max(R.moves,R.par)*100)+'% - 1px)"></b><em style="left:'+Math.min(100,R.par/Math.max(R.moves,R.par)*100)+'%">fewest '+R.par+'</em></div>':'';
   var badges=[];
   if(FLAGS.chain&&w.chain&&w.chain.kind!=='same')badges.push('<span class="chip acc" data-b="chain">'+chainIcon(true).replace('<svg','<svg width="16" height="16"')+' Day '+v.chain.n+'</span>');
-  if(FLAGS.weekGoal&&w.week)badges.push('<span class="chip'+(w.weekMetNow?' acc':'')+'" data-b="week">'+icon('cal')+(w.weekMetNow?'Week goal met':w.week.n+' of '+w.week.goal+' this week')+'</span>');
+  if(FLAGS.weekGoal&&w.week)badges.push('<span class="chip'+(w.weekMetNow?' acc':'')+'" data-b="week">'+icon('cal')+(w.weekMetNow?'Weekly goal met':w.week.n+' of '+w.week.goal+' this week')+'</span>');
   if(w.season)badges.push('<span class="chip" data-b="season">'+icon('star')+'Stamp '+w.season+' of '+SEASON_N+'</span>');
   if(w.chain&&w.chain.earned&&FLAGS.chain)badges.push('<span class="chip acc">+1 rest day</span>');if(R.isBest)badges.push('<span class="chip acc">'+icon('up')+'New best</span>');
-  var fr=o.friend&&o.friend.t?(R.moves<o.friend.t?'You beat it! '+R.moves+' vs '+o.friend.t:R.moves===o.friend.t?'A tie at '+R.moves:'They win this one: '+o.friend.t+' vs '+R.moves):'';if(o.friend){ev('friend_finish');if(o.friend.t&&R.moves<o.friend.t)ev('friend_beat')}
-  var cardHtml=newCard?'<div class="flip" aria-hidden="true"><div class="fi"><div class="ff">'+MARK+'</div><div class="fb">'+cardFace(R.id)+'</div></div></div><p class="addl">Added to your Almanac<small>'+total+' of '+PUZZLE_ORDER.length+' stories</small></p>':
+  var fr=o.friend&&o.friend.t?(R.moves<o.friend.t?'You beat it! '+R.moves+' vs '+o.friend.t:R.moves===o.friend.t?'Tied at '+R.moves+' moves':'They win this one: '+o.friend.t+' vs '+R.moves):'';if(o.friend){ev('friend_finish');if(o.friend.t&&R.moves<o.friend.t)ev('friend_beat')}
+  var cardHtml=newCard?'<div class="flip" aria-hidden="true"><div class="fi"><div class="ff">'+MARK+'</div><div class="fb">'+cardFace(R.id)+'</div></div></div><p class="addl">'+esc(storyHook(R.id)||'Its story is now in your Almanac.')+'<small>Story '+total+' of '+PUZZLE_ORDER.length+' in your Almanac</small></p>':
     (w.tier?'<div class="flip on" aria-hidden="true" style="width:160px"><div class="fi" style="width:160px;height:208px"><div class="fb">'+cardFace(R.id)+'</div></div></div><p class="addl">'+TIER_NAME[w.tier]+' card</p>':'');
-  var tmr='';if(isDaily&&FLAGS.teaser){var nd=dailyFor(addDays(o.daily,1),totalSolvedPuzzles());tmr='<div class="tmr" style="width:100%;text-align:left"><span class="sil">'+art(nd.id,'tile')+'</span><span><b>Tomorrow: '+esc(kick(nd.id))+'</b><small>A new story at midnight</small></span></div>'}
-  var primary=o.first||o.guest?'Continue':isDaily?'Quick reel':next?'Level '+next:'Done';
+  var tmr='';if(isDaily&&FLAGS.teaser){var nd=dailyFor(addDays(o.daily,1),totalSolvedPuzzles());tmr='<div class="tmr" style="width:100%;text-align:left"><span class="sil">'+art(nd.id,'tile')+'</span><span><b>Tomorrow: '+esc(kick(nd.id))+'</b><small>A new puzzle at midnight</small></span></div>'}
+  var primary=o.first||o.guest?'Continue':isDaily?'Play the Reel':next?'Level '+next:'Done';
   var sec=h5('<section class="rw" aria-label="Solved"><button class="ibtn rwx" data-x aria-label="Close">'+icon('x')+'</button>'+
     (FLAGS.companion&&!newCard&&!w.tier?'<div class="zcomp" data-zc="idle" style="margin-top:4px"></div>':'')+
     (fr?'<h1 class="h2" style="margin-top:28px">'+esc(fr)+'</h1>':'')+'<div class="stars" role="img" aria-label="'+R.stars+' of 3 stars">'+stars+'</div>'+
     '<div class="bignum" data-big>'+R.moves+'</div><div class="bigl">moves'+(R.prior&&!R.isBest?' · best '+R.prior.moves:'')+(R.hints?' · '+plur(R.hints,'hint'):'')+'</div>'+parHtml+
     cardHtml+'<div class="badges">'+badges.join('')+'</div>'+tmr+
     '<div class="acts"><button class="btn pri big wide" data-next>'+esc(primary)+'</button><div class="ir">'+
-    '<button class="btn sec" data-story>'+icon('book')+'Story</button>'+(FLAGS.share&&!o.first&&!o.guest?'<button class="btn sec" data-share>'+icon('share')+'Share</button>':'')+
+    '<button class="btn sec" data-story>'+icon('book')+'Read the story</button>'+(FLAGS.share&&!o.first&&!o.guest?'<button class="btn sec" data-share>'+icon('share')+'Share</button>':'')+
     (!o.first?'<button class="btn sec" data-again aria-label="Play again">'+icon('restart')+'</button>':'')+'</div></div></section>');
   if(!rmOn()&&!Q.fast)qsa(sec,'[data-st]').forEach(function(x){x.style.opacity='0'});var page={name:'reward',el:sec,notabs:true,onBack:function(){close();return true}};
   function close(){if(o.first||o.guest){onboardAfterWin();return}Nav.pop()}
@@ -87,15 +87,15 @@ async function choreo(sec,R){var w=R.win;if(window.ZD&&FLAGS.companion)ZD.mount(
   var fl=qs(sec,'.flip:not(.on)');if(fl){await nap(450);fl.classList.add('on');fx('daily',qs(sec,'.addl'))}
   qsa(sec,'.badges .chip').forEach(function(c,i){Nav.anim(c,[{opacity:0,transform:'translateY(8px) scale(.9)'},{opacity:1,transform:'none'}],260,'cubic-bezier(.3,1.4,.5,1)',600+i*90)});
   var tm=qs(sec,'.tmr .sil');if(tm)setTimeout(function(){tm.classList.add('shim')},900);
-  if(w.gift)setTimeout(function(){toast('Season gift unlocked: '+w.gift.t)},1400);
+  if(w.gift)setTimeout(function(){toast('New season gift: '+w.gift.t)},1400);
   // the reminder question: once, after the 2nd daily solved, at a happy moment
   var v=S();if(R.o.daily&&FLAGS.reminders&&!v.remind.asked&&Object.keys(v.daily).length>=2)setTimeout(askReminder,1600);
-  say(R.stars+' of 3 stars, '+plur(R.moves,'move')+(w.card?'. Story added to your Almanac':''))}
+  say(R.stars+' of 3 stars, '+plur(R.moves,'move')+(w.card?'. Its story is now in your Almanac':''))}
 function askReminder(){var v=S();v.remind.asked=1;save();
-  var b=h5('<div><p class="sm">One nudge a day when the new story is out. Never after you have played.</p><div class="seg" role="group" aria-label="Time" style="margin-top:14px"><button aria-pressed="false" data-t="08:00">8 am</button><button aria-pressed="true" data-t="19:00">7 pm</button><button aria-pressed="false" data-t="21:00">9 pm</button></div>'+
+  var b=h5('<div><p class="sm">One reminder a day when the new puzzle is out, and none once you have played.</p><div class="seg" role="group" aria-label="Time" style="margin-top:14px"><button aria-pressed="false" data-t="08:00">8 am</button><button aria-pressed="true" data-t="19:00">7 pm</button><button aria-pressed="false" data-t="21:00">9 pm</button></div>'+
     '<div style="display:flex;flex-direction:column;gap:8px;margin-top:16px"><button class="btn pri wide" data-yes>'+icon('bell')+'Remind me</button><button class="btn ghost wide" data-no>Not now</button></div></div>');
   var t='19:00';qsa(b,'[data-t]').forEach(function(x){x.onclick=function(){t=x.dataset.t;qsa(b,'[data-t]').forEach(function(y){y.setAttribute('aria-pressed',y===x?'true':'false')})}});
-  var sh=Nav.sheet({title:'A nudge for tomorrow?',body:b});
+  var sh=Nav.sheet({title:'Remind you tomorrow?',body:b});
   qs(b,'[data-yes]').onclick=function(){v.remind={asked:1,on:1,time:t};save();ev('remind_opt_in');sh.close();toast('Done. The Android app will remind you at '+qs(b,'[aria-pressed=true]').textContent+'.')};
   qs(b,'[data-no]').onclick=function(){sh.close()}}
 /* share: the daily as a short line + the challenge link (challenge.js codec); a ladder level as a friend challenge */

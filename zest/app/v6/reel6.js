@@ -201,7 +201,7 @@ async function share(c){ev('share_tap');var s=shareText(c);R.lastShare=s.text;
 function explore(c){var p=P(c.id),z=pzProg(c.id),done=z&&z.best?z.best:{},L=liked(),n=0,cells='';
   for(var i=1;i<=p.levels;i++){var d=!!done[i];if(d)n++;cells+='<button class="'+(d?'done':i===c.level?'cur':'')+'" data-lv="'+i+'" aria-label="Level '+i+(d?', solved':'')+(i===c.level?', this card':'')+'">'+i+'</button>'}
   var lk=Object.keys(L).filter(function(k){return L[k].id===c.id}).length;
-  var b=h5('<div><p class="sm">'+plur(p.levels,'level')+' · '+n+' solved · this card is level '+c.level+(lk?' · '+lk+' liked':'')+'</p><div class="rl6lv">'+cells+'</div><button class="btn sec wide" data-back style="margin-top:16px">Keep scrolling the Reel</button></div>');
+  var b=h5('<div><p class="sm">'+plur(p.levels,'level')+' · '+n+' solved · this card is level '+c.level+(lk?' · '+lk+' liked':'')+'</p><div class="rl6lv">'+cells+'</div><button class="btn sec wide" data-back style="margin-top:16px">Back to the Reel</button></div>');
   var sh=Nav.sheet({title:p.name,body:b,cls:'rl6sheet'});qs(b,'[data-back]').onclick=function(){sh.close()};
   qsa(b,'[data-lv]').forEach(function(x){x.onclick=function(){sh.close();ev('reel_explore');openLevel(c.id,+x.dataset.lv)}})}
 function openLevel(id,lv){try{applyTheme()}catch(e){}playPuzzle(id,lv,{})}
@@ -256,7 +256,7 @@ Nav.reg('play',{label:'Play',notabs:false,
 var push0=Nav.push;Nav.push=function(){if(Nav.cur==='play')try{applyTheme()}catch(e){}return push0.apply(Nav,arguments)};
 var pop0=Nav.pop;Nav.pop=function(){var r=pop0.apply(Nav,arguments);Promise.resolve(r).then(function(){if(Nav.cur==='play'&&!Nav.depth)dark()});return r};
 /* the Today entry: the new reel's words */
-var tr0=todayRender;todayRender=function(root,first){var r=tr0.apply(this,arguments);try{var b=qs(root,'[data-reel] .rt');if(b&&!b.dataset.rl6){b.dataset.rl6=1;b.innerHTML='<b>The Reel</b><small>Harder levels to swipe through</small>'}}catch(e){}return r};
+var tr0=todayRender;todayRender=function(root,first){var r=tr0.apply(this,arguments);try{var b=qs(root,'[data-reel] .rt');if(b&&!b.dataset.rl6){b.dataset.rl6=1;b.innerHTML='<b>The Reel</b><small>Harder levels, one after another</small>'}}catch(e){}return r};
 /* the Almanac: liked challenges, one tap to play */
 if(typeof almRender==='function'){var ar0=almRender;almRender=function(root){var r=ar0.apply(this,arguments);try{likedRow(root)}catch(e){}return r}}
 function likedRow(root){var L=liked(),ks=Object.keys(L).filter(function(k){return P(L[k].id)}).sort(function(a,b){return L[b].at-L[a].at}),box=qs(root,'[data-liked]');
